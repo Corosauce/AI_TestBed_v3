@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="50" height="50" tilewidth="64" tileheight="64">
+ <tileset firstgid="1" name="tiles" tilewidth="64" tileheight="64">
+  <image source="../imgs/tiles/tiles.png" width="1024" height="1024"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzFmm2SojAQhqMCCrv7A0TF23m0OYpHWzL2O/vYw8xu4lZIVYokJJ3+ThP6HEK4zvU818lqbF9s/Iq2xic3NrnxC/qT65/xPC+Mcd/v5lysfbXxYwj3ca79Qj2iPeIZ6+Dag1szYE6P94SxVP3eg7UHB5N7xv5mpmVntZrr1mocr63q/fYvzx3WCm6N8Rp7bKytZ4X9KszbAc7Wrd+hHkJ421tt53qw2tlYM9df87w9+nrfYd7e2gc33uK97zeAt8e6xu3TAgeOEV4N/lEO4k/szzDvXlbi2eYbXtXhmecaq7FO/NSaKjzLRzJpDQfuRTizfoXhYSfvbdXYP9mavenf3L/FuSPmjYAxYO1xoc25I96PDo8R606G88HhwLWxT99BP2E+4K0yOqpH/0YfNoXPvoV+jM8JT/ok7/O8r5vxfIu8nHXpvjUcuJfaX5XLg+Z3GOLFTPdt+mbN/y4Rv0hH1KvOeDn3b5cEGJKH+YK76WBxOgbTidbkMZg8/rVEfCmPSI/0qlS5PPZ890WN6UQqLyOMwehoTB5jIi9eLRNwoG6n6JVkSnmkwni1UCcaw6FP1ImzwYhy6GAfJeUhX0OfmYpDnEs7z5HpqyXyvYffrTJwiDBEx95kmurzXi2y0agL7QvyGEBHHdY5P/xZPGbYxwCfp/O8pH1EfOM5qBhv++gn+13xosk8g14tkodivFy9Ei/2iG1K6hXPwUOmjeoMkjxkHyXPc/kr0SF55Pgr0SG/W5oO4XAIzzF3CgyeQYptStKh8zzu3UInUuUh++iMjlSf92oRDtEuGOOlymNEzKx4t7SdM1bN4SVjmzXjkgHnh+wj1V+NOAcV75aUB/2VzrAcf0UYkmlJOmTn+q6NOKT6K54fHXzFWnF7h/MjJy6Rr1gjvpI8Ig8ZU6R+D/awMX2LlbaPwel2qs/0Pi8nJni1iI6IQ5tpH9IrxYlrfEfxDKNu58QlipnXuL+SPGTnOXcdittpY6XjK8YltPOcezid5+JF6TiRvNQ9QwodS3Ze+jyPOFAeOb5fsb98hfRqDTp4Dub4XcJYI27XXTm/rVNjI8aaLegofX91XNCrFBz8naTsfM170RzfL5+nmCA+S/830BmmeFc2mnO/y39aa57nuXcE9Ltr3V/5b6Dce+oln1f6f1Qfnu/Kv9Ir/ned0Oa/OR+385/t2cHgP1u9n1D5b5g5IteF9/yPI70SL7nOeP6Rz6G8DeV1nHBfYv+uP/I9+vCcR6L1zD1Zyis5/uXZu/UnxEY1cBjdOuYIMDeEuSOyc+UfaI7PD/E5D8xRWMo/Yc4J33EvvZNe7dwemhvzNZrwJ1dDOSKN9WP98dCtjzlqa94Bc5mfInjKF+mw9qt1B8DlvJ9mJ6LN85682Dleib8NeEseb8JzTglze3y+ztat3YbPsqswR++Uj+LzhWq3n/I+lNMxYuxkc0WHcjuOmKv8Do4p18S3fR5KjznsHzH35PgQcRgBT/U377dKZQ==
+  </data>
+ </layer>
+ <objectgroup name="BlockingObjects" width="50" height="50">
+  <object name="Block" type="Unpassable" x="384" y="2880" width="32" height="32"/>
+ </objectgroup>
+</map>

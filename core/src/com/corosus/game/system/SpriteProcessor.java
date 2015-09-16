@@ -10,8 +10,8 @@ import com.corosus.game.component.Position;
 
 public class SpriteProcessor extends IntervalEntityProcessingSystem {
 
-	ComponentMapper<Position> mapPos;
-	ComponentMapper<Health> mapHealth;
+	private ComponentMapper<Position> mapPos;
+	private ComponentMapper<Health> mapHealth;
 	
 	public SpriteProcessor(float interval) {
 		super(Aspect.all(Position.class), interval);

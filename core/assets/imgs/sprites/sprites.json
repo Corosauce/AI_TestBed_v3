@@ -1,0 +1,8 @@
+{
+marker: {
+	class: sprite,
+	spriteTable: imgs/sprites/table_001.png,
+	row: 0,
+	column: 0
+}
+}
