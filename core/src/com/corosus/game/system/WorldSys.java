@@ -33,7 +33,7 @@ public class WorldSys extends IntervalEntityProcessingSystem {
 			System.out.println("spawn ent");
 			Random rand = new Random();
 			Entity ent = new EntityBuilder(Game_AI_TestBed.instance().getWorld())
-			.with(new Position(rand.nextInt(100), rand.nextInt(100)))
+			.with(new Position(rand.nextInt(1000), rand.nextInt(1000)))
 			.with(new Health(20))
 			.with(new RenderData())
 			.build();

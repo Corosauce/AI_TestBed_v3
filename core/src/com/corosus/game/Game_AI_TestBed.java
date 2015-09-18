@@ -13,8 +13,10 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.corosus.game.client.InputHandler;
 import com.corosus.game.client.assets.GameAssetManager;
 import com.corosus.game.client.screen.TestScreen;
+import com.corosus.game.system.GameInput;
 import com.corosus.game.system.MapRender;
 import com.corosus.game.system.SpriteRender;
 import com.corosus.game.system.SpriteSimulate;
@@ -25,6 +27,8 @@ public class Game_AI_TestBed extends Game {
 	private static Game_AI_TestBed instance;
 	
 	private World world;
+	
+	private InputHandler inputHandler;
 	
 	/**
 	 * testing stuff
@@ -48,6 +52,8 @@ public class Game_AI_TestBed extends Game {
 	@Override
 	public void create() {
 		instance = this;
+		
+		inputHandler = new InputHandler();
 
 		restart();
 	}
@@ -84,10 +90,13 @@ public class Game_AI_TestBed extends Game {
 		worldConfig.setSystem(new WorldSys(GameSettings.tickDelayGame));
 		worldConfig.setSystem(new MapRender());
 		worldConfig.setSystem(new SpriteRender());
+		worldConfig.setSystem(new GameInput(GameSettings.tickDelayGame));
 		
 		world = new World(worldConfig);
 		
 		setScreen(new TestScreen());
+		
+		Gdx.input.setInputProcessor(inputHandler);
 		
 	}
 	
