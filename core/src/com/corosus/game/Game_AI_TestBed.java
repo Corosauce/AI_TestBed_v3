@@ -6,13 +6,18 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.corosus.game.client.assets.GameAssetManager;
 import com.corosus.game.client.screen.TestScreen;
-import com.corosus.game.system.SpriteProcessor;
+import com.corosus.game.system.MapRender;
+import com.corosus.game.system.SpriteRender;
+import com.corosus.game.system.SpriteSimulate;
 import com.corosus.game.system.WorldSys;
 
 public class Game_AI_TestBed extends Game {
@@ -32,6 +37,10 @@ public class Game_AI_TestBed extends Game {
 	
 	private OrthographicCamera camera;
 	
+	public SpriteBatch batch;
+	
+	public float stateTime = 0;
+	
 	public static Game_AI_TestBed instance() {
 		return instance;
 	}
@@ -48,6 +57,13 @@ public class Game_AI_TestBed extends Game {
 		/**
 		 * TEST
 		 */
+		
+		GameAssetManager.INSTANCE.loadAnimations("imgs/sprites/animations.json");
+		GameAssetManager.INSTANCE.loadSprites("imgs/sprites/sprites.json");
+		GameAssetManager.INSTANCE.loadSounds("sounds/sounds.json");
+		
+		batch = new SpriteBatch();
+		
 		this.am = new AssetManager();
 		this.am.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
 		this.am.load(getLevel(), TiledMap.class);
@@ -64,8 +80,10 @@ public class Game_AI_TestBed extends Game {
         this.camera.update();
 		
 		WorldConfiguration worldConfig = new WorldConfiguration();
-		worldConfig.setSystem(new SpriteProcessor(GameSettings.tickDelayGame));
+		worldConfig.setSystem(new SpriteSimulate(GameSettings.tickDelayGame));
 		worldConfig.setSystem(new WorldSys(GameSettings.tickDelayGame));
+		worldConfig.setSystem(new MapRender());
+		worldConfig.setSystem(new SpriteRender());
 		
 		world = new World(worldConfig);
 		
@@ -73,19 +91,12 @@ public class Game_AI_TestBed extends Game {
 		
 	}
 	
-	public World getWorld() {
-		return world;
+	public OrthographicCamera getCamera() {
+		return camera;
 	}
 	
-	public void render(float delta) {
-
-		camera.position.x += 1;
-		camera.zoom = 2F;
-		camera.update();
-		
-		mapRenderer.setView(camera);
-		mapRenderer.render();
-		
+	public World getWorld() {
+		return world;
 	}
 	
 	public void process(float delta) {
@@ -103,6 +114,13 @@ public class Game_AI_TestBed extends Game {
 	
 	public String getLevelName() {
 		return this.levelName;
+	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		
+		batch.dispose();
 	}
 
 }

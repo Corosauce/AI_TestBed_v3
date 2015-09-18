@@ -1,5 +1,7 @@
 package com.corosus.game.system;
 
+import java.util.Random;
+
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
@@ -8,13 +10,13 @@ import com.corosus.game.Game_AI_TestBed;
 import com.corosus.game.component.Health;
 import com.corosus.game.component.Position;
 
-public class SpriteProcessor extends IntervalEntityProcessingSystem {
+public class SpriteSimulate extends IntervalEntityProcessingSystem {
 
 	private ComponentMapper<Position> mapPos;
 	private ComponentMapper<Health> mapHealth;
 	
-	public SpriteProcessor(float interval) {
-		super(Aspect.all(Position.class), interval);
+	public SpriteSimulate(float interval) {
+		super(Aspect.all(Position.class, Health.class), interval);
 	}
 	
 	@Override
@@ -33,6 +35,15 @@ public class SpriteProcessor extends IntervalEntityProcessingSystem {
 		
 		//Position pos = mapPos.get(e);
 		Health health = mapHealth.get(e);
+		Position pos = mapPos.get(e);
+		
+		Random rand = new Random();
+		
+		pos.x += rand.nextInt(2)-rand.nextInt(2);
+		pos.y += rand.nextInt(2)-rand.nextInt(2);
+		
+		//pos.x += 1F;
+		//pos.y += rand.nextInt()-rand.nextInt();
 		
 		System.out.println("health: " + health.hp);
 		

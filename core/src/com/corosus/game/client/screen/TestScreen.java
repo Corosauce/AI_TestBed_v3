@@ -14,8 +14,6 @@ public class TestScreen implements Screen {
 	@Override
 	public void render(float delta) {
 		Game_AI_TestBed.instance().process(delta);
-		
-		Game_AI_TestBed.instance().render(delta);
 	}
 
 	@Override

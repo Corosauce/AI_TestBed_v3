@@ -1,0 +1,10 @@
+{
+button-click: {
+	class: sound,
+	soundFile: sounds/button-click.wav,
+},
+footstep: {
+	class: sound,
+	soundFile: sounds/footstep-concrete.wav,
+}
+}
