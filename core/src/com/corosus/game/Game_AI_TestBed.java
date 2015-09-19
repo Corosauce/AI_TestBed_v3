@@ -94,7 +94,17 @@ public class Game_AI_TestBed extends Game {
 		worldConfig.setSystem(new SpriteRender());
 		worldConfig.setSystem(new GameInput(GameSettings.tickDelayGame));
 		
+		
+		
 		world = new World(worldConfig);
+        
+        /*world = new World();
+        
+        world.setSystem(new SpriteSimulate(GameSettings.tickDelayGame));
+        world.setSystem(new WorldSys(GameSettings.tickDelayGame));
+        world.setSystem(new MapRender());
+        world.setSystem(new SpriteRender());
+        world.setSystem(new GameInput(GameSettings.tickDelayGame));*/
 		
 		setScreen(new TestScreen());
 		

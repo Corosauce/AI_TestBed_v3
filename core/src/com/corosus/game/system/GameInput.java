@@ -7,10 +7,12 @@ import java.util.Map.Entry;
 
 import com.artemis.Aspect;
 import com.artemis.Entity;
+import com.artemis.annotations.Wire;
 import com.artemis.systems.IntervalEntityProcessingSystem;
 import com.badlogic.gdx.Input;
 import com.corosus.game.Game_AI_TestBed;
 
+@Wire
 public class GameInput extends IntervalEntityProcessingSystem {
 	
 	public static HashMap<Integer, Boolean> lookupKeysDown = new HashMap<Integer, Boolean>();

@@ -3,6 +3,7 @@ package com.corosus.game.system;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
+import com.artemis.annotations.Wire;
 import com.artemis.systems.IntervalEntityProcessingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -14,6 +15,7 @@ import com.corosus.game.client.assets.GameAssetManager;
 import com.corosus.game.component.Position;
 import com.corosus.game.component.RenderData;
 
+@Wire
 public class MapRender extends IntervalEntityProcessingSystem {
 	
 	public MapRender() {
