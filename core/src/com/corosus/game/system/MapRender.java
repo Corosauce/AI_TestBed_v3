@@ -4,6 +4,9 @@ import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.systems.IntervalEntityProcessingSystem;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.corosus.game.Cst;
 import com.corosus.game.GameSettings;
 import com.corosus.game.Game_AI_TestBed;
@@ -31,9 +34,16 @@ public class MapRender extends IntervalEntityProcessingSystem {
 		
 		//game.getCamera().position.x += 1;
 		//camera.position.y += 1;
-		game.getCamera().zoom = 2F;
+		game.getCamera().zoom = 4F;
 		game.getCamera().update();
 		
+		Color color = new Color(0, 0, 0, 0);
+		
+		//clear screen
+		Gdx.gl.glClearColor(color.r, color.g,color.b,color.a);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		//update map position and render
 		game.mapRenderer.setView(game.getCamera());
 		game.mapRenderer.render();
 		

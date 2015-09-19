@@ -1,12 +1,12 @@
 package com.corosus.game;
 
+import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.WorldConfiguration;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -44,6 +44,8 @@ public class Game_AI_TestBed extends Game {
 	public SpriteBatch batch;
 	
 	public float stateTime = 0;
+	
+	public int entityCount = 0;
 	
 	public static Game_AI_TestBed instance() {
 		return instance;
@@ -106,6 +108,11 @@ public class Game_AI_TestBed extends Game {
 	
 	public World getWorld() {
 		return world;
+	}
+	
+	public void killEntity(Entity e) {
+		getWorld().deleteEntity(e);
+		entityCount--;
 	}
 	
 	public void process(float delta) {

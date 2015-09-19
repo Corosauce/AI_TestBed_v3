@@ -10,6 +10,7 @@ import com.corosus.game.Game_AI_TestBed;
 import com.corosus.game.component.Health;
 import com.corosus.game.component.Position;
 import com.corosus.game.component.RenderData;
+import com.corosus.game.factory.EntityFactory;
 
 public class WorldSys extends IntervalEntityProcessingSystem {
 	
@@ -29,15 +30,18 @@ public class WorldSys extends IntervalEntityProcessingSystem {
 		
 		
 		gameTime++;
-		if (gameTime % 2 == 0) {
+		if (gameTime % 20 == 0) {
 			System.out.println("spawn ent");
 			Random rand = new Random();
-			Entity ent = new EntityBuilder(Game_AI_TestBed.instance().getWorld())
+			EntityFactory.createEntity(0, rand.nextInt(3000), rand.nextInt(3000));
+			/*Entity ent = new EntityBuilder(Game_AI_TestBed.instance().getWorld())
 			.with(new Position(rand.nextInt(1000), rand.nextInt(1000)))
 			.with(new Health(20))
 			.with(new RenderData())
-			.build();
+			.build();*/
 		}
+		
+		System.out.println("entities: " + Game_AI_TestBed.instance().entityCount);
 		
 		//super.processSystem();
 	}

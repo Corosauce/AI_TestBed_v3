@@ -50,7 +50,7 @@ public class SpriteRender extends IntervalEntityProcessingSystem {
 		RenderData render = mapRender.get(e);
 		Position pos = mapPos.get(e);
 		
-		render.anims = GameAssetManager.INSTANCE.getRenderAssets("imgs/sprites/tanya.json");
+		//render.anims = GameAssetManager.INSTANCE.getRenderAssets("imgs/sprites/tanya.json");
 		
 		render.anims.get(render.state).get(render.orient).draw(game.batch, game.stateTime, game.getWorld().getDelta(), pos.x - Cst.SPRITESIZE / 2, pos.y - Cst.SPRITESIZE / 2);
 	}
