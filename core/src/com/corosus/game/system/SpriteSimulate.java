@@ -70,7 +70,7 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 		pos.x += motion.x;
 		pos.y += motion.y;
 		
-		float drag = 0.85F;
+		float drag = 0.15F;
 		
 		motion.x *= drag;
 		motion.y *= drag;

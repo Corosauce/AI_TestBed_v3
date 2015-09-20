@@ -42,7 +42,7 @@ public class WorldSys extends IntervalEntityProcessingSystem {
 			.build();*/
 		}
 		
-		System.out.println("entities: " + Game_AI_TestBed.instance().entityCount);
+		//System.out.println("entities: " + Game_AI_TestBed.instance().entityCount);
 		
 		//super.processSystem();
 	}
