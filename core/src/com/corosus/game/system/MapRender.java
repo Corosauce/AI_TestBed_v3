@@ -36,7 +36,7 @@ public class MapRender extends IntervalEntityProcessingSystem {
 		
 		//game.getCamera().position.x += 1;
 		//camera.position.y += 1;
-		game.getCamera().zoom = 4F;
+		game.getCamera().zoom = 2F;
 		game.getCamera().update();
 		
 		Color color = new Color(0, 0, 0, 0);

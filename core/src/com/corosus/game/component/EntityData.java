@@ -9,7 +9,8 @@ import com.corosus.game.entity.EnumEntityType;
  */
 public class EntityData extends Component {
 
-	
+	public boolean aiControlled = false;
+	public boolean inputControlled = false;
 	
 	public EnumEntityType type = EnumEntityType.SPRITE;
 	

@@ -46,22 +46,19 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 		Random rand = new Random();
 		
 		if (profile.type == EnumEntityType.SPRITE) {
-			motion.x = rand.nextInt(2)-rand.nextInt(2);
-			motion.y = rand.nextInt(2)-rand.nextInt(2);
-			
-			//pos.x += 1F;
-			//pos.y += rand.nextInt()-rand.nextInt();
-			
-			//System.out.println("health: " + health.hp);
-			
-			health.hp--;
-			
-			//if (rand.nextInt(10) == 0) {
-			for (int i = 0; i < 25; i++) {
-				float speed = 10F;
-				float vecX = rand.nextFloat() * speed - rand.nextFloat() * speed;
-				float vecY = rand.nextFloat() * speed - rand.nextFloat() * speed;
-				EntityFactory.createEntity(EnumEntityType.PROJECTILE, pos.x, pos.y, vecX, vecY);
+			if (profile.aiControlled) {
+				motion.x = rand.nextInt(2)-rand.nextInt(2);
+				motion.y = rand.nextInt(2)-rand.nextInt(2);
+				
+				health.hp--;
+				
+				//if (rand.nextInt(10) == 0) {
+				for (int i = 0; i < 25; i++) {
+					float speed = 10F;
+					float vecX = rand.nextFloat() * speed - rand.nextFloat() * speed;
+					float vecY = rand.nextFloat() * speed - rand.nextFloat() * speed;
+					//EntityFactory.createEntity(EnumEntityType.PROJECTILE, pos.x, pos.y, vecX, vecY);
+				}
 			}
 		} else if (profile.type == EnumEntityType.PROJECTILE) {
 			if (health.lifeTime > 100) {
@@ -73,7 +70,7 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 		pos.x += motion.x;
 		pos.y += motion.y;
 		
-		float drag = 0.98F;
+		float drag = 0.85F;
 		
 		motion.x *= drag;
 		motion.y *= drag;

@@ -16,6 +16,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.corosus.game.client.InputHandler;
 import com.corosus.game.client.assets.GameAssetManager;
 import com.corosus.game.client.screen.TestScreen;
+import com.corosus.game.factory.EntityFactory;
 import com.corosus.game.system.GameInput;
 import com.corosus.game.system.MapRender;
 import com.corosus.game.system.SpriteRender;
@@ -46,6 +47,8 @@ public class Game_AI_TestBed extends Game {
 	public float stateTime = 0;
 	
 	public int entityCount = 0;
+	
+	public int playerID = -1;
 	
 	public static Game_AI_TestBed instance() {
 		return instance;
@@ -110,6 +113,8 @@ public class Game_AI_TestBed extends Game {
 		
 		Gdx.input.setInputProcessor(inputHandler);
 		
+		
+		setPlayer(EntityFactory.createPlayer(100, 100).getId());
 	}
 	
 	public OrthographicCamera getCamera() {
@@ -140,6 +145,18 @@ public class Game_AI_TestBed extends Game {
 	
 	public String getLevelName() {
 		return this.levelName;
+	}
+	
+	public void setPlayer(int playerID) {
+		this.playerID = playerID;
+	}
+	
+	public Entity getPlayerEntity() {
+		if (playerID == -1) {
+			System.out.println("PLAYER NOT SET");
+			return null;
+		}
+		return getWorld().getEntity(playerID);
 	}
 	
 	@Override

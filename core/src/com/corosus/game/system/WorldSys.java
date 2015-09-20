@@ -34,7 +34,7 @@ public class WorldSys extends IntervalEntityProcessingSystem {
 		if (gameTime % 20 == 0) {
 			System.out.println("spawn ent");
 			Random rand = new Random();
-			EntityFactory.createEntity(EnumEntityType.SPRITE, rand.nextInt(3000), rand.nextInt(3000));
+			//EntityFactory.createEntity(EnumEntityType.SPRITE, rand.nextInt(3000), rand.nextInt(3000));
 			/*Entity ent = new EntityBuilder(Game_AI_TestBed.instance().getWorld())
 			.with(new Position(rand.nextInt(1000), rand.nextInt(1000)))
 			.with(new Health(20))

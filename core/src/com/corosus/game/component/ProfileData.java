@@ -14,7 +14,7 @@ import com.corosus.game.entity.EnumEntityType;
  */
 public class ProfileData extends Component {
 	
-	public float moveSpeed = 1;
+	public float moveSpeed = 3;
 	public float fireDelay = 10;
 	
 	public ProfileData() {
