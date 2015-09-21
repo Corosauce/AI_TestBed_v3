@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.corosus.game.Cst;
 import com.corosus.game.GameSettings;
 import com.corosus.game.Game_AI_TestBed;
+import com.corosus.game.Level;
 import com.corosus.game.client.assets.ActorState;
 import com.corosus.game.client.assets.GameAssetManager;
 import com.corosus.game.client.assets.Orient;
@@ -37,10 +38,10 @@ public class SpriteRender extends IntervalEntityProcessingSystem {
 		
 		Game_AI_TestBed game = Game_AI_TestBed.instance();
 		
-		game.batch.setProjectionMatrix(game.getCamera().combined);
-		game.batch.begin();
+		game.getLevel().getBatch().setProjectionMatrix(game.getCamera().combined);
+		game.getLevel().getBatch().begin();
 		super.processSystem();
-		game.batch.end();
+		game.getLevel().getBatch().end();
 		
 	}
 
@@ -54,7 +55,10 @@ public class SpriteRender extends IntervalEntityProcessingSystem {
 		Position pos = mapPos.get(e);
 		Velocity vel = mapVelocity.get(e);
 		
-		render.orient = Orient.fromVector(new Vector2(vel.x, vel.y));
+		//render.orient = Orient.fromVector(new Vector2(vel.x, vel.y));
+		
+		render.orient = Orient.fromAngleOld(pos.rotationYaw);
+		
 		if (vel.x != 0 || vel.y != 0) {
 			render.state = ActorState.WALK;
 		} else {
@@ -63,7 +67,9 @@ public class SpriteRender extends IntervalEntityProcessingSystem {
 		
 		//render.anims = GameAssetManager.INSTANCE.getRenderAssets("imgs/sprites/tanya.json");
 		
-		render.anims.get(render.state).get(render.orient).draw(game.batch, game.stateTime, game.getWorld().getDelta(), pos.x - Cst.SPRITESIZE / 2, pos.y - Cst.SPRITESIZE / 2);
+		Level level = game.getLevel();
+		
+		render.anims.get(render.state).get(render.orient).draw(level.getBatch(), level.getStateTime(), level.getWorld().getDelta(), pos.x - Cst.SPRITESIZE / 2, pos.y - Cst.SPRITESIZE / 2);
 	}
 
 }

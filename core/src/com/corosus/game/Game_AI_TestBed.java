@@ -15,6 +15,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.corosus.game.client.InputHandler;
 import com.corosus.game.client.assets.GameAssetManager;
+import com.corosus.game.client.screen.ScreenActiveGame;
 import com.corosus.game.client.screen.TestScreen;
 import com.corosus.game.factory.EntityFactory;
 import com.corosus.game.system.GameInput;
@@ -27,8 +28,6 @@ public class Game_AI_TestBed extends Game {
 
 	private static Game_AI_TestBed instance;
 	
-	private World world;
-	
 	private InputHandler inputHandler;
 	
 	/**
@@ -36,19 +35,10 @@ public class Game_AI_TestBed extends Game {
 	 */
 	
 	public AssetManager am;
-    public TiledMap map;
-	public String levelName = "test_002.tmx";
-	public TiledMapRenderer mapRenderer;
+    
 	
 	private OrthographicCamera camera;
-	
-	public SpriteBatch batch;
-	
-	public float stateTime = 0;
-	
-	public int entityCount = 0;
-	
-	public int playerID = -1;
+	private Level level;
 	
 	public static Game_AI_TestBed instance() {
 		return instance;
@@ -59,6 +49,7 @@ public class Game_AI_TestBed extends Game {
 		instance = this;
 		
 		inputHandler = new InputHandler();
+		level = new Level();
 
 		restart();
 	}
@@ -73,15 +64,12 @@ public class Game_AI_TestBed extends Game {
 		GameAssetManager.INSTANCE.loadSprites("imgs/sprites/sprites.json");
 		GameAssetManager.INSTANCE.loadSounds("sounds/sounds.json");
 		
-		batch = new SpriteBatch();
-		
 		this.am = new AssetManager();
 		this.am.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
-		this.am.load(getLevel(), TiledMap.class);
+		this.am.load(getLevel().getLevel(), TiledMap.class);
 		this.am.finishLoading();
-		this.map = this.am.get(getLevel());
 		
-		mapRenderer = new OrthogonalTiledMapRenderer(map);
+		
 		
 		float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
@@ -89,17 +77,8 @@ public class Game_AI_TestBed extends Game {
         this.camera = new OrthographicCamera();
         this.camera.setToOrtho(false, w, h);
         this.camera.update();
-		
-		WorldConfiguration worldConfig = new WorldConfiguration();
-		worldConfig.setSystem(new SpriteSimulate(GameSettings.tickDelayGame));
-		worldConfig.setSystem(new WorldSys(GameSettings.tickDelayGame));
-		worldConfig.setSystem(new MapRender());
-		worldConfig.setSystem(new SpriteRender());
-		worldConfig.setSystem(new GameInput(GameSettings.tickDelayGame));
-		
-		
-		
-		world = new World(worldConfig);
+        
+        getLevel().restart();
         
         /*world = new World();
         
@@ -109,61 +88,28 @@ public class Game_AI_TestBed extends Game {
         world.setSystem(new SpriteRender());
         world.setSystem(new GameInput(GameSettings.tickDelayGame));*/
 		
-		setScreen(new TestScreen());
+		setScreen(new ScreenActiveGame());
 		
 		Gdx.input.setInputProcessor(inputHandler);
-		
-		
-		setPlayer(EntityFactory.createPlayer(100, 100).getId());
 	}
 	
 	public OrthographicCamera getCamera() {
 		return camera;
 	}
 	
-	public World getWorld() {
-		return world;
-	}
-	
-	public void killEntity(Entity e) {
-		getWorld().deleteEntity(e);
-		entityCount--;
+	public Level getLevel() {
+		return this.level;
 	}
 	
 	public void process(float delta) {
-		world.setDelta(delta);
-		world.process();
-	}
-	
-	public String getLevel() {
-		return "maps/" + getLevelName();
-	}
-	
-	public void setLevelName(String name) {
-		this.levelName = name;
-	}
-	
-	public String getLevelName() {
-		return this.levelName;
-	}
-	
-	public void setPlayer(int playerID) {
-		this.playerID = playerID;
-	}
-	
-	public Entity getPlayerEntity() {
-		if (playerID == -1) {
-			System.out.println("PLAYER NOT SET");
-			return null;
-		}
-		return getWorld().getEntity(playerID);
+		getLevel().process(delta);
 	}
 	
 	@Override
 	public void dispose() {
 		super.dispose();
 		
-		batch.dispose();
+		getLevel().dispose();
 	}
 
 }

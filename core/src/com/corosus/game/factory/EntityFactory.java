@@ -35,7 +35,7 @@ public class EntityFactory {
 			ent.with(new RenderData("civ1"));
 		}
 		
-		Game_AI_TestBed.instance().entityCount++;
+		Game_AI_TestBed.instance().getLevel().addToEntityCount(1);
 		
 		return ent.build();
 	}
@@ -53,13 +53,13 @@ public class EntityFactory {
 		ent.with(new Health(100));
 		ent.with(new RenderData("civ1"));
 		
-		Game_AI_TestBed.instance().entityCount++;
+		Game_AI_TestBed.instance().getLevel().addToEntityCount(1);
 		
 		return ent.build();
 	}
 	
 	public static EntityBuilder getEntityTemplate_Common(EntityData data, float posX, float posY, float motionX, float motionY) {
-		EntityBuilder ent = new EntityBuilder(Game_AI_TestBed.instance().getWorld())
+		EntityBuilder ent = new EntityBuilder(Game_AI_TestBed.instance().getLevel().getWorld())
 		.with(new Position(posX, posY))
 		.with(new Velocity(motionX, motionY))
 		.with(data)

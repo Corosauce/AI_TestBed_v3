@@ -59,10 +59,12 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 					float vecY = rand.nextFloat() * speed - rand.nextFloat() * speed;
 					//EntityFactory.createEntity(EnumEntityType.PROJECTILE, pos.x, pos.y, vecX, vecY);
 				}
+			} else {
+				
 			}
 		} else if (profile.type == EnumEntityType.PROJECTILE) {
 			if (health.lifeTime > 100) {
-				Game_AI_TestBed.instance().killEntity(e);
+				Game_AI_TestBed.instance().getLevel().killEntity(e);
 			}
 		}
 		
@@ -77,14 +79,30 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 		
 		health.lifeTime++;
 		
-		if (pos.x < 0 || pos.x > 3000 || pos.y < 0 || pos.y > 3000) {
-			//System.out.println("killed out of bound entity");
-			Game_AI_TestBed.instance().killEntity(e);
+		if (pos.x < 0) {
+			pos.x = 0;
 		}
+		
+		if (pos.x > Game_AI_TestBed.instance().getLevel().getLevelSizeX()) {
+			pos.x = Game_AI_TestBed.instance().getLevel().getLevelSizeX();
+		}
+		
+		if (pos.y < 0) {
+			pos.y = 0;
+		}
+		
+		if (pos.y > Game_AI_TestBed.instance().getLevel().getLevelSizeY()) {
+			pos.y = Game_AI_TestBed.instance().getLevel().getLevelSizeY();
+		}
+		
+		/*if (pos.x < 0 || pos.x > Game_AI_TestBed.instance().getLevel().getLevelSizeX() || pos.y < 0 || pos.y > Game_AI_TestBed.instance().getLevel().getLevelSizeY()) {
+			//System.out.println("killed out of bound entity");
+			Game_AI_TestBed.instance().getLevel().killEntity(e);
+		}*/
 		
 		if (health.hp <= 0) {
 			System.out.println("killed entity");
-			Game_AI_TestBed.instance().killEntity(e);
+			Game_AI_TestBed.instance().getLevel().killEntity(e);
 		}
 	}
 

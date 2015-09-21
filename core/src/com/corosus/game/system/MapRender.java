@@ -32,11 +32,11 @@ public class MapRender extends IntervalEntityProcessingSystem {
 		
 		Game_AI_TestBed game = Game_AI_TestBed.instance();
 		
-		game.stateTime += game.getWorld().getDelta();
+		game.getLevel().setStateTime(game.getLevel().getStateTime() + game.getLevel().getWorld().getDelta());
 		
 		//game.getCamera().position.x += 1;
 		//camera.position.y += 1;
-		game.getCamera().zoom = 2F;
+		game.getCamera().zoom = 1F;
 		game.getCamera().update();
 		
 		Color color = new Color(0, 0, 0, 0);
@@ -46,8 +46,8 @@ public class MapRender extends IntervalEntityProcessingSystem {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		//update map position and render
-		game.mapRenderer.setView(game.getCamera());
-		game.mapRenderer.render();
+		game.getLevel().getMapRenderer().setView(game.getCamera());
+		game.getLevel().getMapRenderer().render();
 		
 	}
 

@@ -37,6 +37,31 @@ public enum Orient {
             return UP_RIGHT;
 
         if ((angle >= 67.5) && (angle < 112.5))
+            return RIGHT;
+
+        if ((angle >= 112.5) && (angle < 157.5))
+            return DOWN_RIGHT;
+
+        if ((angle >= 157.5) && (angle < 202.5))
+            return DOWN;
+
+        if ((angle >= 202.5) && (angle < 247.5))
+            return DOWN_LEFT;
+
+        if ((angle >= 247.5) && (angle < 292.5))
+            return LEFT;
+
+        if ((angle >= 292.5) && (angle < 337.5))
+            return UP_LEFT;
+
+        return UP;
+    }
+    
+    public static Orient fromAngleOld(float angle){
+        if ((angle >= 22.5) && (angle < 67.5))
+            return UP_RIGHT;
+
+        if ((angle >= 67.5) && (angle < 112.5))
             return UP;
 
         if ((angle >= 112.5) && (angle < 157.5))

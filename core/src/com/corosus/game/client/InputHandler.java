@@ -23,6 +23,15 @@ public class InputHandler extends InputAdapter {
 		return super.keyUp(keycode);
 	}
 	
+	@Override
+	public boolean mouseMoved(int screenX, int screenY) {
+		
+		GameInput.mouseX = screenX;
+		GameInput.mouseY = screenY;
+		
+		return super.mouseMoved(screenX, screenY);
+	}
+	
 	
 	
 }
