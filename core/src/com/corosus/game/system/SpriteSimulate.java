@@ -101,7 +101,7 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 		}*/
 		
 		if (health.hp <= 0) {
-			System.out.println("killed entity");
+			//System.out.println("killed entity");
 			Game_AI_TestBed.instance().getLevel().killEntity(e);
 		}
 	}

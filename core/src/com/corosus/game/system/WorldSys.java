@@ -32,7 +32,7 @@ public class WorldSys extends IntervalEntityProcessingSystem {
 		
 		gameTime++;
 		if (gameTime % 20 == 0) {
-			System.out.println("spawn ent");
+			//System.out.println("spawn ent");
 			Random rand = new Random();
 			EntityFactory.createEntity(EnumEntityType.SPRITE, rand.nextInt(Game_AI_TestBed.instance().getLevel().getLevelSizeX()), rand.nextInt(Game_AI_TestBed.instance().getLevel().getLevelSizeY()));
 			/*Entity ent = new EntityBuilder(Game_AI_TestBed.instance().getWorld())

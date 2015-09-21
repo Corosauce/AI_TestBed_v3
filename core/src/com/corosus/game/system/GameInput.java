@@ -16,6 +16,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
+import com.badlogic.gdx.math.Vector2;
 import com.corosus.game.Game_AI_TestBed;
 import com.corosus.game.client.assets.Orient;
 import com.corosus.game.component.Position;
@@ -142,26 +143,64 @@ public class GameInput extends IntervalEntityProcessingSystem {
 				//boolean x = false;
 				//boolean y = false;
 				
-				if (keycode == Input.Keys.A) {
-					vel.x = -profile.moveSpeed;
-					//x = true;
+				boolean gridMovement = false;
+				
+				if (gridMovement) {
+					if (keycode == Input.Keys.A) {
+						vel.x = -profile.moveSpeed;
+						//x = true;
+					}
+					
+					if (keycode == Input.Keys.D) {
+						vel.x = profile.moveSpeed;
+						//if (x) vel.x = 0;
+					}
+					
+					if (keycode == Input.Keys.W) {
+						vel.y = profile.moveSpeed;
+						//y = true;
+					}
+					
+					if (keycode == Input.Keys.S) {
+						vel.y = -profile.moveSpeed;
+						//if (y) vel.y = 0;
+					}
+				} else {
+					if (keycode == Input.Keys.W) {
+						double rot = Math.toRadians(pos.rotationYaw);
+						vel.y += (float) (Math.sin(rot));
+						vel.x += (float) (Math.cos(rot));
+					} 
+					
+					if (keycode == Input.Keys.S) {
+						double rot = Math.toRadians(pos.rotationYaw + 180);
+						vel.y += (float) (Math.sin(rot));
+						vel.x += (float) (Math.cos(rot));
+					}
+					
+					if (keycode == Input.Keys.A) {
+						double rot = Math.toRadians(pos.rotationYaw + 90);
+						vel.y += (float) (Math.sin(rot));
+						vel.x += (float) (Math.cos(rot));
+					} 
+					
+					if (keycode == Input.Keys.D) {
+						double rot = Math.toRadians(pos.rotationYaw - 90);
+						vel.y += (float) (Math.sin(rot));
+						vel.x += (float) (Math.cos(rot));
+					}
+					
+					
+					double length = Math.sqrt(vel.x * vel.x + vel.y * vel.y);
+					vel.x /= length;
+					vel.y /= length;
+					
+					vel.x *= profile.moveSpeed;
+					vel.y *= profile.moveSpeed;
 				}
 				
-				if (keycode == Input.Keys.D) {
-					vel.x = profile.moveSpeed;
-					//if (x) vel.x = 0;
-				}
-				
-				if (keycode == Input.Keys.W) {
-					vel.y = profile.moveSpeed;
-					//y = true;
-				}
-				
-				if (keycode == Input.Keys.S) {
-					vel.y = -profile.moveSpeed;
-					//if (y) vel.y = 0;
-				}
-				
+				Game_AI_TestBed.instance().getCamera().position.x = pos.x;
+				Game_AI_TestBed.instance().getCamera().position.y = pos.y;
 			}
 			
 			//process mouse
@@ -174,9 +213,9 @@ public class GameInput extends IntervalEntityProcessingSystem {
 			float mapCoordX = cameraX - (screenSizeX/2) + mouseX;
 			float mapCoordY = cameraY - (screenSizeY/2) + (screenSizeY - mouseY);
 			
-			System.out.println("screen: " + screenSizeX + " - " + screenSizeY);
-			System.out.println("camera: " + cameraX + " - " + cameraY);
-			System.out.println("mouse: " + mouseX + " - " + mouseY);
+			//System.out.println("screen: " + screenSizeX + " - " + screenSizeY);
+			//System.out.println("camera: " + cameraX + " - " + cameraY);
+			//System.out.println("mouse: " + mouseX + " - " + mouseY);
 			
 			/*pos.x = mapCoordX;
 			pos.y = mapCoordY;*/
@@ -192,7 +231,7 @@ public class GameInput extends IntervalEntityProcessingSystem {
 			
 			pos.rotationYaw = (float) angle;
 			
-			System.out.println(angle);
+			//System.out.println(angle);
 			
 			//Orient.fromAngle(angle);
 		}
