@@ -39,6 +39,11 @@ public class GameInput extends IntervalEntityProcessingSystem {
 	
 	public GameInput(float interval) {
 		super(Aspect.exclude(), interval);
+		
+		lookupKeysDown.put(Input.Keys.W, false);
+		lookupKeysDown.put(Input.Keys.A, false);
+		lookupKeysDown.put(Input.Keys.S, false);
+		lookupKeysDown.put(Input.Keys.D, false);
 	}
 
 	@Override
@@ -131,6 +136,76 @@ public class GameInput extends IntervalEntityProcessingSystem {
 				//System.out.println("cant find controller!");
 			}
 			
+			try {
+				
+				vel.x = 0;
+				vel.y = 0;
+
+				boolean gridMovement = true;
+				
+				if (gridMovement) {
+					if (lookupKeysDown.get(Input.Keys.A)) {
+						vel.x += -profile.moveSpeed;
+						//x = true;
+					}
+					
+					if (lookupKeysDown.get(Input.Keys.D)) {
+						vel.x += profile.moveSpeed;
+						//if (x) vel.x = 0;
+					}
+					
+					if (lookupKeysDown.get(Input.Keys.W)) {
+						vel.y += profile.moveSpeed;
+						//y = true;
+					}
+					
+					if (lookupKeysDown.get(Input.Keys.S)) {
+						vel.y += -profile.moveSpeed;
+						//if (y) vel.y = 0;
+					}
+				} else {
+					if (lookupKeysDown.get(Input.Keys.W)) {
+						double rot = Math.toRadians(pos.rotationYaw);
+						vel.y += (float) (Math.sin(rot));
+						vel.x += (float) (Math.cos(rot));
+					} 
+					
+					if (lookupKeysDown.get(Input.Keys.S)) {
+						double rot = Math.toRadians(pos.rotationYaw + 180);
+						vel.y += (float) (Math.sin(rot));
+						vel.x += (float) (Math.cos(rot));
+					}
+					
+					if (lookupKeysDown.get(Input.Keys.A)) {
+						double rot = Math.toRadians(pos.rotationYaw + 90);
+						vel.y += (float) (Math.sin(rot));
+						vel.x += (float) (Math.cos(rot));
+					} 
+					
+					if (lookupKeysDown.get(Input.Keys.D)) {
+						double rot = Math.toRadians(pos.rotationYaw - 90);
+						vel.y += (float) (Math.sin(rot));
+						vel.x += (float) (Math.cos(rot));
+					}
+					
+				}
+				
+				
+				
+				//normalize speed
+				double length = Math.sqrt(vel.x * vel.x + vel.y * vel.y);
+				if (length > 0) {
+					vel.x /= length;
+					vel.y /= length;
+				}
+				
+				vel.x *= profile.moveSpeed;
+				vel.y *= profile.moveSpeed;
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 			//process keys
 			iter = lookupKeysDown.entrySet().iterator();
 			while (iter.hasNext()) {
@@ -143,64 +218,9 @@ public class GameInput extends IntervalEntityProcessingSystem {
 				//boolean x = false;
 				//boolean y = false;
 				
-				boolean gridMovement = false;
 				
-				if (gridMovement) {
-					if (keycode == Input.Keys.A) {
-						vel.x = -profile.moveSpeed;
-						//x = true;
-					}
-					
-					if (keycode == Input.Keys.D) {
-						vel.x = profile.moveSpeed;
-						//if (x) vel.x = 0;
-					}
-					
-					if (keycode == Input.Keys.W) {
-						vel.y = profile.moveSpeed;
-						//y = true;
-					}
-					
-					if (keycode == Input.Keys.S) {
-						vel.y = -profile.moveSpeed;
-						//if (y) vel.y = 0;
-					}
-				} else {
-					if (keycode == Input.Keys.W) {
-						double rot = Math.toRadians(pos.rotationYaw);
-						vel.y += (float) (Math.sin(rot));
-						vel.x += (float) (Math.cos(rot));
-					} 
-					
-					if (keycode == Input.Keys.S) {
-						double rot = Math.toRadians(pos.rotationYaw + 180);
-						vel.y += (float) (Math.sin(rot));
-						vel.x += (float) (Math.cos(rot));
-					}
-					
-					if (keycode == Input.Keys.A) {
-						double rot = Math.toRadians(pos.rotationYaw + 90);
-						vel.y += (float) (Math.sin(rot));
-						vel.x += (float) (Math.cos(rot));
-					} 
-					
-					if (keycode == Input.Keys.D) {
-						double rot = Math.toRadians(pos.rotationYaw - 90);
-						vel.y += (float) (Math.sin(rot));
-						vel.x += (float) (Math.cos(rot));
-					}
-					
-					
-					double length = Math.sqrt(vel.x * vel.x + vel.y * vel.y);
-					vel.x /= length;
-					vel.y /= length;
-					
-					vel.x *= profile.moveSpeed;
-					vel.y *= profile.moveSpeed;
-				}
 				
-				Game_AI_TestBed.instance().getCamera().position.x = pos.x;
-				Game_AI_TestBed.instance().getCamera().position.y = pos.y;
+				
 			}
 			
 			//process mouse

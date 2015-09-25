@@ -14,6 +14,7 @@ import com.corosus.game.Game_AI_TestBed;
 import com.corosus.game.client.assets.GameAssetManager;
 import com.corosus.game.component.Position;
 import com.corosus.game.component.RenderData;
+import com.corosus.game.component.Velocity;
 
 @Wire
 public class MapRender extends IntervalEntityProcessingSystem {
@@ -38,6 +39,20 @@ public class MapRender extends IntervalEntityProcessingSystem {
 		//camera.position.y += 1;
 		game.getCamera().zoom = 1F;
 		game.getCamera().update();
+		
+		ComponentMapper<Position> mapPos = ComponentMapper.getFor(Position.class, Game_AI_TestBed.instance().getLevel().getWorld());
+		Entity player = Game_AI_TestBed.instance().getLevel().getPlayerEntity();
+		
+		if (player != null) {
+			Position pos = mapPos.get(player);
+			
+			Game_AI_TestBed.instance().getCamera().position.x = pos.x;
+			Game_AI_TestBed.instance().getCamera().position.y = pos.y;
+			
+			System.out.println(pos.x + " - " + pos.y);
+		}
+		
+		
 		
 		Color color = new Color(0, 0, 0, 0);
 		
