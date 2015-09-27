@@ -20,9 +20,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.corosus.game.Game_AI_TestBed;
 import com.corosus.game.Logger;
 import com.corosus.game.client.assets.Orient;
+import com.corosus.game.component.EntityData;
+import com.corosus.game.component.Health;
 import com.corosus.game.component.Position;
 import com.corosus.game.component.ProfileData;
 import com.corosus.game.component.Velocity;
+import com.corosus.game.entity.ActionRoutineDodge;
 import com.corosus.game.input.XBox360Pad;
 
 @Wire
@@ -38,6 +41,10 @@ public class GameInput extends IntervalEntityProcessingSystem {
 	//xbox controller
 	public static Controller controller = null;
 	
+	private ComponentMapper<Position> mapPos;
+	private ComponentMapper<Velocity> mapVelocity;
+	private ComponentMapper<ProfileData> mapProfile;
+	
 	public GameInput(float interval) {
 		super(Aspect.exclude(), interval);
 		
@@ -45,6 +52,7 @@ public class GameInput extends IntervalEntityProcessingSystem {
 		lookupKeysDown.put(Input.Keys.A, false);
 		lookupKeysDown.put(Input.Keys.S, false);
 		lookupKeysDown.put(Input.Keys.D, false);
+		lookupKeysDown.put(Input.Keys.SHIFT_LEFT, false);
 	}
 
 	@Override
@@ -65,10 +73,6 @@ public class GameInput extends IntervalEntityProcessingSystem {
 		} else {
 			
 		}
-		
-		ComponentMapper<Velocity> mapVelocity = ComponentMapper.getFor(Velocity.class, Game_AI_TestBed.instance().getLevel().getWorld());
-		ComponentMapper<Position> mapPos = ComponentMapper.getFor(Position.class, Game_AI_TestBed.instance().getLevel().getWorld());
-		ComponentMapper<ProfileData> mapProfile = ComponentMapper.getFor(ProfileData.class, Game_AI_TestBed.instance().getLevel().getWorld());
 		
 		Iterator<Entry<Integer, Boolean>> iter = lookupKeysDown.entrySet().iterator();
 		
@@ -194,6 +198,22 @@ public class GameInput extends IntervalEntityProcessingSystem {
 					
 				}
 				
+				if (lookupKeysDown.get(Input.Keys.SHIFT_LEFT)) {
+					
+					float velX = vel.x;
+					float velY = vel.y;
+					
+					double length = Math.sqrt(velX * velX + velY * velY);
+					if (length > 0) {
+						velX /= length;
+						velY /= length;
+					}
+					
+					velX *= profile.moveSpeed * 2;
+					velY *= profile.moveSpeed * 2;
+					
+					profile.listRoutines.add(new ActionRoutineDodge(5, new Vector2(velX, velY)));
+				}
 				
 				
 				//normalize speed

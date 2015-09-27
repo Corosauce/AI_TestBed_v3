@@ -8,6 +8,7 @@ import net.mostlyoriginal.api.component.physics.Physics;
 import net.mostlyoriginal.game.util.VecUtil;
 
 import com.artemis.Aspect;
+import com.artemis.Component;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.annotations.Wire;
@@ -21,6 +22,7 @@ import com.corosus.game.component.PhysicsData;
 import com.corosus.game.component.Position;
 import com.corosus.game.component.ProfileData;
 import com.corosus.game.component.Velocity;
+import com.corosus.game.entity.ActionRoutine;
 import com.corosus.game.entity.EnumEntityType;
 
 @Wire
@@ -72,6 +74,19 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 		if (physics.needInit) {
 			physics.needInit = false;
 			physics.initPhysics(e.id, pos.x, pos.y);
+		}
+		
+		List<Component> listComponents = new ArrayList<Component>();
+		listComponents.add(motion);
+		
+		for (int i = 0; i < profileData.listRoutines.size(); i++) {
+			ActionRoutine action = profileData.listRoutines.get(i);
+			if (!action.isComplete()) {
+				action.tick(listComponents);
+			} else {
+				action.dispose();
+				profileData.listRoutines.remove(i--);
+			}
 		}
 		
 		Random rand = new Random();
@@ -175,7 +190,7 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 		super.processSystem();
 		
 		for (CollisionEntry entry : listCollisionQueueStart) {
-			Logger.dbg("collision start between " + entry.entIDA + " and " + entry.entIDB);
+			//Logger.dbg("collision start between " + entry.entIDA + " and " + entry.entIDB);
 			
 			Entity entIDA = Game_AI_TestBed.instance().getLevel().getWorld().getEntity(entry.entIDA);
 			if (entIDA != null && entIDA != Game_AI_TestBed.instance().getLevel().getPlayerEntity()) {
@@ -192,7 +207,7 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 		listCollisionQueueStart.clear();
 		
 		for (CollisionEntry entry : listCollisionQueueEnd) {
-			Logger.dbg("collision end between " + entry.entIDA + " and " + entry.entIDB);
+			//Logger.dbg("collision end between " + entry.entIDA + " and " + entry.entIDB);
 		}
 		listCollisionQueueEnd.clear();
 	}
