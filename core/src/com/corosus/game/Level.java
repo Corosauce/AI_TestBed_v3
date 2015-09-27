@@ -7,18 +7,21 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.corosus.game.factory.EntityFactory;
 import com.corosus.game.system.GameInput;
 import com.corosus.game.system.MapRender;
+import com.corosus.game.system.PhysicsWrapper;
 import com.corosus.game.system.SpriteRender;
 import com.corosus.game.system.SpriteSimulate;
-import com.corosus.game.system.WorldSys;
+import com.corosus.game.system.WorldSim;
 import com.corosus.game.system.WorldTimer;
 
 public class Level {
 
 	
-	private World world;
+	private World worldArtemis;
+	private com.badlogic.gdx.physics.box2d.World worldBox2D;
 	
 	private TiledMap map;
 	private String levelName = "test_002.tmx";
@@ -50,22 +53,25 @@ public class Level {
 		WorldConfiguration worldConfig = new WorldConfiguration();
 		worldConfig.setSystem(new WorldTimer(GameSettings.tickDelayGame));
 		worldConfig.setSystem(new GameInput(GameSettings.tickDelayGame));
-		worldConfig.setSystem(new WorldSys(GameSettings.tickDelayGame));
+		//process world
+		worldConfig.setSystem(new WorldSim(GameSettings.tickDelayGame));
+		//process physics
+		worldConfig.setSystem(new PhysicsWrapper(GameSettings.tickDelayGame));
+		//process entities that respond to physics
 		worldConfig.setSystem(new SpriteSimulate(GameSettings.tickDelayGame));
 		worldConfig.setSystem(new MapRender());
 		worldConfig.setSystem(new SpriteRender());
 		
+		worldArtemis = new World(worldConfig);
 		
-		
-		
-		world = new World(worldConfig);
+		worldBox2D = new com.badlogic.gdx.physics.box2d.World(new Vector2(0, 0), true);
 		
 		setPlayer(EntityFactory.createPlayer(100, 100).getId());
 	}
 	
 	public void process(float delta) {
-		world.setDelta(delta);
-		world.process();
+		worldArtemis.setDelta(delta);
+		worldArtemis.process();
 	}
 	
 	public void dispose() {
@@ -73,7 +79,7 @@ public class Level {
 	}
 	
 	public World getWorld() {
-		return world;
+		return worldArtemis;
 	}
 	
 	public void killEntity(Entity e) {
@@ -160,5 +166,13 @@ public class Level {
 
 	public float getPartialTick() {
 		return (Game_AI_TestBed.instance().getLevel().getStateTime() - WorldTimer.lastTime) / GameSettings.tickDelayGame;
+	}
+
+	public com.badlogic.gdx.physics.box2d.World getWorldBox2D() {
+		return worldBox2D;
+	}
+
+	public void setWorldBox2D(com.badlogic.gdx.physics.box2d.World worldBox2D) {
+		this.worldBox2D = worldBox2D;
 	}
 }

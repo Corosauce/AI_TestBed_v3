@@ -1,20 +1,27 @@
 package com.corosus.game.system;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+
+import net.mostlyoriginal.api.component.physics.Physics;
+import net.mostlyoriginal.game.util.VecUtil;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.artemis.systems.IntervalEntityProcessingSystem;
+import com.badlogic.gdx.math.Vector2;
 import com.corosus.game.Game_AI_TestBed;
 import com.corosus.game.Logger;
-import com.corosus.game.component.Health;
-import com.corosus.game.component.Position;
 import com.corosus.game.component.EntityData;
+import com.corosus.game.component.Health;
+import com.corosus.game.component.PhysicsData;
+import com.corosus.game.component.Position;
+import com.corosus.game.component.ProfileData;
 import com.corosus.game.component.Velocity;
 import com.corosus.game.entity.EnumEntityType;
-import com.corosus.game.factory.EntityFactory;
 
 @Wire
 public class SpriteSimulate extends IntervalEntityProcessingSystem {
@@ -22,10 +29,26 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 	private ComponentMapper<Position> mapPos;
 	private ComponentMapper<Health> mapHealth;
 	private ComponentMapper<Velocity> mapVelocity;
-	private ComponentMapper<EntityData> mapProfile;
+	private ComponentMapper<EntityData> mapData;
+	private ComponentMapper<ProfileData> mapProfile;
+	private ComponentMapper<PhysicsData> mapPhysics;
+	
+	private List<CollisionEntry> listCollisionQueueStart = new ArrayList<CollisionEntry>();
+	private List<CollisionEntry> listCollisionQueueEnd = new ArrayList<CollisionEntry>();
+	
+	public class CollisionEntry {
+		
+		public int entIDA;
+		public int entIDB;
+		
+		public CollisionEntry(int entIDA, int entIDB) {
+			this.entIDA = entIDA;
+			this.entIDB = entIDB;
+		}
+	}
 	
 	public SpriteSimulate(float interval) {
-		super(Aspect.all(Position.class, Health.class, Velocity.class, EntityData.class), interval);
+		super(Aspect.all(Position.class, Health.class, Velocity.class, EntityData.class, ProfileData.class, PhysicsData.class), interval);
 	}
 	
 	@Override
@@ -42,16 +65,39 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 		Health health = mapHealth.get(e);
 		Position pos = mapPos.get(e);
 		Velocity motion = mapVelocity.get(e);
-		EntityData profile = mapProfile.get(e);
+		EntityData data = mapData.get(e);
+		ProfileData profileData = mapProfile.get(e);
+		PhysicsData physics = mapPhysics.get(e);
+		
+		if (physics.needInit) {
+			physics.needInit = false;
+			physics.initPhysics(e.id, pos.x, pos.y);
+		}
 		
 		Random rand = new Random();
 		
-		if (profile.type == EnumEntityType.SPRITE) {
-			if (profile.aiControlled) {
-				motion.x = rand.nextInt(2)-rand.nextInt(2);
-				motion.y = rand.nextInt(2)-rand.nextInt(2);
+		if (data.type == EnumEntityType.SPRITE) {
+			if (data.aiControlled) {
 				
-				health.hp--;
+				//TEMP DUMMY AI
+				profileData.moveSpeed = 5;
+				
+				/*motion.x = rand.nextInt(2)-rand.nextInt(2);
+				motion.y = rand.nextInt(2)-rand.nextInt(2);*/
+				
+				Entity player = Game_AI_TestBed.instance().getLevel().getPlayerEntity();
+				
+				if (player != null) {
+					
+					Position posPlayer = mapPos.get(player);
+					
+					Vector2 targVec = VecUtil.getTargetVector(pos.x, pos.y, posPlayer.x, posPlayer.y);
+					
+					motion.x = targVec.x * profileData.moveSpeed;
+					motion.y = targVec.y * profileData.moveSpeed;
+				}
+				
+				//health.hp--;
 				
 				//if (rand.nextInt(10) == 0) {
 				for (int i = 0; i < 25; i++) {
@@ -60,12 +106,16 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 					float vecY = rand.nextFloat() * speed - rand.nextFloat() * speed;
 					//EntityFactory.createEntity(EnumEntityType.PROJECTILE, pos.x, pos.y, vecX, vecY);
 				}
+				
+				
 			} else {
 				
 			}
-		} else if (profile.type == EnumEntityType.PROJECTILE) {
+		} else if (data.type == EnumEntityType.PROJECTILE) {
 			if (health.lifeTime > 100) {
-				Game_AI_TestBed.instance().getLevel().killEntity(e);
+				
+				//TODO: REOCATE TO PROPER CLEANUP METHOD
+				killEntity(physics, e);
 			}
 		}
 		
@@ -83,6 +133,10 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 		motion.y *= drag;
 		
 		health.lifeTime++;
+		
+		//possibly relocate this code to physicswrapper system
+		physics.body.setTransform(pos.x, pos.y, 0);
+		physics.body.applyForceToCenter(0, 0, true);
 		
 		if (pos.x < 0) {
 			pos.setPos(0, pos.y);
@@ -107,15 +161,52 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 		
 		if (health.hp <= 0) {
 			//System.out.println("killed entity");
-			Game_AI_TestBed.instance().getLevel().killEntity(e);
+			killEntity(physics, e);
 		}
+	}
+	
+	public void killEntity(PhysicsData phys, Entity e) {
+		phys.dispose();
+		Game_AI_TestBed.instance().getLevel().killEntity(e);
 	}
 
 	@Override
 	protected void processSystem() {
 		super.processSystem();
 		
-		//Logger.dbg("tick " + this);
+		for (CollisionEntry entry : listCollisionQueueStart) {
+			Logger.dbg("collision start between " + entry.entIDA + " and " + entry.entIDB);
+			
+			Entity entIDA = Game_AI_TestBed.instance().getLevel().getWorld().getEntity(entry.entIDA);
+			if (entIDA != null && entIDA != Game_AI_TestBed.instance().getLevel().getPlayerEntity()) {
+				Health health = mapHealth.get(entIDA);
+				health.hp = 0;
+			}
+			
+			Entity entIDB = Game_AI_TestBed.instance().getLevel().getWorld().getEntity(entry.entIDB);
+			if (entIDB != null && entIDB != Game_AI_TestBed.instance().getLevel().getPlayerEntity()) {
+				Health health = mapHealth.get(entIDB);
+				health.hp = 0;
+			}
+		}
+		listCollisionQueueStart.clear();
+		
+		for (CollisionEntry entry : listCollisionQueueEnd) {
+			Logger.dbg("collision end between " + entry.entIDA + " and " + entry.entIDB);
+		}
+		listCollisionQueueEnd.clear();
+	}
+
+	public List<CollisionEntry> getListCollisionQueueStart() {
+		return listCollisionQueueStart;
+	}
+	
+	public void triggerCollisionEvent(int entIDA, int entIDB) {
+		listCollisionQueueStart.add(new CollisionEntry(entIDA, entIDB));
+	}
+	
+	public void triggerCollisionEndEvent(int entIDA, int entIDB) {
+		listCollisionQueueEnd.add(new CollisionEntry(entIDA, entIDB));
 	}
 	
 }

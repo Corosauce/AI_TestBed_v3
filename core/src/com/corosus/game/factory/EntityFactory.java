@@ -4,6 +4,7 @@ import com.artemis.Entity;
 import com.artemis.utils.EntityBuilder;
 import com.corosus.game.Game_AI_TestBed;
 import com.corosus.game.component.Health;
+import com.corosus.game.component.PhysicsData;
 import com.corosus.game.component.PlayerData;
 import com.corosus.game.component.Position;
 import com.corosus.game.component.EntityData;
@@ -63,7 +64,9 @@ public class EntityFactory {
 		.with(new Position(posX, posY))
 		.with(new Velocity(motionX, motionY))
 		.with(data)
-		.with(new ProfileData());
+		.with(new ProfileData())
+		.with(new PhysicsData())
+		;
 		return ent;
 	}
 	

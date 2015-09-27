@@ -22,7 +22,7 @@ import com.corosus.game.system.GameInput;
 import com.corosus.game.system.MapRender;
 import com.corosus.game.system.SpriteRender;
 import com.corosus.game.system.SpriteSimulate;
-import com.corosus.game.system.WorldSys;
+import com.corosus.game.system.WorldSim;
 
 public class Game_AI_TestBed extends Game {
 

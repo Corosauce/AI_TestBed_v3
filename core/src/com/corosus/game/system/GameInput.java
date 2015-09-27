@@ -119,6 +119,10 @@ public class GameInput extends IntervalEntityProcessingSystem {
 			Position pos = mapPos.get(player);
 			ProfileData profile = mapProfile.get(player);
 			
+			//force no movement unless input
+			vel.x = 0F;
+			vel.y = 0;
+			
 			//process controller
 			if (controller != null) {
 				System.out.println("data: " + controller.getAxis(XBox360Pad.AXIS_LEFT_X));
@@ -140,9 +144,6 @@ public class GameInput extends IntervalEntityProcessingSystem {
 			}
 			
 			try {
-				
-				vel.x = 0F;
-				vel.y = 0;
 
 				boolean gridMovement = true;
 				

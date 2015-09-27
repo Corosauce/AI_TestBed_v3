@@ -77,7 +77,7 @@ public class SpriteRender extends IntervalEntityProcessingSystem {
 		float rX = pos.prevX + (pos.x - pos.prevX) * partialTick;
 		float rY = pos.prevY + (pos.y - pos.prevY) * partialTick;
 		
-		Logger.dbg("rx: " + rX + " vs x: " + pos.x + " delta: " + level.getWorld().getDelta() + " state time: " + level.getStateTime() + " partialTick: " + partialTick);
+		//Logger.dbg("rx: " + rX + " vs x: " + pos.x + " delta: " + level.getWorld().getDelta() + " state time: " + level.getStateTime() + " partialTick: " + partialTick);
 		
 		render.anims.get(render.state).get(render.orient).draw(level.getBatch(), level.getStateTime(), level.getWorld().getDelta(), rX - Cst.SPRITESIZE / 2, rY - Cst.SPRITESIZE / 2);
 	}

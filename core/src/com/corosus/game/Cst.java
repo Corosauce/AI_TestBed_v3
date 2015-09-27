@@ -5,6 +5,7 @@ package com.corosus.game;
  */
 public class Cst {
     public static int SPRITESIZE = 64;
+    public static int SPRITECOLLIDESIZE = 16;
     public static int TILESIZE   = 64;
     public static boolean  DEBUG = true;
 }

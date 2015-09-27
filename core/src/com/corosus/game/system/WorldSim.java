@@ -14,11 +14,11 @@ import com.corosus.game.component.RenderData;
 import com.corosus.game.entity.EnumEntityType;
 import com.corosus.game.factory.EntityFactory;
 
-public class WorldSys extends IntervalEntityProcessingSystem {
+public class WorldSim extends IntervalEntityProcessingSystem {
 	
 	public long gameTime = 0;
 	
-	public WorldSys(float interval) {
+	public WorldSim(float interval) {
 		super(Aspect.exclude(), interval);
 	}
 
