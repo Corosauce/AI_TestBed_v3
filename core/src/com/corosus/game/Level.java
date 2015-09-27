@@ -13,6 +13,7 @@ import com.corosus.game.system.MapRender;
 import com.corosus.game.system.SpriteRender;
 import com.corosus.game.system.SpriteSimulate;
 import com.corosus.game.system.WorldSys;
+import com.corosus.game.system.WorldTimer;
 
 public class Level {
 
@@ -45,12 +46,15 @@ public class Level {
 		
 		setMapRenderer(new OrthogonalTiledMapRenderer(map));
 		
+		//systems tick in order added by default
 		WorldConfiguration worldConfig = new WorldConfiguration();
-		worldConfig.setSystem(new SpriteSimulate(GameSettings.tickDelayGame));
+		worldConfig.setSystem(new WorldTimer(GameSettings.tickDelayGame));
+		worldConfig.setSystem(new GameInput(GameSettings.tickDelayGame));
 		worldConfig.setSystem(new WorldSys(GameSettings.tickDelayGame));
+		worldConfig.setSystem(new SpriteSimulate(GameSettings.tickDelayGame));
 		worldConfig.setSystem(new MapRender());
 		worldConfig.setSystem(new SpriteRender());
-		worldConfig.setSystem(new GameInput(GameSettings.tickDelayGame));
+		
 		
 		
 		
@@ -152,5 +156,9 @@ public class Level {
 	
 	public int getLevelSizeY() {
 		return mapTilesY * mapTileHeight;
+	}
+
+	public float getPartialTick() {
+		return (Game_AI_TestBed.instance().getLevel().getStateTime() - WorldTimer.lastTime) / GameSettings.tickDelayGame;
 	}
 }

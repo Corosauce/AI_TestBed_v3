@@ -18,6 +18,7 @@ import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.math.Vector2;
 import com.corosus.game.Game_AI_TestBed;
+import com.corosus.game.Logger;
 import com.corosus.game.client.assets.Orient;
 import com.corosus.game.component.Position;
 import com.corosus.game.component.ProfileData;
@@ -53,6 +54,8 @@ public class GameInput extends IntervalEntityProcessingSystem {
 	
 	@Override
 	protected void processSystem() {
+		
+		//Logger.dbg("tick " + this);
 		
 		if (controller == null) {
 			if (Controllers.getControllers().size > 0) {
@@ -138,7 +141,7 @@ public class GameInput extends IntervalEntityProcessingSystem {
 			
 			try {
 				
-				vel.x = 0;
+				vel.x = 0F;
 				vel.y = 0;
 
 				boolean gridMovement = true;

@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.corosus.game.Cst;
 import com.corosus.game.GameSettings;
 import com.corosus.game.Game_AI_TestBed;
+import com.corosus.game.Logger;
 import com.corosus.game.client.assets.GameAssetManager;
 import com.corosus.game.component.Position;
 import com.corosus.game.component.RenderData;
@@ -31,6 +32,8 @@ public class MapRender extends IntervalEntityProcessingSystem {
 	@Override
 	protected void processSystem() {
 		
+		//Logger.dbg("tick " + this);
+		
 		Game_AI_TestBed game = Game_AI_TestBed.instance();
 		
 		game.getLevel().setStateTime(game.getLevel().getStateTime() + game.getLevel().getWorld().getDelta());
@@ -46,10 +49,15 @@ public class MapRender extends IntervalEntityProcessingSystem {
 		if (player != null) {
 			Position pos = mapPos.get(player);
 			
-			Game_AI_TestBed.instance().getCamera().position.x = pos.x;
-			Game_AI_TestBed.instance().getCamera().position.y = pos.y;
+			float partialTick = Game_AI_TestBed.instance().getLevel().getPartialTick();
 			
-			System.out.println(pos.x + " - " + pos.y);
+			float rX = pos.prevX + (pos.x - pos.prevX) * partialTick;
+			float rY = pos.prevY + (pos.y - pos.prevY) * partialTick;
+			
+			Game_AI_TestBed.instance().getCamera().position.x = rX;
+			Game_AI_TestBed.instance().getCamera().position.y = rY;
+			
+			//System.out.println(pos.x + " - " + pos.y);
 		}
 		
 		

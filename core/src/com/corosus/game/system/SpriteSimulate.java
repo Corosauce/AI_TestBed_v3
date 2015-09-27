@@ -8,6 +8,7 @@ import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.artemis.systems.IntervalEntityProcessingSystem;
 import com.corosus.game.Game_AI_TestBed;
+import com.corosus.game.Logger;
 import com.corosus.game.component.Health;
 import com.corosus.game.component.Position;
 import com.corosus.game.component.EntityData;
@@ -69,8 +70,12 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 		}
 		
 		//physics
+		pos.prevX = pos.x;
+		pos.prevY = pos.y;
+		
 		pos.x += motion.x;
 		pos.y += motion.y;
+		
 		
 		float drag = 0.15F;
 		
@@ -80,19 +85,19 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 		health.lifeTime++;
 		
 		if (pos.x < 0) {
-			pos.x = 0;
+			pos.setPos(0, pos.y);
 		}
 		
 		if (pos.x > Game_AI_TestBed.instance().getLevel().getLevelSizeX()) {
-			pos.x = Game_AI_TestBed.instance().getLevel().getLevelSizeX();
+			pos.setPos(Game_AI_TestBed.instance().getLevel().getLevelSizeX(), pos.y);
 		}
 		
 		if (pos.y < 0) {
-			pos.y = 0;
+			pos.setPos(pos.x, 0);
 		}
 		
 		if (pos.y > Game_AI_TestBed.instance().getLevel().getLevelSizeY()) {
-			pos.y = Game_AI_TestBed.instance().getLevel().getLevelSizeY();
+			pos.setPos(pos.x, Game_AI_TestBed.instance().getLevel().getLevelSizeY());
 		}
 		
 		/*if (pos.x < 0 || pos.x > Game_AI_TestBed.instance().getLevel().getLevelSizeX() || pos.y < 0 || pos.y > Game_AI_TestBed.instance().getLevel().getLevelSizeY()) {
@@ -106,4 +111,11 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 		}
 	}
 
+	@Override
+	protected void processSystem() {
+		super.processSystem();
+		
+		//Logger.dbg("tick " + this);
+	}
+	
 }

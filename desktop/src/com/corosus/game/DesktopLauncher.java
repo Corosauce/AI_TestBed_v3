@@ -9,6 +9,8 @@ public class DesktopLauncher {
 		cfg.title = "AI_TestBed";
 		cfg.width = 960;
 		cfg.height = 640;
+		cfg.vSyncEnabled = false;
+		//cfg.foregroundFPS = 0;
 		new LwjglApplication(new Game_AI_TestBed(), cfg);
 	}
 }

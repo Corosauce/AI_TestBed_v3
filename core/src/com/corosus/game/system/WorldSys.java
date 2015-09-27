@@ -7,6 +7,7 @@ import com.artemis.Entity;
 import com.artemis.systems.IntervalEntityProcessingSystem;
 import com.artemis.utils.EntityBuilder;
 import com.corosus.game.Game_AI_TestBed;
+import com.corosus.game.Logger;
 import com.corosus.game.component.Health;
 import com.corosus.game.component.Position;
 import com.corosus.game.component.RenderData;
@@ -29,9 +30,10 @@ public class WorldSys extends IntervalEntityProcessingSystem {
 	@Override
 	protected void processSystem() {
 		
+		//Logger.dbg("tick " + this);
 		
 		gameTime++;
-		if (gameTime % 20 == 0) {
+		if (gameTime % 2 == 0) {
 			//System.out.println("spawn ent");
 			Random rand = new Random();
 			EntityFactory.createEntity(EnumEntityType.SPRITE, rand.nextInt(Game_AI_TestBed.instance().getLevel().getLevelSizeX()), rand.nextInt(Game_AI_TestBed.instance().getLevel().getLevelSizeY()));
