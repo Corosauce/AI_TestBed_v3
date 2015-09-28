@@ -96,12 +96,13 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 		
 		for (int i = 0; i < profileData.listRoutines.size(); i++) {
 			ActionRoutine action = profileData.listRoutines.get(i);
-			if (!action.isComplete()) {
-				action.tick(listComponents);
-			} else {
+			action.tick(listComponents);
+			if (action.isActive()) {
+				
+			}/* else {
 				action.dispose();
 				profileData.listRoutines.remove(i--);
-			}
+			}*/
 		}
 		
 		Random rand = new Random();

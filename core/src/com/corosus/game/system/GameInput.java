@@ -215,7 +215,15 @@ public class GameInput extends IntervalEntityProcessingSystem {
 					velX *= dodgeSpeed;
 					velY *= dodgeSpeed;
 					
-					profile.listRoutines.add(new ActionRoutineDodge(3, new Vector2(velX, velY)));
+					//try to activate the dodge which is currently added to index 0
+					//TODO: assign a more sane action/skill system
+					boolean result = profile.listRoutines.get(0).tryActivate(new Vector2(velX, velY));
+					
+					if (result) {
+						Logger.dbg("dodged!");
+					} else {
+						Logger.dbg("cant dodge");
+					}
 				}
 				
 				

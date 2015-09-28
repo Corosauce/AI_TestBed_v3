@@ -2,6 +2,7 @@ package com.corosus.game.factory;
 
 import com.artemis.Entity;
 import com.artemis.utils.EntityBuilder;
+import com.badlogic.gdx.math.Vector2;
 import com.corosus.game.Game_AI_TestBed;
 import com.corosus.game.component.Health;
 import com.corosus.game.component.PhysicsData;
@@ -11,6 +12,7 @@ import com.corosus.game.component.EntityData;
 import com.corosus.game.component.ProfileData;
 import com.corosus.game.component.RenderData;
 import com.corosus.game.component.Velocity;
+import com.corosus.game.entity.ActionRoutineDodge;
 import com.corosus.game.entity.EnumEntityType;
 
 public class EntityFactory {
@@ -60,11 +62,15 @@ public class EntityFactory {
 	}
 	
 	public static EntityBuilder getEntityTemplate_Common(EntityData data, float posX, float posY, float motionX, float motionY) {
+		
+		ProfileData profile = new ProfileData();
+		profile.addAction(new ActionRoutineDodge(3));
+		
 		EntityBuilder ent = new EntityBuilder(Game_AI_TestBed.instance().getLevel().getWorld())
 		.with(new Position(posX, posY))
 		.with(new Velocity(motionX, motionY))
 		.with(data)
-		.with(new ProfileData())
+		.with(profile)
 		.with(new PhysicsData())
 		;
 		return ent;

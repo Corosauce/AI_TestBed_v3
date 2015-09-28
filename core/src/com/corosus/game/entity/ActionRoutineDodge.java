@@ -9,10 +9,9 @@ import com.corosus.game.component.Velocity;
 public class ActionRoutineDodge extends ActionRoutine {
 
 	public Vector2 motion;
-	
-	public ActionRoutineDodge(int tickLength, Vector2 motion) {
+
+	public ActionRoutineDodge(int tickLength) {
 		super(tickLength);
-		this.motion = motion;
 	}
 	
 	@Override
@@ -23,6 +22,15 @@ public class ActionRoutineDodge extends ActionRoutine {
 		
 		vel.x = motion.x;
 		vel.y = motion.y;
+	}
+	
+	@Override
+	public boolean tryActivate(Object... objects) {
+		boolean canActivate = super.tryActivate(objects);
+		if (canActivate) {
+			motion = (Vector2) objects[0];
+		}
+		return canActivate;
 	}
 	
 }
