@@ -14,9 +14,11 @@ import com.corosus.game.Logger;
 import com.corosus.game.client.assets.ActorState;
 import com.corosus.game.client.assets.GameAssetManager;
 import com.corosus.game.client.assets.Orient;
+import com.corosus.game.component.EntityData;
 import com.corosus.game.component.Position;
 import com.corosus.game.component.RenderData;
 import com.corosus.game.component.Velocity;
+import com.corosus.game.entity.EnumEntityType;
 
 @Wire
 public class SpriteRender extends IntervalEntityProcessingSystem {
@@ -24,6 +26,7 @@ public class SpriteRender extends IntervalEntityProcessingSystem {
 	private ComponentMapper<RenderData> mapRender;
 	private ComponentMapper<Position> mapPos;
 	private ComponentMapper<Velocity> mapVelocity;
+	private ComponentMapper<EntityData> mapEntityData;
 	
 	public SpriteRender() {
 		super(Aspect.all(Position.class, RenderData.class, Velocity.class), GameSettings.tickDelayRender);
@@ -57,16 +60,21 @@ public class SpriteRender extends IntervalEntityProcessingSystem {
 		RenderData render = mapRender.get(e);
 		Position pos = mapPos.get(e);
 		Velocity vel = mapVelocity.get(e);
+		EntityData entData = mapEntityData.get(e);
 		
 		//render.orient = Orient.fromVector(new Vector2(vel.x, vel.y));
 		
-		//render.orient = Orient.fromAngleOld(pos.rotationYaw);
-		
-		/*if (vel.x != 0 || vel.y != 0) {
-			render.state = ActorState.WALK;
-		} else {
-			render.state = ActorState.STATIC;
-		}*/
+		if (entData.type == EnumEntityType.SPRITE) {
+			render.orient = Orient.fromAngleOld(pos.rotationYaw);
+			
+			if (vel.x != 0 || vel.y != 0) {
+				render.state = ActorState.WALK;
+			} else {
+				render.state = ActorState.STATIC;
+			}
+		} else if (entData.type == EnumEntityType.PROJECTILE) {
+			
+		}
 		
 		//render.anims = GameAssetManager.INSTANCE.getRenderAssets("imgs/sprites/tanya.json");
 		

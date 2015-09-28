@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javax.vecmath.Vector2f;
+
 import net.mostlyoriginal.game.util.VecUtil;
 
 import com.artemis.Aspect;
@@ -74,16 +76,16 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 		if (physics.needInit) {
 			physics.needInit = false;
 			
-			byte categoryBits = 0;
+			short categoryBits = 0;
 			if (data.type == EnumEntityType.SPRITE) {
 				categoryBits = PhysicsData.COLLIDE_SPRITE;
 			} else if (data.type == EnumEntityType.PROJECTILE) {
 				categoryBits = PhysicsData.COLLIDE_PROJECTILE;
 			}
 			
-			byte maskBits = 0;
+			short maskBits = 0;
 			if (data.type == EnumEntityType.SPRITE) {
-				maskBits = PhysicsData.COLLIDE_SPRITE;
+				maskBits = (short) (PhysicsData.COLLIDE_SPRITE | PhysicsData.COLLIDE_PROJECTILE);
 			} else if (data.type == EnumEntityType.PROJECTILE) {
 				maskBits = PhysicsData.COLLIDE_SPRITE;
 			}
@@ -122,24 +124,34 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 					
 					Position posPlayer = mapPos.get(player);
 					
-					Vector2 targVec = VecUtil.getTargetVector(pos.x, pos.y, posPlayer.x, posPlayer.y);
+					float dist = VecUtil.getDist(new Vector2f(pos.x, pos.y), new Vector2f(posPlayer.x, posPlayer.y));
 					
-					motion.x = targVec.x * profileData.moveSpeed;
-					motion.y = targVec.y * profileData.moveSpeed;
-					
-					if (Game_AI_TestBed.instance().getLevel().getGameTime() % 2 == 0) {
-						//for (int i = 0; i < 1; i++) {
-						if (rand.nextInt(5) == 0) {
-							//System.out.println("spawn");
-							float speed = profileData.moveSpeed * 4F;
-							//float vecX = rand.nextFloat() * speed - rand.nextFloat() * speed;
-							//float vecY = rand.nextFloat() * speed - rand.nextFloat() * speed;
-							
-							//Vector2 targVec = VecUtil.getTargetVector(pos.x, pos.y, posPlayer.x, posPlayer.y);
-							
-							float vecX = targVec.x * speed;
-							float vecY = targVec.y * speed;
-							EntityFactory.createEntity(EnumEntityType.PROJECTILE, pos.x + vecX * 2, pos.y + vecY * 2, vecX, vecY);
+					if (dist < 400) {
+						Vector2f targVec = VecUtil.getTargetVector(pos.x, pos.y, posPlayer.x, posPlayer.y);
+						
+						motion.x = targVec.x * profileData.moveSpeed;
+						motion.y = targVec.y * profileData.moveSpeed;
+						
+						//make rotationYaw be aimed at motion
+						double angle = Math.toDegrees(Math.atan2(motion.y, motion.x));
+						if (angle < 0) angle += 360;
+						
+						pos.rotationYaw = (float) angle;
+						
+						if (Game_AI_TestBed.instance().getLevel().getGameTime() % 2 == 0) {
+							//for (int i = 0; i < 1; i++) {
+							if (rand.nextInt(5) == 0) {
+								//System.out.println("spawn");
+								float speed = profileData.moveSpeed * 4F;
+								//float vecX = rand.nextFloat() * speed - rand.nextFloat() * speed;
+								//float vecY = rand.nextFloat() * speed - rand.nextFloat() * speed;
+								
+								//Vector2 targVec = VecUtil.getTargetVector(pos.x, pos.y, posPlayer.x, posPlayer.y);
+								
+								float vecX = targVec.x * speed;
+								float vecY = targVec.y * speed;
+								EntityFactory.createEntity(EnumEntityType.PROJECTILE, pos.x + vecX * 2, pos.y + vecY * 2, vecX, vecY);
+							}
 						}
 					}
 				}
@@ -162,7 +174,7 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 			
 			if (health.lifeTime > 100) {
 				
-				//TODO: REOCATE TO PROPER CLEANUP METHOD
+				//TODO: RELOCATE TO PROPER CLEANUP METHOD
 				killEntity(physics, e);
 			}
 		}

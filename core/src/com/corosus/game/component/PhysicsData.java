@@ -34,7 +34,7 @@ public class PhysicsData extends Component {
 		
 	}
 	
-	public void initPhysics(int entID, float x, float y, byte categoryBits, byte maskBits) {
+	public void initPhysics(int entID, float x, float y, short categoryBits, short maskBits) {
 		World world = Game_AI_TestBed.instance().getLevel().getWorldBox2D();
 		
 		/*if (world.isLocked()) {

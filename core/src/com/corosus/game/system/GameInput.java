@@ -20,13 +20,15 @@ import com.badlogic.gdx.math.Vector2;
 import com.corosus.game.Game_AI_TestBed;
 import com.corosus.game.Logger;
 import com.corosus.game.client.assets.Orient;
+import com.corosus.game.client.input.XBox360Pad;
 import com.corosus.game.component.EntityData;
 import com.corosus.game.component.Health;
 import com.corosus.game.component.Position;
 import com.corosus.game.component.ProfileData;
 import com.corosus.game.component.Velocity;
 import com.corosus.game.entity.ActionRoutineDodge;
-import com.corosus.game.input.XBox360Pad;
+import com.corosus.game.entity.EnumEntityType;
+import com.corosus.game.factory.EntityFactory;
 
 @Wire
 public class GameInput extends IntervalEntityProcessingSystem {
@@ -37,6 +39,7 @@ public class GameInput extends IntervalEntityProcessingSystem {
 	//mouse
 	public static float mouseX = 0;
 	public static float mouseY = 0;
+	public static HashMap<Integer, Boolean> lookupMouseDown = new HashMap<Integer, Boolean>();
 	
 	//xbox controller
 	public static Controller controller = null;
@@ -48,11 +51,11 @@ public class GameInput extends IntervalEntityProcessingSystem {
 	public GameInput(float interval) {
 		super(Aspect.exclude(), interval);
 		
-		lookupKeysDown.put(Input.Keys.W, false);
+		/*lookupKeysDown.put(Input.Keys.W, false);
 		lookupKeysDown.put(Input.Keys.A, false);
 		lookupKeysDown.put(Input.Keys.S, false);
 		lookupKeysDown.put(Input.Keys.D, false);
-		lookupKeysDown.put(Input.Keys.SHIFT_LEFT, false);
+		lookupKeysDown.put(Input.Keys.SHIFT_LEFT, false);*/
 	}
 
 	@Override
@@ -152,45 +155,45 @@ public class GameInput extends IntervalEntityProcessingSystem {
 				boolean gridMovement = true;
 				
 				if (gridMovement) {
-					if (lookupKeysDown.get(Input.Keys.A)) {
+					if (keyDown(Input.Keys.A)) {
 						vel.x += -profile.moveSpeed;
 						//x = true;
 					}
 					
-					if (lookupKeysDown.get(Input.Keys.D)) {
+					if (keyDown(Input.Keys.D)) {
 						vel.x += profile.moveSpeed;
 						//if (x) vel.x = 0;
 					}
 					
-					if (lookupKeysDown.get(Input.Keys.W)) {
+					if (keyDown(Input.Keys.W)) {
 						vel.y += profile.moveSpeed;
 						//y = true;
 					}
 					
-					if (lookupKeysDown.get(Input.Keys.S)) {
+					if (keyDown(Input.Keys.S)) {
 						vel.y += -profile.moveSpeed;
 						//if (y) vel.y = 0;
 					}
 				} else {
-					if (lookupKeysDown.get(Input.Keys.W)) {
+					if (keyDown(Input.Keys.W)) {
 						double rot = Math.toRadians(pos.rotationYaw);
 						vel.y += (float) (Math.sin(rot));
 						vel.x += (float) (Math.cos(rot));
 					} 
 					
-					if (lookupKeysDown.get(Input.Keys.S)) {
+					if (keyDown(Input.Keys.S)) {
 						double rot = Math.toRadians(pos.rotationYaw + 180);
 						vel.y += (float) (Math.sin(rot));
 						vel.x += (float) (Math.cos(rot));
 					}
 					
-					if (lookupKeysDown.get(Input.Keys.A)) {
+					if (keyDown(Input.Keys.A)) {
 						double rot = Math.toRadians(pos.rotationYaw + 90);
 						vel.y += (float) (Math.sin(rot));
 						vel.x += (float) (Math.cos(rot));
 					} 
 					
-					if (lookupKeysDown.get(Input.Keys.D)) {
+					if (keyDown(Input.Keys.D)) {
 						double rot = Math.toRadians(pos.rotationYaw - 90);
 						vel.y += (float) (Math.sin(rot));
 						vel.x += (float) (Math.cos(rot));
@@ -199,7 +202,7 @@ public class GameInput extends IntervalEntityProcessingSystem {
 				}
 				
 				//dodge
-				if (lookupKeysDown.get(Input.Keys.SHIFT_LEFT)) {
+				if (keyDown(Input.Keys.SHIFT_LEFT)) {
 					
 					float velX = vel.x;
 					float velY = vel.y;
@@ -236,6 +239,14 @@ public class GameInput extends IntervalEntityProcessingSystem {
 				
 				vel.x *= profile.moveSpeed;
 				vel.y *= profile.moveSpeed;
+				
+				//mouse shoot
+				if (mouseDown(0)) {
+					double rot = Math.toRadians(pos.rotationYaw + 90);
+					float vecX = (float) (Math.sin(rot)) * profile.moveSpeed * 2F;
+					float vecY = (float) (-Math.cos(rot)) * profile.moveSpeed * 2F;
+					EntityFactory.createEntity(EnumEntityType.PROJECTILE, pos.x + vecX, pos.y + vecY, vecX, vecY);
+				}
 				
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -278,6 +289,7 @@ public class GameInput extends IntervalEntityProcessingSystem {
 			/*vel.x = -(pos.x - mapCoordX);
 			vel.y = -(pos.y - mapCoordY);*/
 			
+			//make rotationYaw be aimed at mouse
 			float vecX = -(pos.x - mapCoordX);
 			float vecY = -(pos.y - mapCoordY);
 			
@@ -292,6 +304,16 @@ public class GameInput extends IntervalEntityProcessingSystem {
 		}
 		
 		//super.processSystem();
+	}
+	
+	public boolean keyDown(int keyCode) {
+		if (!lookupKeysDown.containsKey(keyCode)) return false;
+		return lookupKeysDown.get(keyCode);
+	}
+	
+	public boolean mouseDown(int buttonCode) {
+		if (!lookupMouseDown.containsKey(buttonCode)) return false;
+		return lookupMouseDown.get(buttonCode);
 	}
 
 }

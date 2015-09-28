@@ -1,4 +1,4 @@
-package com.corosus.game.input;
+package com.corosus.game.client.input;
 
 import com.badlogic.gdx.controllers.PovDirection;
 
