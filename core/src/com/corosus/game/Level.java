@@ -29,7 +29,7 @@ public class Level {
 	private SpriteBatch batch;
 
 	
-	
+	private long gameTime = 0;
 	private float stateTime = 0;
 	
 	private int entityCount = 0;
@@ -174,5 +174,13 @@ public class Level {
 
 	public void setWorldBox2D(com.badlogic.gdx.physics.box2d.World worldBox2D) {
 		this.worldBox2D = worldBox2D;
+	}
+
+	public long getGameTime() {
+		return gameTime;
+	}
+
+	public void setGameTime(long gameTime) {
+		this.gameTime = gameTime;
 	}
 }

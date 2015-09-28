@@ -11,4 +11,7 @@ public class Health extends Component {
 		this.hp = startHealth;
 	}
 	
+	public boolean isDead() {
+		return hp <= 0;
+	}
 }

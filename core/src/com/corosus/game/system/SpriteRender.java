@@ -60,13 +60,13 @@ public class SpriteRender extends IntervalEntityProcessingSystem {
 		
 		//render.orient = Orient.fromVector(new Vector2(vel.x, vel.y));
 		
-		render.orient = Orient.fromAngleOld(pos.rotationYaw);
+		//render.orient = Orient.fromAngleOld(pos.rotationYaw);
 		
-		if (vel.x != 0 || vel.y != 0) {
+		/*if (vel.x != 0 || vel.y != 0) {
 			render.state = ActorState.WALK;
 		} else {
 			render.state = ActorState.STATIC;
-		}
+		}*/
 		
 		//render.anims = GameAssetManager.INSTANCE.getRenderAssets("imgs/sprites/tanya.json");
 		
@@ -79,7 +79,12 @@ public class SpriteRender extends IntervalEntityProcessingSystem {
 		
 		//Logger.dbg("rx: " + rX + " vs x: " + pos.x + " delta: " + level.getWorld().getDelta() + " state time: " + level.getStateTime() + " partialTick: " + partialTick);
 		
-		render.anims.get(render.state).get(render.orient).draw(level.getBatch(), level.getStateTime(), level.getWorld().getDelta(), rX - Cst.SPRITESIZE / 2, rY - Cst.SPRITESIZE / 2);
+		try {
+			render.anims.get(render.state).get(render.orient).draw(level.getBatch(), level.getStateTime(), level.getWorld().getDelta(), rX - Cst.SPRITESIZE / 2, rY - Cst.SPRITESIZE / 2);
+		} catch (Exception e2) {
+			e2.printStackTrace();
+		}
+		
 	}
 
 }

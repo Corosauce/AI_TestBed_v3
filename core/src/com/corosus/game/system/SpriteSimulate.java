@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import net.mostlyoriginal.api.component.physics.Physics;
 import net.mostlyoriginal.game.util.VecUtil;
 
 import com.artemis.Aspect;
@@ -24,6 +23,7 @@ import com.corosus.game.component.ProfileData;
 import com.corosus.game.component.Velocity;
 import com.corosus.game.entity.ActionRoutine;
 import com.corosus.game.entity.EnumEntityType;
+import com.corosus.game.factory.EntityFactory;
 
 @Wire
 public class SpriteSimulate extends IntervalEntityProcessingSystem {
@@ -110,23 +110,40 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 					
 					motion.x = targVec.x * profileData.moveSpeed;
 					motion.y = targVec.y * profileData.moveSpeed;
+					
+					if (Game_AI_TestBed.instance().getLevel().getGameTime() % 10 == 0) {
+						//for (int i = 0; i < 1; i++) {
+						if (rand.nextInt(10) == 0) {
+							System.out.println("spawn");
+							float speed = 10F;
+							//float vecX = rand.nextFloat() * speed - rand.nextFloat() * speed;
+							//float vecY = rand.nextFloat() * speed - rand.nextFloat() * speed;
+							
+							//Vector2 targVec = VecUtil.getTargetVector(pos.x, pos.y, posPlayer.x, posPlayer.y);
+							
+							float vecX = targVec.x * profileData.moveSpeed * 2;
+							float vecY = targVec.y * profileData.moveSpeed * 2;
+							EntityFactory.createEntity(EnumEntityType.PROJECTILE, pos.x + vecX * 2, pos.y + vecY * 2, vecX, vecY);
+						}
+					}
 				}
 				
 				//health.hp--;
 				
-				//if (rand.nextInt(10) == 0) {
-				for (int i = 0; i < 25; i++) {
-					float speed = 10F;
-					float vecX = rand.nextFloat() * speed - rand.nextFloat() * speed;
-					float vecY = rand.nextFloat() * speed - rand.nextFloat() * speed;
-					//EntityFactory.createEntity(EnumEntityType.PROJECTILE, pos.x, pos.y, vecX, vecY);
-				}
+				//
+				
 				
 				
 			} else {
 				
 			}
+			
+			/*float drag = 0.15F;
+			
+			motion.x *= drag;
+			motion.y *= drag;*/
 		} else if (data.type == EnumEntityType.PROJECTILE) {
+			
 			if (health.lifeTime > 100) {
 				
 				//TODO: REOCATE TO PROPER CLEANUP METHOD
@@ -141,17 +158,13 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 		pos.x += motion.x;
 		pos.y += motion.y;
 		
-		
-		float drag = 0.15F;
-		
-		motion.x *= drag;
-		motion.y *= drag;
-		
 		health.lifeTime++;
 		
 		//possibly relocate this code to physicswrapper system
-		physics.body.setTransform(pos.x, pos.y, 0);
-		physics.body.applyForceToCenter(0, 0, true);
+		if (physics.body != null) {
+			physics.body.setTransform(pos.x, pos.y, 0);
+			physics.body.applyForceToCenter(0, 0, true);
+		}
 		
 		if (pos.x < 0) {
 			pos.setPos(0, pos.y);
@@ -174,7 +187,7 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 			Game_AI_TestBed.instance().getLevel().killEntity(e);
 		}*/
 		
-		if (health.hp <= 0) {
+		if (health.isDead()) {
 			//System.out.println("killed entity");
 			killEntity(physics, e);
 		}

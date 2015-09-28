@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
 import com.corosus.game.Cst;
 import com.corosus.game.Game_AI_TestBed;
+import com.corosus.game.Logger;
 import com.corosus.game.entity.EnumEntityType;
 import com.corosus.game.physics.CollisionListener;
 
@@ -32,6 +33,11 @@ public class PhysicsData extends Component {
 	public void initPhysics(int entID, float x, float y) {
 		World world = Game_AI_TestBed.instance().getLevel().getWorldBox2D();
 		
+		if (world.isLocked()) {
+			System.out.println("CANCELLING PHYSICS, WORLD LOCKED");
+			return;
+		}
+		
 		collisionListener = new CollisionListener();
 		
 		world.setContactListener(collisionListener);
@@ -43,7 +49,7 @@ public class PhysicsData extends Component {
 		def.position.set(x, y);
 		
 		
-		
+		System.out.println("pos: " + x + " - " + y);
 		body = world.createBody(def);
 		
 		/*PolygonShape shape = new PolygonShape();
@@ -67,6 +73,12 @@ public class PhysicsData extends Component {
 	
 	public void dispose() {
 		World world = Game_AI_TestBed.instance().getLevel().getWorldBox2D();
-		world.destroyBody(body);
+		if (body != null) {
+			body.setUserData(null);
+			world.destroyBody(body);
+			body = null;
+		} else {
+			Logger.warn("tried to kill phys body when it was already null'd");
+		}
 	}
 }

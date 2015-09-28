@@ -22,6 +22,7 @@ public class PhysicsWrapper extends IntervalEntityProcessingSystem {
 		
 		//For last 2 params: making these values higher will give you a more correct simulation, at the cost of some performance.
 		Game_AI_TestBed.instance().getLevel().getWorldBox2D().step(GameSettings.tickDelayGame, 6, 2);
+		//Game_AI_TestBed.instance().getLevel().getWorldBox2D().step(GameSettings.tickDelayGame, 1, 1);
 		
 		super.processSystem();
 	}

@@ -1,0 +1,10 @@
+{
+static$up: {
+	class: animation,
+	spriteTable: imgs/sprites/prj_energyblast.png,
+	nframes: 2,
+	row: 0,
+	column: 0,
+	duration: 0.166
+}
+}

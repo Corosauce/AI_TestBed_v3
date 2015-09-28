@@ -198,6 +198,7 @@ public class GameInput extends IntervalEntityProcessingSystem {
 					
 				}
 				
+				//dodge
 				if (lookupKeysDown.get(Input.Keys.SHIFT_LEFT)) {
 					
 					float velX = vel.x;
@@ -209,10 +210,12 @@ public class GameInput extends IntervalEntityProcessingSystem {
 						velY /= length;
 					}
 					
-					velX *= profile.moveSpeed * 2;
-					velY *= profile.moveSpeed * 2;
+					float dodgeSpeed = profile.moveSpeed * 3;
 					
-					profile.listRoutines.add(new ActionRoutineDodge(5, new Vector2(velX, velY)));
+					velX *= dodgeSpeed;
+					velY *= dodgeSpeed;
+					
+					profile.listRoutines.add(new ActionRoutineDodge(3, new Vector2(velX, velY)));
 				}
 				
 				

@@ -33,7 +33,7 @@ public class EntityFactory {
 		//projectile
 		} else if (type == EnumEntityType.PROJECTILE) {
 			ent.with(new Health(1));
-			ent.with(new RenderData("civ1"));
+			ent.with(new RenderData("prj_energyblast"));
 		}
 		
 		Game_AI_TestBed.instance().getLevel().addToEntityCount(1);
