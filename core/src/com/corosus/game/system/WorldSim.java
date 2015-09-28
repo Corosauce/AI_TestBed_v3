@@ -34,12 +34,12 @@ public class WorldSim extends IntervalEntityProcessingSystem {
 		
 		gameTime++;
 		Game_AI_TestBed.instance().getLevel().setGameTime(gameTime);
-		if (gameTime % 2 == 0) {
+		if (gameTime % 3 == 0) {
 			//System.out.println("spawn ent");
-			//for (int i = 0; i < 5; i++) {
+			for (int i = 0; i < 1; i++) {
 				Random rand = new Random();
 				EntityFactory.createEntity(EnumEntityType.SPRITE, rand.nextInt(Game_AI_TestBed.instance().getLevel().getLevelSizeX()), rand.nextInt(Game_AI_TestBed.instance().getLevel().getLevelSizeY()));
-			//}
+			}
 			/*Entity ent = new EntityBuilder(Game_AI_TestBed.instance().getWorld())
 			.with(new Position(rand.nextInt(1000), rand.nextInt(1000)))
 			.with(new Health(20))

@@ -26,17 +26,21 @@ public class PhysicsData extends Component {
 	
 	public boolean needInit = true;
 	
+	public static byte COLLIDE_PROJECTILE = 0x0001;
+	public static byte COLLIDE_SPRITE = 0x0002;
+	public static byte COLLIDE_PLAYER = 0x0004;
+	
 	public PhysicsData() {
 		
 	}
 	
-	public void initPhysics(int entID, float x, float y) {
+	public void initPhysics(int entID, float x, float y, byte categoryBits, byte maskBits) {
 		World world = Game_AI_TestBed.instance().getLevel().getWorldBox2D();
 		
-		if (world.isLocked()) {
+		/*if (world.isLocked()) {
 			System.out.println("CANCELLING PHYSICS, WORLD LOCKED");
 			return;
-		}
+		}*/
 		
 		collisionListener = new CollisionListener();
 		
@@ -49,7 +53,7 @@ public class PhysicsData extends Component {
 		def.position.set(x, y);
 		
 		
-		System.out.println("pos: " + x + " - " + y);
+		//System.out.println("pos: " + x + " - " + y);
 		body = world.createBody(def);
 		
 		/*PolygonShape shape = new PolygonShape();
@@ -61,8 +65,11 @@ public class PhysicsData extends Component {
 		FixtureDef fDef = new FixtureDef();
 		fDef.shape = shape;
 		fDef.density = 1F;
+		fDef.filter.categoryBits = categoryBits;
+		fDef.filter.maskBits = maskBits;
 		
 		Fixture fixture = body.createFixture(fDef);
+		
 		
 		//mainly used for looking up who collided with who
 		body.setUserData(entID);
@@ -78,6 +85,7 @@ public class PhysicsData extends Component {
 			world.destroyBody(body);
 			body = null;
 		} else {
+			//occurs during double kill calls from sprite sim, need some sort of queue remove system? also one for stopping further code processing
 			Logger.warn("tried to kill phys body when it was already null'd");
 		}
 	}

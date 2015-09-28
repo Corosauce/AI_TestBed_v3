@@ -73,7 +73,22 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 		
 		if (physics.needInit) {
 			physics.needInit = false;
-			physics.initPhysics(e.id, pos.x, pos.y);
+			
+			byte categoryBits = 0;
+			if (data.type == EnumEntityType.SPRITE) {
+				categoryBits = PhysicsData.COLLIDE_SPRITE;
+			} else if (data.type == EnumEntityType.PROJECTILE) {
+				categoryBits = PhysicsData.COLLIDE_PROJECTILE;
+			}
+			
+			byte maskBits = 0;
+			if (data.type == EnumEntityType.SPRITE) {
+				maskBits = PhysicsData.COLLIDE_SPRITE;
+			} else if (data.type == EnumEntityType.PROJECTILE) {
+				maskBits = PhysicsData.COLLIDE_SPRITE;
+			}
+			
+			physics.initPhysics(e.id, pos.x, pos.y, categoryBits, maskBits);
 		}
 		
 		List<Component> listComponents = new ArrayList<Component>();
@@ -111,18 +126,18 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 					motion.x = targVec.x * profileData.moveSpeed;
 					motion.y = targVec.y * profileData.moveSpeed;
 					
-					if (Game_AI_TestBed.instance().getLevel().getGameTime() % 10 == 0) {
+					if (Game_AI_TestBed.instance().getLevel().getGameTime() % 2 == 0) {
 						//for (int i = 0; i < 1; i++) {
-						if (rand.nextInt(10) == 0) {
-							System.out.println("spawn");
-							float speed = 10F;
+						if (rand.nextInt(5) == 0) {
+							//System.out.println("spawn");
+							float speed = profileData.moveSpeed * 4F;
 							//float vecX = rand.nextFloat() * speed - rand.nextFloat() * speed;
 							//float vecY = rand.nextFloat() * speed - rand.nextFloat() * speed;
 							
 							//Vector2 targVec = VecUtil.getTargetVector(pos.x, pos.y, posPlayer.x, posPlayer.y);
 							
-							float vecX = targVec.x * profileData.moveSpeed * 2;
-							float vecY = targVec.y * profileData.moveSpeed * 2;
+							float vecX = targVec.x * speed;
+							float vecY = targVec.y * speed;
 							EntityFactory.createEntity(EnumEntityType.PROJECTILE, pos.x + vecX * 2, pos.y + vecY * 2, vecX, vecY);
 						}
 					}
