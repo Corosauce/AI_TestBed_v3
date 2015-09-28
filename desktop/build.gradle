@@ -3,8 +3,10 @@ apply plugin: "java"
 sourceCompatibility = 1.7
 sourceSets.main.java.srcDirs = [ "src/" ]
 
-project.ext.mainClassName = "net.mostlyoriginal.game.desktop.DesktopLauncher"
-project.ext.assetsDir = new File("../android/assets");
+//project.ext.mainClassName = "net.mostlyoriginal.game.desktop.DesktopLauncher"
+project.ext.mainClassName = "com.corosus.game.DesktopLauncher"
+//project.ext.assetsDir = new File("../android/assets");
+project.ext.assetsDir = new File("../core/assets");
 project.ext.weaveDir = new File("$buildDir/exploded")
 
 task run(dependsOn: classes, type: JavaExec) {

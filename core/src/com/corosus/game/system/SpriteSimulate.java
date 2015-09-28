@@ -76,6 +76,9 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 		if (physics.needInit) {
 			physics.needInit = false;
 			
+			//need to make enemy projectiles not able to hurt enemies
+			//teams?
+			
 			short categoryBits = 0;
 			if (data.type == EnumEntityType.SPRITE) {
 				categoryBits = PhysicsData.COLLIDE_SPRITE;
@@ -85,7 +88,7 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 			
 			short maskBits = 0;
 			if (data.type == EnumEntityType.SPRITE) {
-				maskBits = (short) (PhysicsData.COLLIDE_SPRITE | PhysicsData.COLLIDE_PROJECTILE);
+				maskBits = PhysicsData.COLLIDE_PROJECTILE;
 			} else if (data.type == EnumEntityType.PROJECTILE) {
 				maskBits = PhysicsData.COLLIDE_SPRITE;
 			}
