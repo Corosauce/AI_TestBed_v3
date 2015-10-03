@@ -5,13 +5,17 @@ import java.util.List;
 import java.util.Random;
 
 import javax.vecmath.Vector2f;
+import javax.vecmath.Vector4f;
 
 import com.artemis.Aspect;
 import com.artemis.Component;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.systems.IntervalEntityProcessingSystem;
+import com.corosus.game.Cst;
 import com.corosus.game.Game_AI_TestBed;
+import com.corosus.game.Level;
+import com.corosus.game.Logger;
 import com.corosus.game.component.EntityData;
 import com.corosus.game.component.Health;
 import com.corosus.game.component.PhysicsData;
@@ -181,8 +185,67 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 		pos.prevX = pos.x;
 		pos.prevY = pos.y;
 		
-		pos.x += motion.x;
-		pos.y += motion.y;
+		Level level = Game_AI_TestBed.instance().getLevel();
+		
+		int fPosX = (int) (pos.x + motion.x);
+		int fPosY = (int) (pos.y + motion.y);
+		
+		Vector4f vec = Game_AI_TestBed.instance().getLevel().getCellBorder(fPosX, fPosY);
+		Logger.dbg("x: " + fPosX + " - y: " + fPosY + " vs " + vec);
+		
+		if (!level.isPassable(fPosX, fPosY) && motion.x < 0 && fPosX < vec.x + Cst.TILESIZE) {
+			System.out.println("adjust -x!");
+			fPosX = (int) (vec.x + Cst.TILESIZE) + 1;
+			motion.x = 0;
+		}
+		
+		vec = Game_AI_TestBed.instance().getLevel().getCellBorder(fPosX, fPosY);
+		if (!level.isPassable(fPosX, fPosY) && motion.x > 0 && fPosX > vec.x) {
+			System.out.println("adjust +x!");
+			fPosX = (int) (vec.x) - 1;
+			motion.x = 0;
+		}
+		
+		vec = Game_AI_TestBed.instance().getLevel().getCellBorder(fPosX, fPosY);
+		if (!level.isPassable(fPosX, fPosY) && motion.y < 0 && fPosY < vec.y + Cst.TILESIZE) {
+			System.out.println("adjust -y!");
+			fPosY = (int) (vec.y + Cst.TILESIZE) + 1;
+			motion.y = 0;
+		}
+		
+		vec = Game_AI_TestBed.instance().getLevel().getCellBorder(fPosX, fPosY);
+		if (!level.isPassable(fPosX, fPosY) && motion.y > 0 && fPosY > vec.y) {
+			System.out.println("adjust +y!");
+			fPosY = (int) (vec.y) - 1;
+			motion.y = 0;
+		}
+			
+			//left
+			/*if (fPosX < vec.x + Cst.TILESIZE) {
+				System.out.println("adjust!");
+				fPosX = (int) (vec.x + Cst.TILESIZE) + 1;
+			} else if (fPosX > vec.x) {
+				System.out.println("adjust2!");
+				fPosX = (int) (vec.x) - 1;
+			}*/
+			
+		
+		
+		vec = Game_AI_TestBed.instance().getLevel().getCellBorder(fPosX, fPosY);
+		
+		if (!level.isPassable(fPosX, fPosY)) {
+			
+			//up
+			/*if (fPosY > vec.y + Cst.TILESIZE) {
+				System.out.println("adjust!");
+				fPosY = (int) (vec.y + Cst.TILESIZE);
+			}*/
+			
+		}
+		
+		
+		pos.x = fPosX;
+		pos.y = fPosY;
 		
 		health.lifeTime++;
 		

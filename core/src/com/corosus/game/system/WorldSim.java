@@ -56,7 +56,7 @@ public class WorldSim extends IntervalEntityProcessingSystem {
 					float dist = VecUtil.getDist(new Vector2f(randX, randY), new Vector2f(posPlayer.x, posPlayer.y));
 
 					if (dist > 512) {
-						EntityFactory.createEntity(EnumEntityType.SPRITE, randX, randY);
+						//EntityFactory.createEntity(EnumEntityType.SPRITE, randX, randY);
 						
 						/*Entity ent = factorySprites.position(66,1).velocity(0, 0).create();
 						System.out.println("test: " + ent.getId());

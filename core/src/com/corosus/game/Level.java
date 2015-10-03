@@ -1,11 +1,15 @@
 package com.corosus.game;
 
+import javax.vecmath.Vector4f;
+
 import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.WorldConfiguration;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.corosus.game.factory.EntityFactory;
@@ -24,7 +28,7 @@ public class Level {
 	private com.badlogic.gdx.physics.box2d.World worldBox2D;
 	
 	private TiledMap map;
-	private String levelName = "test_002.tmx";
+	private String levelName = "test_001.tmx";
 	private TiledMapRenderer mapRenderer;
 	private SpriteBatch batch;
 
@@ -182,5 +186,31 @@ public class Level {
 
 	public void setGameTime(long gameTime) {
 		this.gameTime = gameTime;
+	}
+	
+	public Cell getCell(int column, int row, int layer) {
+    	Cell cell = getMapLayer(layer).getCell(column, row);
+		return cell;
+	}
+	
+	public TiledMapTileLayer getMapLayer(int layer) {
+		TiledMapTileLayer mapLayer = (TiledMapTileLayer)getMap().getLayers().get(layer);
+		return mapLayer;
+	}
+	
+	public TiledMap getMap() {
+		return this.map;
+	}
+	
+	public boolean isPassable(int x, int y) {
+        return this.getCell(x / Cst.TILESIZE, y / Cst.TILESIZE, 0) != null;
+    }
+	
+	public Vector4f getCellBorder(int x, int y) {
+		int tileX = (x / Cst.TILESIZE) * Cst.TILESIZE;
+		int tileY = (y / Cst.TILESIZE) * Cst.TILESIZE;
+		
+		//Cell cell = getCell(x / Cst.TILESIZE, y / Cst.TILESIZE, 0);
+		return new Vector4f(tileX, tileY, tileX + Cst.TILESIZE, tileY + Cst.TILESIZE);
 	}
 }
