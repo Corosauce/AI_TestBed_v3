@@ -20,6 +20,9 @@ public class ProfileData extends Component {
 	public float moveSpeed = 10;
 	public float fireDelay = 10;
 	
+	//relocate to projectile data
+	public float prjDamage = 5;
+	
 	public List<ActionRoutine> listRoutines = new ArrayList<ActionRoutine>();
 	
 	public ProfileData() {

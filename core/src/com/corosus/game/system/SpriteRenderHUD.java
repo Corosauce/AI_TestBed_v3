@@ -19,7 +19,7 @@ import com.corosus.game.component.RenderData;
 import com.corosus.game.component.Velocity;
 import com.corosus.game.entity.EnumEntityType;
 
-public class SpriteRender extends IntervalEntityProcessingSystem {
+public class SpriteRenderHUD extends IntervalEntityProcessingSystem {
 
 	private ComponentMapper<RenderData> mapRender;
 	private ComponentMapper<Position> mapPos;
@@ -27,7 +27,7 @@ public class SpriteRender extends IntervalEntityProcessingSystem {
 	private ComponentMapper<EntityData> mapEntityData;
 	private ComponentMapper<Health> mapHealth;
 	
-	public SpriteRender() {
+	public SpriteRenderHUD() {
 		super(Aspect.all(Position.class, RenderData.class, Velocity.class), GameSettings.tickDelayRender);
 	}
 	
@@ -38,16 +38,7 @@ public class SpriteRender extends IntervalEntityProcessingSystem {
 	
 	@Override
 	protected void processSystem() {
-		
-		//Logger.dbg("tick " + this);
-		
-		Game_AI_TestBed game = Game_AI_TestBed.instance();
-		
-		game.getLevel().getBatch().setProjectionMatrix(game.getCamera().combined);
-		game.getLevel().getBatch().begin();
 		super.processSystem();
-		game.getLevel().getBatch().end();
-		
 	}
 
 	@Override
@@ -62,37 +53,39 @@ public class SpriteRender extends IntervalEntityProcessingSystem {
 		EntityData entData = mapEntityData.get(e);
 		Health health = mapHealth.get(e);
 		
-		//render.orient = Orient.fromVector(new Vector2(vel.x, vel.y));
-		
-		if (entData.type == EnumEntityType.SPRITE) {
-			render.orient = Orient.fromAngleOld(pos.rotationYaw);
-			
-			if (vel.x != 0 || vel.y != 0) {
-				render.state = ActorState.WALK;
-			} else {
-				render.state = ActorState.STATIC;
-			}
-		} else if (entData.type == EnumEntityType.PROJECTILE) {
-			
-		}
-		
-		//render.anims = GameAssetManager.INSTANCE.getRenderAssets("imgs/sprites/tanya.json");
-		
 		Level level = game.getLevel();
 		
-		float partialTick = level.getPartialTick();//(level.getStateTime() - WorldTimer.lastTime) / GameSettings.tickDelayGame;
+		float partialTick = level.getPartialTick();
 		
 		float rX = pos.prevX + (pos.x - pos.prevX) * partialTick;
 		float rY = pos.prevY + (pos.y - pos.prevY) * partialTick;
 		
-		//Logger.dbg("rx: " + rX + " vs x: " + pos.x + " delta: " + level.getWorld().getDelta() + " state time: " + level.getStateTime() + " partialTick: " + partialTick);
-
+		//TODO: only render whats on screen, also use batching properly
 		
-		
-		try {
-			render.anims.get(render.state).get(render.orient).draw(level.getBatch(), level.getStateTime(), level.getWorld().getDelta(), rX - Cst.SPRITESIZE / 2, rY - Cst.SPRITESIZE / 2);
-		} catch (Exception e2) {
-			e2.printStackTrace();
+		if (health.hp < health.hpMax && entData.type == EnumEntityType.SPRITE && (game.getLevel().getPlayerEntity() == null || game.getLevel().getPlayerEntity().getId() != e.getId())) {
+			float widthScale = 0.3F;
+			float size = health.hp * widthScale;
+			float sizeMax = health.hpMax * widthScale;
+			float x = (int) rX - (sizeMax/2);
+			float y = (int) (rY + 30);
+			float width = 10;
+			float borderSize = 2;
+			
+			ShapeRenderer healthBoxOutline = new ShapeRenderer();
+			//orient to map coords
+			healthBoxOutline.setProjectionMatrix(game.getCamera().combined);
+			healthBoxOutline.begin(ShapeType.Filled);
+			healthBoxOutline.setColor(0, 1, 0, 0);
+			healthBoxOutline.rectLine(x - borderSize, y, x + sizeMax + borderSize, y, width + borderSize*2);
+			healthBoxOutline.end();
+			
+			ShapeRenderer healthBox = new ShapeRenderer();
+			//orient to map coords
+			healthBox.setProjectionMatrix(game.getCamera().combined);
+			healthBox.begin(ShapeType.Filled);
+			healthBox.setColor(1, 0, 0, 0);
+			healthBox.rectLine(x, y, x + size, y, width);
+			healthBox.end();
 		}
 	}
 

@@ -7,6 +7,7 @@ import com.artemis.annotations.PooledWeaver;
 public class Health extends Component {
 
 	public int hp;
+	public int hpMax;
 	public int lifeTime = 0;
 	
 	public Health() {
@@ -15,9 +16,14 @@ public class Health extends Component {
 	
 	public Health(int startHealth) {
 		this.hp = startHealth;
+		this.hpMax = startHealth;
 	}
 	
 	public boolean isDead() {
 		return hp <= 0;
+	}
+	
+	public void reset() {
+		this.hp = this.hpMax;
 	}
 }

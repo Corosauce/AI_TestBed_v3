@@ -130,31 +130,39 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 					
 					float dist = VecUtil.getDist(new Vector2f(pos.x, pos.y), new Vector2f(posPlayer.x, posPlayer.y));
 					
-					if (dist < 400 && VecUtil.canSee(pos.toVec(), posPlayer.toVec())) {
-						Vector2f targVec = VecUtil.getTargetVector(pos.x, pos.y, posPlayer.x, posPlayer.y);
-						
-						motion.x = targVec.x * profileData.moveSpeed;
-						motion.y = targVec.y * profileData.moveSpeed;
-						
-						//make rotationYaw be aimed at motion
-						double angle = Math.toDegrees(Math.atan2(motion.y, motion.x));
-						if (angle < 0) angle += 360;
-						
-						pos.rotationYaw = (float) angle;
-						
-						if (Game_AI_TestBed.instance().getLevel().getGameTime() % 2 == 0) {
-							//for (int i = 0; i < 1; i++) {
-							if (rand.nextInt(5) == 0) {
-								//System.out.println("spawn");
-								float speed = profileData.moveSpeed * 4F;
-								//float vecX = rand.nextFloat() * speed - rand.nextFloat() * speed;
-								//float vecY = rand.nextFloat() * speed - rand.nextFloat() * speed;
-								
-								//Vector2 targVec = VecUtil.getTargetVector(pos.x, pos.y, posPlayer.x, posPlayer.y);
-								
-								float vecX = targVec.x * speed;
-								float vecY = targVec.y * speed;
-								EntityFactory.createEntity(EnumEntityType.PROJECTILE, pos.x + vecX * 2, pos.y + vecY * 2, vecX, vecY);
+					
+					if (dist < 400) {
+						if (VecUtil.canSee(pos.toVec(), posPlayer.toVec())) {
+							Vector2f targVec = VecUtil.getTargetVector(pos.x, pos.y, posPlayer.x, posPlayer.y);
+							
+							if (dist > 32) {
+								motion.x = targVec.x * profileData.moveSpeed;
+								motion.y = targVec.y * profileData.moveSpeed;
+							} else {
+								motion.x = 0;
+								motion.y = 0;
+							}
+							
+							//make rotationYaw be aimed at motion
+							double angle = Math.toDegrees(Math.atan2(motion.y, motion.x));
+							if (angle < 0) angle += 360;
+							
+							pos.rotationYaw = (float) angle;
+							
+							if (Game_AI_TestBed.instance().getLevel().getGameTime() % 2 == 0) {
+								//for (int i = 0; i < 1; i++) {
+								if (rand.nextInt(5) == 0) {
+									//System.out.println("spawn");
+									float speed = profileData.moveSpeed * 4F;
+									//float vecX = rand.nextFloat() * speed - rand.nextFloat() * speed;
+									//float vecY = rand.nextFloat() * speed - rand.nextFloat() * speed;
+									
+									//Vector2 targVec = VecUtil.getTargetVector(pos.x, pos.y, posPlayer.x, posPlayer.y);
+									
+									float vecX = targVec.x * speed;
+									float vecY = targVec.y * speed;
+									EntityFactory.createEntity(EnumEntityType.PROJECTILE, pos.x + vecX * 2, pos.y + vecY * 2, vecX, vecY);
+								}
 							}
 						}
 					}
@@ -179,7 +187,7 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 			if (health.lifeTime > 100) {
 				
 				//TODO: RELOCATE TO PROPER CLEANUP METHOD
-				killEntity(physics, e);
+				killEntity(e);
 			}
 		}
 		
@@ -199,11 +207,16 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 		//Logger.dbg("real pos: " + fPosX + " - " + fPosY + " tile pos: " + fTileX + " - " + fTileY);
 		
 		boolean collide = false;
+		boolean bounce = true;
 		
 		if (!level.isPassable(fPosX, (int) pos.y) && motion.x < 0 && fPosX < vec.x + Cst.TILESIZE) {
 			//System.out.println("adjust -x!");
 			fPosX = (int) (vec.x + Cst.TILESIZE) + 1;
-			motion.x = 0;
+			if (bounce) {
+				motion.x *= -1;
+			} else {
+				motion.x = 0;
+			}
 			collide = true;
 		}
 		
@@ -211,7 +224,13 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 		if (!level.isPassable(fPosX, (int) pos.y) && motion.x > 0 && fPosX > vec.x) {
 			//System.out.println("adjust +x!");
 			fPosX = (int) (vec.x) - 1;
-			if (!collide) motion.x = 0;
+			if (!collide) {
+				if (bounce) {
+					motion.x *= -1;
+				} else {
+					motion.x = 0;
+				}
+			}
 			collide = true;
 		}
 		
@@ -219,7 +238,13 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 		if (!level.isPassable((int) pos.x, fPosY) && motion.y < 0 && fPosY < vec.y + Cst.TILESIZE) {
 			//System.out.println("adjust -y!");
 			fPosY = (int) (vec.y + Cst.TILESIZE) + 1;
-			if (!collide) motion.y = 0;
+			if (!collide) {
+				if (bounce) {
+					motion.y *= -1;
+				} else {
+					motion.y = 0;
+				}
+			}
 			collide = true;
 		}
 		
@@ -227,7 +252,13 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 		if (!level.isPassable((int) pos.x, fPosY) && motion.y > 0 && fPosY > vec.y) {
 			//System.out.println("adjust +y!");
 			fPosY = (int) (vec.y) - 1;
-			if (!collide) motion.y = 0;
+			if (!collide) {
+				if (bounce) {
+					motion.y *= -1;
+				} else {
+					motion.y = 0;
+				}
+			}
 			collide = true;
 		}
 			
@@ -289,13 +320,19 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 		
 		if (health.isDead()) {
 			//System.out.println("killed entity");
-			killEntity(physics, e);
+			killEntity(e);
 		}
 	}
 	
-	public void killEntity(PhysicsData phys, Entity e) {
-		phys.dispose();
-		Game_AI_TestBed.instance().getLevel().killEntity(e);
+	public void killEntity(Entity e) {
+		if (e.getId() == Game_AI_TestBed.instance().getLevel().getPlayerEntity().getId()) {
+			Game_AI_TestBed.instance().getLevel().respawnPlayer();
+		} else {
+			PhysicsData phys = mapPhysics.get(e);
+			phys.dispose();
+			Game_AI_TestBed.instance().getLevel().killEntity(e);
+		}
+		
 	}
 
 	@Override
@@ -306,15 +343,19 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 			//Logger.dbg("collision start between " + entry.entIDA + " and " + entry.entIDB);
 			
 			Entity entIDA = Game_AI_TestBed.instance().getLevel().getWorld().getEntity(entry.entIDA);
-			if (entIDA != null && entIDA != Game_AI_TestBed.instance().getLevel().getPlayerEntity()) {
+			if (entIDA != null/* && entIDA != Game_AI_TestBed.instance().getLevel().getPlayerEntity()*/) {
 				Health health = mapHealth.get(entIDA);
-				health.hp = 0;
+				ProfileData profile = mapProfile.get(entIDA);
+				health.hp -= profile.prjDamage;
+				//health.hp = 0;
 			}
 			
 			Entity entIDB = Game_AI_TestBed.instance().getLevel().getWorld().getEntity(entry.entIDB);
-			if (entIDB != null && entIDB != Game_AI_TestBed.instance().getLevel().getPlayerEntity()) {
+			if (entIDB != null/* && entIDB != Game_AI_TestBed.instance().getLevel().getPlayerEntity()*/) {
 				Health health = mapHealth.get(entIDB);
-				health.hp = 0;
+				ProfileData profile = mapProfile.get(entIDB);
+				health.hp -= profile.prjDamage;
+				//health.hp = 0;
 			}
 		}
 		listCollisionQueueStart.clear();

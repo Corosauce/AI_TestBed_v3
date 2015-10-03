@@ -6,19 +6,21 @@ import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.WorldConfiguration;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.corosus.game.component.Health;
+import com.corosus.game.component.Position;
 import com.corosus.game.factory.EntityFactory;
 import com.corosus.game.system.GameInput;
+import com.corosus.game.system.HUDRender;
 import com.corosus.game.system.MapRender;
 import com.corosus.game.system.PhysicsWrapper;
 import com.corosus.game.system.SpriteRender;
+import com.corosus.game.system.SpriteRenderHUD;
 import com.corosus.game.system.SpriteSimulate;
 import com.corosus.game.system.WorldSim;
 import com.corosus.game.system.WorldTimer;
@@ -71,12 +73,14 @@ public class Level {
 		worldConfig.setSystem(new SpriteSimulate(GameSettings.tickDelayGame));
 		worldConfig.setSystem(new MapRender());
 		worldConfig.setSystem(new SpriteRender());
+		worldConfig.setSystem(new SpriteRenderHUD());
+		worldConfig.setSystem(new HUDRender());
 		
 		worldArtemis = new World(worldConfig);
 		
 		worldBox2D = new com.badlogic.gdx.physics.box2d.World(new Vector2(0, 0), true);
 		
-		setPlayer(EntityFactory.createPlayer(100, 100).getId());
+		respawnPlayer();
 	}
 	
 	public void process(float delta) {
@@ -164,6 +168,20 @@ public class Level {
         mapTilesY = map.getProperties().get("height", Integer.class);
         mapTileWidth = map.getProperties().get("tilewidth", Integer.class);
         mapTileHeight = map.getProperties().get("tileheight", Integer.class);
+	}
+	
+	public void respawnPlayer() {
+		Entity ent = getPlayerEntity();
+		if (ent != null) {
+			Health health = ent.getComponent(Health.class);
+			health.reset();
+			
+			Position pos = ent.getComponent(Position.class);
+			pos.setPos(100, 100);
+		} else {
+			setPlayer(EntityFactory.createPlayer(100, 100).getId());
+		}
+		
 	}
 	
 	public int getLevelSizeX() {
