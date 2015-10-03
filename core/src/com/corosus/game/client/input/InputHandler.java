@@ -25,7 +25,7 @@ public class InputHandler extends InputAdapter {
 	@Override
 	public boolean mouseMoved(int screenX, int screenY) {
 		
-		Logger.dbg("mouse moved!");
+		//Logger.dbg("mouse moved!");
 		
 		GameInput.mouseX = screenX;
 		GameInput.mouseY = screenY;
@@ -36,7 +36,7 @@ public class InputHandler extends InputAdapter {
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		
-		Logger.dbg("mouse down!");
+		//Logger.dbg("mouse down!");
 		
 		GameInput.mouseX = screenX;
 		GameInput.mouseY = screenY;

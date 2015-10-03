@@ -1,5 +1,7 @@
 package com.corosus.game.component;
 
+import javax.vecmath.Vector2f;
+
 import com.artemis.Component;
 import com.artemis.annotations.PooledWeaver;
 
@@ -23,5 +25,9 @@ public class Position extends Component {
 		this.y = y;
 		this.prevX = x;
 		this.prevY = y;
+	}
+	
+	public Vector2f toVec() {
+		return new Vector2f(x, y);
 	}
 }

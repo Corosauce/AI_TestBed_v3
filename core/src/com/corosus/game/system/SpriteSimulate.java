@@ -130,7 +130,7 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 					
 					float dist = VecUtil.getDist(new Vector2f(pos.x, pos.y), new Vector2f(posPlayer.x, posPlayer.y));
 					
-					if (dist < 400) {
+					if (dist < 400 && VecUtil.canSee(pos.toVec(), posPlayer.toVec())) {
 						Vector2f targVec = VecUtil.getTargetVector(pos.x, pos.y, posPlayer.x, posPlayer.y);
 						
 						motion.x = targVec.x * profileData.moveSpeed;
@@ -196,12 +196,12 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 		
 		Vector4f vec = Game_AI_TestBed.instance().getLevel().getCellBorder(fPosX, (int) pos.y);
 		//Logger.dbg("x: " + fPosX + " - y: " + fPosY + " vs " + vec + " passable: " + level.isPassable(fPosX, fPosY));
-		Logger.dbg("real pos: " + fPosX + " - " + fPosY + " tile pos: " + fTileX + " - " + fTileY);
+		//Logger.dbg("real pos: " + fPosX + " - " + fPosY + " tile pos: " + fTileX + " - " + fTileY);
 		
 		boolean collide = false;
 		
 		if (!level.isPassable(fPosX, (int) pos.y) && motion.x < 0 && fPosX < vec.x + Cst.TILESIZE) {
-			System.out.println("adjust -x!");
+			//System.out.println("adjust -x!");
 			fPosX = (int) (vec.x + Cst.TILESIZE) + 1;
 			motion.x = 0;
 			collide = true;
@@ -209,7 +209,7 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 		
 		vec = Game_AI_TestBed.instance().getLevel().getCellBorder(fPosX, (int) pos.y);
 		if (!level.isPassable(fPosX, (int) pos.y) && motion.x > 0 && fPosX > vec.x) {
-			System.out.println("adjust +x!");
+			//System.out.println("adjust +x!");
 			fPosX = (int) (vec.x) - 1;
 			if (!collide) motion.x = 0;
 			collide = true;
@@ -217,7 +217,7 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 		
 		vec = Game_AI_TestBed.instance().getLevel().getCellBorder((int) pos.x, fPosY);
 		if (!level.isPassable((int) pos.x, fPosY) && motion.y < 0 && fPosY < vec.y + Cst.TILESIZE) {
-			System.out.println("adjust -y!");
+			//System.out.println("adjust -y!");
 			fPosY = (int) (vec.y + Cst.TILESIZE) + 1;
 			if (!collide) motion.y = 0;
 			collide = true;
@@ -225,7 +225,7 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 		
 		vec = Game_AI_TestBed.instance().getLevel().getCellBorder((int) pos.x, fPosY);
 		if (!level.isPassable((int) pos.x, fPosY) && motion.y > 0 && fPosY > vec.y) {
-			System.out.println("adjust +y!");
+			//System.out.println("adjust +y!");
 			fPosY = (int) (vec.y) - 1;
 			if (!collide) motion.y = 0;
 			collide = true;

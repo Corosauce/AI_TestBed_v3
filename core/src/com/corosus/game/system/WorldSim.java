@@ -21,7 +21,7 @@ public class WorldSim extends IntervalEntityProcessingSystem {
 	
 	private ComponentMapper<Position> mapPos;
 	
-	private FactorySprites factorySprites;
+	//private FactorySprites factorySprites;
 	
 	public WorldSim(float interval) {
 		super(Aspect.exclude(), interval);
