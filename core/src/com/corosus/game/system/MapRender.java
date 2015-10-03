@@ -3,21 +3,14 @@ package com.corosus.game.system;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.annotations.Wire;
 import com.artemis.systems.IntervalEntityProcessingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.corosus.game.Cst;
 import com.corosus.game.GameSettings;
 import com.corosus.game.Game_AI_TestBed;
-import com.corosus.game.Logger;
-import com.corosus.game.client.assets.GameAssetManager;
 import com.corosus.game.component.Position;
-import com.corosus.game.component.RenderData;
-import com.corosus.game.component.Velocity;
 
-@Wire
 public class MapRender extends IntervalEntityProcessingSystem {
 	
 	public MapRender() {

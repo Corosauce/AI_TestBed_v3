@@ -4,24 +4,24 @@ import java.util.Random;
 
 import javax.vecmath.Vector2f;
 
-import net.mostlyoriginal.game.util.VecUtil;
-
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.annotations.Wire;
 import com.artemis.systems.IntervalEntityProcessingSystem;
 import com.corosus.game.Game_AI_TestBed;
 import com.corosus.game.component.Position;
 import com.corosus.game.entity.EnumEntityType;
 import com.corosus.game.factory.EntityFactory;
+import com.corosus.game.factory.FactorySprites;
+import com.corosus.game.util.VecUtil;
 
-@Wire
 public class WorldSim extends IntervalEntityProcessingSystem {
 	
 	public long gameTime = 0;
 	
 	private ComponentMapper<Position> mapPos;
+	
+	private FactorySprites factorySprites;
 	
 	public WorldSim(float interval) {
 		super(Aspect.exclude(), interval);
@@ -57,6 +57,11 @@ public class WorldSim extends IntervalEntityProcessingSystem {
 
 					if (dist > 512) {
 						EntityFactory.createEntity(EnumEntityType.SPRITE, randX, randY);
+						
+						/*Entity ent = factorySprites.position(66,1).velocity(0, 0).create();
+						System.out.println("test: " + ent.getId());
+						
+						System.out.println(mapPos.get(ent).x);*/
 					}
 				}
 				

@@ -1,4 +1,4 @@
-package net.mostlyoriginal.game.util;
+package com.corosus.game.util;
 
 import javax.vecmath.Vector2f;
 

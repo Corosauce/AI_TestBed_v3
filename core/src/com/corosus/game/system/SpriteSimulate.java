@@ -6,17 +6,12 @@ import java.util.Random;
 
 import javax.vecmath.Vector2f;
 
-import net.mostlyoriginal.game.util.VecUtil;
-
 import com.artemis.Aspect;
 import com.artemis.Component;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.annotations.Wire;
 import com.artemis.systems.IntervalEntityProcessingSystem;
-import com.badlogic.gdx.math.Vector2;
 import com.corosus.game.Game_AI_TestBed;
-import com.corosus.game.Logger;
 import com.corosus.game.component.EntityData;
 import com.corosus.game.component.Health;
 import com.corosus.game.component.PhysicsData;
@@ -26,8 +21,8 @@ import com.corosus.game.component.Velocity;
 import com.corosus.game.entity.ActionRoutine;
 import com.corosus.game.entity.EnumEntityType;
 import com.corosus.game.factory.EntityFactory;
+import com.corosus.game.util.VecUtil;
 
-@Wire
 public class SpriteSimulate extends IntervalEntityProcessingSystem {
 
 	private ComponentMapper<Position> mapPos;
@@ -93,7 +88,7 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 				maskBits = PhysicsData.COLLIDE_SPRITE;
 			}
 			
-			physics.initPhysics(e.id, pos.x, pos.y, categoryBits, maskBits);
+			physics.initPhysics(e.getId(), pos.x, pos.y, categoryBits, maskBits);
 		}
 		
 		List<Component> listComponents = new ArrayList<Component>();

@@ -3,16 +3,12 @@ package com.corosus.game.system;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.annotations.Wire;
 import com.artemis.systems.IntervalEntityProcessingSystem;
-import com.badlogic.gdx.math.Vector2;
 import com.corosus.game.Cst;
 import com.corosus.game.GameSettings;
 import com.corosus.game.Game_AI_TestBed;
 import com.corosus.game.Level;
-import com.corosus.game.Logger;
 import com.corosus.game.client.assets.ActorState;
-import com.corosus.game.client.assets.GameAssetManager;
 import com.corosus.game.client.assets.Orient;
 import com.corosus.game.component.EntityData;
 import com.corosus.game.component.Position;
@@ -20,7 +16,6 @@ import com.corosus.game.component.RenderData;
 import com.corosus.game.component.Velocity;
 import com.corosus.game.entity.EnumEntityType;
 
-@Wire
 public class SpriteRender extends IntervalEntityProcessingSystem {
 
 	private ComponentMapper<RenderData> mapRender;

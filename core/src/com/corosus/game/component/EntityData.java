@@ -14,6 +14,10 @@ public class EntityData extends Component {
 	
 	public EnumEntityType type = EnumEntityType.SPRITE;
 	
+	public EntityData() {
+		
+	}
+	
 	public EntityData(EnumEntityType profileID) {
 		this.type = profileID;
 	}

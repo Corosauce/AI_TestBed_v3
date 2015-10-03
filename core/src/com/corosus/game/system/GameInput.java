@@ -5,12 +5,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.mostlyoriginal.api.component.basic.Pos;
-
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.annotations.Wire;
 import com.artemis.systems.IntervalEntityProcessingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -19,18 +16,13 @@ import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.math.Vector2;
 import com.corosus.game.Game_AI_TestBed;
 import com.corosus.game.Logger;
-import com.corosus.game.client.assets.Orient;
 import com.corosus.game.client.input.XBox360Pad;
-import com.corosus.game.component.EntityData;
-import com.corosus.game.component.Health;
 import com.corosus.game.component.Position;
 import com.corosus.game.component.ProfileData;
 import com.corosus.game.component.Velocity;
-import com.corosus.game.entity.ActionRoutineDodge;
 import com.corosus.game.entity.EnumEntityType;
 import com.corosus.game.factory.EntityFactory;
 
-@Wire
 public class GameInput extends IntervalEntityProcessingSystem {
 	
 	//keyboard

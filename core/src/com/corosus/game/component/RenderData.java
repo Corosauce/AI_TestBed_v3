@@ -14,6 +14,10 @@ public class RenderData extends Component {
 	public ActorState state = ActorState.STATIC;
 	public HashMap<ActorState, HashMap<Orient, IRenderable>> anims;
 	
+	public RenderData() {
+		
+	}
+	
 	public RenderData(String spriteAsset) {
 		anims = GameAssetManager.INSTANCE.getRenderAssets("imgs/sprites/" + spriteAsset + ".json");
 	}
