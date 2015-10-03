@@ -206,15 +206,15 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 			motion.x = 0;
 		}
 		
-		vec = Game_AI_TestBed.instance().getLevel().getCellBorder((int) vec.x, fPosY);
-		if (!level.isPassable((int) vec.x, fPosY) && motion.y < 0 && fPosY < vec.y + Cst.TILESIZE) {
+		vec = Game_AI_TestBed.instance().getLevel().getCellBorder((int) pos.x, fPosY);
+		if (!level.isPassable((int) pos.x, fPosY) && motion.y < 0 && fPosY < vec.y + Cst.TILESIZE) {
 			System.out.println("adjust -y!");
 			fPosY = (int) (vec.y + Cst.TILESIZE) + 1;
 			motion.y = 0;
 		}
 		
-		vec = Game_AI_TestBed.instance().getLevel().getCellBorder((int) vec.x, fPosY);
-		if (!level.isPassable((int) vec.x, fPosY) && motion.y > 0 && fPosY > vec.y) {
+		vec = Game_AI_TestBed.instance().getLevel().getCellBorder((int) pos.x, fPosY);
+		if (!level.isPassable((int) pos.x, fPosY) && motion.y > 0 && fPosY > vec.y) {
 			System.out.println("adjust +y!");
 			fPosY = (int) (vec.y) - 1;
 			motion.y = 0;
