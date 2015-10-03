@@ -12,6 +12,7 @@ import com.artemis.Component;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.systems.IntervalEntityProcessingSystem;
+import com.badlogic.gdx.math.MathUtils;
 import com.corosus.game.Cst;
 import com.corosus.game.Game_AI_TestBed;
 import com.corosus.game.Level;
@@ -25,6 +26,7 @@ import com.corosus.game.component.Velocity;
 import com.corosus.game.entity.ActionRoutine;
 import com.corosus.game.entity.EnumEntityType;
 import com.corosus.game.factory.EntityFactory;
+import com.corosus.game.util.MathUtil;
 import com.corosus.game.util.VecUtil;
 
 public class SpriteSimulate extends IntervalEntityProcessingSystem {
@@ -189,35 +191,44 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 		
 		int fPosX = (int) (pos.x + motion.x);
 		int fPosY = (int) (pos.y + motion.y);
+		int fTileX = MathUtil.floorF((float)fPosX / (float)Cst.TILESIZE);
+		int fTileY = MathUtil.floorF((float)fPosY / (float)Cst.TILESIZE);
 		
 		Vector4f vec = Game_AI_TestBed.instance().getLevel().getCellBorder(fPosX, (int) pos.y);
-		Logger.dbg("x: " + fPosX + " - y: " + fPosY + " vs " + vec);
+		//Logger.dbg("x: " + fPosX + " - y: " + fPosY + " vs " + vec + " passable: " + level.isPassable(fPosX, fPosY));
+		Logger.dbg("real pos: " + fPosX + " - " + fPosY + " tile pos: " + fTileX + " - " + fTileY);
+		
+		boolean collide = false;
 		
 		if (!level.isPassable(fPosX, (int) pos.y) && motion.x < 0 && fPosX < vec.x + Cst.TILESIZE) {
 			System.out.println("adjust -x!");
 			fPosX = (int) (vec.x + Cst.TILESIZE) + 1;
 			motion.x = 0;
+			collide = true;
 		}
 		
 		vec = Game_AI_TestBed.instance().getLevel().getCellBorder(fPosX, (int) pos.y);
 		if (!level.isPassable(fPosX, (int) pos.y) && motion.x > 0 && fPosX > vec.x) {
 			System.out.println("adjust +x!");
 			fPosX = (int) (vec.x) - 1;
-			motion.x = 0;
+			if (!collide) motion.x = 0;
+			collide = true;
 		}
 		
 		vec = Game_AI_TestBed.instance().getLevel().getCellBorder((int) pos.x, fPosY);
 		if (!level.isPassable((int) pos.x, fPosY) && motion.y < 0 && fPosY < vec.y + Cst.TILESIZE) {
 			System.out.println("adjust -y!");
 			fPosY = (int) (vec.y + Cst.TILESIZE) + 1;
-			motion.y = 0;
+			if (!collide) motion.y = 0;
+			collide = true;
 		}
 		
 		vec = Game_AI_TestBed.instance().getLevel().getCellBorder((int) pos.x, fPosY);
 		if (!level.isPassable((int) pos.x, fPosY) && motion.y > 0 && fPosY > vec.y) {
 			System.out.println("adjust +y!");
 			fPosY = (int) (vec.y) - 1;
-			motion.y = 0;
+			if (!collide) motion.y = 0;
+			collide = true;
 		}
 			
 			//left
@@ -255,7 +266,7 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 			physics.body.applyForceToCenter(0, 0, true);
 		}
 		
-		if (pos.x < 0) {
+		/*if (pos.x < 0) {
 			pos.setPos(0, pos.y);
 		}
 		
@@ -269,7 +280,7 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 		
 		if (pos.y > Game_AI_TestBed.instance().getLevel().getLevelSizeY()) {
 			pos.setPos(pos.x, Game_AI_TestBed.instance().getLevel().getLevelSizeY());
-		}
+		}*/
 		
 		/*if (pos.x < 0 || pos.x > Game_AI_TestBed.instance().getLevel().getLevelSizeX() || pos.y < 0 || pos.y > Game_AI_TestBed.instance().getLevel().getLevelSizeY()) {
 			//System.out.println("killed out of bound entity");

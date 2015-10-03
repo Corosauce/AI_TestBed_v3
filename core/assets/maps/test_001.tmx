@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="50" height="50" tilewidth="64" tileheight="64">
- <tileset firstgid="1" name="tiles" tilewidth="64" tileheight="64">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="64" tileheight="64" nextobjectid="2">
+ <tileset firstgid="1" name="tiles" tilewidth="64" tileheight="64" tilecount="256">
   <image source="../imgs/tiles/tiles.png" width="1024" height="1024"/>
  </tileset>
- <layer name="Tile Layer 1" width="50" height="50">
+ <objectgroup name="BlockingObjects">
+  <object id="1" name="Block" type="Unpassable" x="384" y="2880" width="32" height="32"/>
+ </objectgroup>
+ <layer name="NavLayer" width="50" height="50">
   <data encoding="base64" compression="zlib">
-   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
+   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
   </data>
  </layer>
- <objectgroup name="BlockingObjects" width="50" height="50">
-  <object name="Block" type="Unpassable" x="384" y="2880" width="32" height="32"/>
- </objectgroup>
+ <layer name="BlockingLayer" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt1ksOgCAQBFHO4f0P6sqFhsQII10h9RKXzNCGX2uSJEmSJEnS3fHTt9qzZ8W80zlG/mdvTDoHuWaiZzrHTuvqbR+T9/mX84h67l5zI9ZK9qbkmL0HKTlItZK9KTlG749erdXMwc1BqpXsnc5R+S6hoqz/WbvkkKQqJ7x1EEE=
+  </data>
+ </layer>
 </map>

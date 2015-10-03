@@ -6,11 +6,13 @@ import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.WorldConfiguration;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.corosus.game.factory.EntityFactory;
 import com.corosus.game.system.GameInput;
@@ -20,6 +22,7 @@ import com.corosus.game.system.SpriteRender;
 import com.corosus.game.system.SpriteSimulate;
 import com.corosus.game.system.WorldSim;
 import com.corosus.game.system.WorldTimer;
+import com.corosus.game.util.MathUtil;
 
 public class Level {
 
@@ -44,6 +47,9 @@ public class Level {
 	private int mapTilesY;
 	private int mapTileWidth;
 	private int mapTileHeight;
+	
+	public static int LAYER_NAV = 1;
+	public static int LAYER_COLLIDE = 2;
 	
 	public void restart() {
 		
@@ -194,6 +200,11 @@ public class Level {
 	}
 	
 	public TiledMapTileLayer getMapLayer(int layer) {
+		
+		/*MapLayer layer1 = getMap().getLayers().get(0);
+		MapLayer layer2 = getMap().getLayers().get(1);
+		MapLayer layer3 = getMap().getLayers().get(2);*/
+		
 		TiledMapTileLayer mapLayer = (TiledMapTileLayer)getMap().getLayers().get(layer);
 		return mapLayer;
 	}
@@ -203,12 +214,14 @@ public class Level {
 	}
 	
 	public boolean isPassable(int x, int y) {
-        return this.getCell(x / Cst.TILESIZE, y / Cst.TILESIZE, 0) != null;
+		int tileX = MathUtil.floorF((float)x / (float)Cst.TILESIZE);
+		int tileY = MathUtil.floorF((float)y / (float)Cst.TILESIZE);
+        return this.getCell(tileX, tileY, LAYER_NAV) != null && this.getCell(tileX, tileY, LAYER_COLLIDE) == null;
     }
 	
 	public Vector4f getCellBorder(int x, int y) {
-		int tileX = (x / Cst.TILESIZE) * Cst.TILESIZE;
-		int tileY = (y / Cst.TILESIZE) * Cst.TILESIZE;
+		int tileX = MathUtil.floorF((float)x / (float)Cst.TILESIZE) * Cst.TILESIZE;
+		int tileY = MathUtil.floorF((float)y / (float)Cst.TILESIZE) * Cst.TILESIZE;
 		
 		//Cell cell = getCell(x / Cst.TILESIZE, y / Cst.TILESIZE, 0);
 		return new Vector4f(tileX, tileY, tileX + Cst.TILESIZE, tileY + Cst.TILESIZE);
