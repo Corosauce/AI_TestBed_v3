@@ -190,31 +190,31 @@ public class SpriteSimulate extends IntervalEntityProcessingSystem {
 		int fPosX = (int) (pos.x + motion.x);
 		int fPosY = (int) (pos.y + motion.y);
 		
-		Vector4f vec = Game_AI_TestBed.instance().getLevel().getCellBorder(fPosX, fPosY);
+		Vector4f vec = Game_AI_TestBed.instance().getLevel().getCellBorder(fPosX, (int) pos.y);
 		Logger.dbg("x: " + fPosX + " - y: " + fPosY + " vs " + vec);
 		
-		if (!level.isPassable(fPosX, fPosY) && motion.x < 0 && fPosX < vec.x + Cst.TILESIZE) {
+		if (!level.isPassable(fPosX, (int) pos.y) && motion.x < 0 && fPosX < vec.x + Cst.TILESIZE) {
 			System.out.println("adjust -x!");
 			fPosX = (int) (vec.x + Cst.TILESIZE) + 1;
 			motion.x = 0;
 		}
 		
-		vec = Game_AI_TestBed.instance().getLevel().getCellBorder(fPosX, fPosY);
-		if (!level.isPassable(fPosX, fPosY) && motion.x > 0 && fPosX > vec.x) {
+		vec = Game_AI_TestBed.instance().getLevel().getCellBorder(fPosX, (int) pos.y);
+		if (!level.isPassable(fPosX, (int) pos.y) && motion.x > 0 && fPosX > vec.x) {
 			System.out.println("adjust +x!");
 			fPosX = (int) (vec.x) - 1;
 			motion.x = 0;
 		}
 		
-		vec = Game_AI_TestBed.instance().getLevel().getCellBorder(fPosX, fPosY);
-		if (!level.isPassable(fPosX, fPosY) && motion.y < 0 && fPosY < vec.y + Cst.TILESIZE) {
+		vec = Game_AI_TestBed.instance().getLevel().getCellBorder((int) vec.x, fPosY);
+		if (!level.isPassable((int) vec.x, fPosY) && motion.y < 0 && fPosY < vec.y + Cst.TILESIZE) {
 			System.out.println("adjust -y!");
 			fPosY = (int) (vec.y + Cst.TILESIZE) + 1;
 			motion.y = 0;
 		}
 		
-		vec = Game_AI_TestBed.instance().getLevel().getCellBorder(fPosX, fPosY);
-		if (!level.isPassable(fPosX, fPosY) && motion.y > 0 && fPosY > vec.y) {
+		vec = Game_AI_TestBed.instance().getLevel().getCellBorder((int) vec.x, fPosY);
+		if (!level.isPassable((int) vec.x, fPosY) && motion.y > 0 && fPosY > vec.y) {
 			System.out.println("adjust +y!");
 			fPosY = (int) (vec.y) - 1;
 			motion.y = 0;
