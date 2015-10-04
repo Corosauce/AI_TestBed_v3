@@ -60,32 +60,38 @@ public class SpriteRenderHUD extends IntervalEntityProcessingSystem {
 		float rX = pos.prevX + (pos.x - pos.prevX) * partialTick;
 		float rY = pos.prevY + (pos.y - pos.prevY) * partialTick;
 		
-		//TODO: only render whats on screen, also use batching properly
+		//TODO: use batching properly
 		
-		if (health.hp < health.hpMax && entData.type == EnumEntityType.SPRITE && (game.getLevel().getPlayerEntity() == null || game.getLevel().getPlayerEntity().getId() != e.getId())) {
-			float widthScale = 0.3F;
-			float size = health.hp * widthScale;
-			float sizeMax = health.hpMax * widthScale;
-			float x = (int) rX - (sizeMax/2);
-			float y = (int) (rY + 30);
-			float width = 10;
-			float borderSize = 2;
-			
-			ShapeRenderer healthBoxOutline = new ShapeRenderer();
-			//orient to map coords
-			healthBoxOutline.setProjectionMatrix(game.getCamera().combined);
-			healthBoxOutline.begin(ShapeType.Filled);
-			healthBoxOutline.setColor(0, 1, 0, 0);
-			healthBoxOutline.rectLine(x - borderSize, y, x + sizeMax + borderSize, y, width + borderSize*2);
-			healthBoxOutline.end();
-			
-			ShapeRenderer healthBox = new ShapeRenderer();
-			//orient to map coords
-			healthBox.setProjectionMatrix(game.getCamera().combined);
-			healthBox.begin(ShapeType.Filled);
-			healthBox.setColor(1, 0, 0, 0);
-			healthBox.rectLine(x, y, x + size, y, width);
-			healthBox.end();
+		if (/*false && */game.isInView(pos.toVec(), Cst.SPRITESIZE)) {
+			if (health.hp < health.hpMax && entData.type == EnumEntityType.SPRITE && (game.getLevel().getPlayerEntity() == null || game.getLevel().getPlayerEntity().getId() != e.getId())) {
+				float widthScale = 0.3F;
+				float size = health.hp * widthScale;
+				float sizeMax = health.hpMax * widthScale;
+				float x = (int) rX - (sizeMax/2);
+				float y = (int) (rY + 30);
+				float width = 10;
+				float borderSize = 2;
+				
+				ShapeRenderer healthBoxOutline = new ShapeRenderer();
+				//orient to map coords
+				healthBoxOutline.setProjectionMatrix(game.getCamera().combined);
+				healthBoxOutline.begin(ShapeType.Filled);
+				healthBoxOutline.setColor(0, 1, 0, 0);
+				healthBoxOutline.rectLine(x - borderSize, y, x + sizeMax + borderSize, y, width + borderSize*2);
+				healthBoxOutline.end();
+				
+				healthBoxOutline.dispose();
+				
+				ShapeRenderer healthBox = new ShapeRenderer();
+				//orient to map coords
+				healthBox.setProjectionMatrix(game.getCamera().combined);
+				healthBox.begin(ShapeType.Filled);
+				healthBox.setColor(1, 0, 0, 0);
+				healthBox.rectLine(x, y, x + size, y, width);
+				healthBox.end();
+				
+				healthBox.dispose();
+			}
 		}
 	}
 

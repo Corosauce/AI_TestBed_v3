@@ -9,6 +9,7 @@ import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.systems.IntervalEntityProcessingSystem;
 import com.corosus.game.Game_AI_TestBed;
+import com.corosus.game.Logger;
 import com.corosus.game.component.Position;
 import com.corosus.game.entity.EnumEntityType;
 import com.corosus.game.factory.EntityFactory;
@@ -41,7 +42,7 @@ public class WorldSim extends IntervalEntityProcessingSystem {
 		Game_AI_TestBed.instance().getLevel().setGameTime(gameTime);
 		if (gameTime % 3 == 0) {
 			//System.out.println("spawn ent");
-			for (int i = 0; i < 1; i++) {
+			for (int i = 0; i < 10; i++) {
 				Random rand = new Random();
 				
 				int randX = rand.nextInt(Game_AI_TestBed.instance().getLevel().getLevelSizeX());
@@ -58,12 +59,17 @@ public class WorldSim extends IntervalEntityProcessingSystem {
 					float dist = VecUtil.getDist(new Vector2f(randX, randY), new Vector2f(posPlayer.x, posPlayer.y));
 
 					if (dist > 512) {
-						EntityFactory.createEntity(EnumEntityType.SPRITE, randX, randY);
-						
-						/*Entity ent = factorySprites.position(66,1).velocity(0, 0).create();
-						System.out.println("test: " + ent.getId());
-						
-						System.out.println(mapPos.get(ent).x);*/
+						if (Game_AI_TestBed.instance().getLevel().getEntityCount() < 1000) {
+							//EntityFactory.createEntity(EnumEntityType.SPRITE, randX, randY);
+							//EntityFactory.createEntity_NPC(randX, randY);
+							
+							Logger.dbg("spawncount: " + Game_AI_TestBed.instance().getLevel().getEntityCount());
+							
+							/*Entity ent = factorySprites.position(66,1).velocity(0, 0).create();
+							System.out.println("test: " + ent.getId());
+							
+							System.out.println(mapPos.get(ent).x);*/
+						}
 					}
 				}
 				

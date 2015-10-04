@@ -6,6 +6,9 @@ import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.WorldConfiguration;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -15,13 +18,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.corosus.game.component.Health;
 import com.corosus.game.component.Position;
 import com.corosus.game.factory.EntityFactory;
+import com.corosus.game.factory.SpawnableBase;
 import com.corosus.game.system.GameInput;
 import com.corosus.game.system.HUDRender;
 import com.corosus.game.system.MapRender;
 import com.corosus.game.system.PhysicsWrapper;
 import com.corosus.game.system.SpriteRender;
 import com.corosus.game.system.SpriteRenderHUD;
-import com.corosus.game.system.SpriteSimulate;
+import com.corosus.game.system.SpriteSim;
 import com.corosus.game.system.WorldSim;
 import com.corosus.game.system.WorldTimer;
 import com.corosus.game.util.MathUtil;
@@ -50,8 +54,10 @@ public class Level {
 	private int mapTileWidth;
 	private int mapTileHeight;
 	
-	public static int LAYER_NAV = 1;
+	public static int LAYER_NAV = 0;
+	public static int LAYER_BLOCKINGOBJECTS = 1;
 	public static int LAYER_COLLIDE = 2;
+	public static int LAYER_MISSIONOBJECTS = 3;
 	
 	public void restart() {
 		
@@ -70,7 +76,7 @@ public class Level {
 		//process physics
 		worldConfig.setSystem(new PhysicsWrapper(GameSettings.tickDelayGame));
 		//process entities that respond to physics
-		worldConfig.setSystem(new SpriteSimulate(GameSettings.tickDelayGame));
+		worldConfig.setSystem(new SpriteSim(GameSettings.tickDelayGame));
 		worldConfig.setSystem(new MapRender());
 		worldConfig.setSystem(new SpriteRender());
 		worldConfig.setSystem(new SpriteRenderHUD());
@@ -79,6 +85,8 @@ public class Level {
 		worldArtemis = new World(worldConfig);
 		
 		worldBox2D = new com.badlogic.gdx.physics.box2d.World(new Vector2(0, 0), true);
+
+        loadLevelObjects();
 		
 		respawnPlayer();
 	}
@@ -170,6 +178,21 @@ public class Level {
         mapTileHeight = map.getProperties().get("tileheight", Integer.class);
 	}
 	
+	public void loadLevelObjects() {
+		MapLayer mapLayerMission = getMap().getLayers().get(LAYER_MISSIONOBJECTS);
+		
+		MapObjects objects = mapLayerMission.getObjects();
+		
+		for (int i = 0; i < objects.getCount(); i++) {
+			MapObject mapObj = objects.get(i);
+			
+			SpawnableBase base = EntityFactory.getEntity(mapObj.getName());
+			if (base != null) {
+				base.prepare(mapObj);
+			}
+		}
+	}
+	
 	public void respawnPlayer() {
 		Entity ent = getPlayerEntity();
 		if (ent != null) {
@@ -179,7 +202,8 @@ public class Level {
 			Position pos = ent.getComponent(Position.class);
 			pos.setPos(100, 100);
 		} else {
-			setPlayer(EntityFactory.createPlayer(100, 100).getId());
+			//setPlayer(EntityFactory.createPlayer(100, 100).getId());
+			setPlayer(EntityFactory.createEntity_Player(100, 100).getId());
 		}
 		
 	}
@@ -222,6 +246,8 @@ public class Level {
 		/*MapLayer layer1 = getMap().getLayers().get(0);
 		MapLayer layer2 = getMap().getLayers().get(1);
 		MapLayer layer3 = getMap().getLayers().get(2);*/
+		
+		//MapLayers mapLayers = getMap().getLayers();
 		
 		TiledMapTileLayer mapLayer = (TiledMapTileLayer)getMap().getLayers().get(layer);
 		return mapLayer;

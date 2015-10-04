@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="64" tileheight="64" nextobjectid="2">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="64" tileheight="64" nextobjectid="30">
  <tileset firstgid="1" name="tiles" tilewidth="64" tileheight="64" tilecount="256">
   <image source="../imgs/tiles/tiles.png" width="1024" height="1024"/>
  </tileset>
- <objectgroup name="BlockingObjects">
-  <object id="1" name="Block" type="Unpassable" x="384" y="2880" width="32" height="32"/>
- </objectgroup>
  <layer name="NavLayer" width="50" height="50">
   <data encoding="base64" compression="zlib">
    eJzFmm2SojAQhiMqirv7A0TF23k0jzJHWzL2O/XYC8wkKJuqFElIOunvJvQ5hHDt67mvndXYvtj4FW2Nd26sc+MX9DvXP+N5HhjjvlNzLta+2vgxhI+2r/VAPaLd4hlr49qNW9NgTo33hDFU/d6NtRsHk3vG/qrHZW1109fCahzfWtX74pvnGmsFd4vxLfZYWVvPDfbbYN4acAq3fo26D+G+s1r1dW/1YGNlX//083bo6/0B83bW3rvxCu99vwS8HdaVbp8KZ+AY4W1BP/JB9In9HuaH55Votpqg1TY801xjW6wTPbVmE575I55UdgbuRTi9fIXmoSefbdXYP9manclf37/FuS3mtYDRYO1xoM25Ld637hwt1p3szHt3Bq6NfdoO2gmzAfeN4bF59G+0YV3417bQjvHZ4Umb5G2et3X9Oe+Rlr0sfRR2Bu6l9li5PHD+hCFa9Hjfuok1ry7xfBGPKFcHo2Xfv10SYIgfZgs+TAYXx6MxmaiMH43x46clnpf8iPhIrpYql8een7aoNJlIpWWE0RgepfGjTaTF3NLhDJTtFLkST8mPVBhzC2WitDPUiTJxNhiRDwfox5L8kK2hzUw9Q5xLPc/h6dwS6V7D7m4yzhBhCI+d8TTV5s0t0tEoC9UMfjTAYxv+j//wvrjN0I8GNk/+fEn9iOeNflAxXvHoJ9td0aLM9EFzi/ihGC9XrkSLHWKbJeWKfnCfqaPyQeKH9GNJfy57JTzEjxx7JTxkd5fGQ2fYh+eYOwUGfZBimyXxkD+Pe1eQiVR+SD8OhkeqzZtbdIaoF4zxUvnRImZWvLu0njNWzaElY5upuKRAzS1jMK6PPe+8Izhm2KsWflDxrufH0P7FD+t3cGiv5MNy7BVhiKdjeLyqskjP9V0bz5Bqr+g/DrAV3pe+Ew/K9gH+Iycuka0Yi6/eKVfiR6QhY4rU78EaOqZvsSm5Gis/fT+m55TtVJvpbV5OTODPmVqER1xbZeqH5Epx4lSM9g7dEB4tYqM5cYli5qn7q3fiQVuTc9ehuJ06NhZfvcoP+sK4hHqecw8nfy5aTOHxan7QF+s7KvVbbkjPx77P34XHJTzzI+fbWrG/bIXkagqPVLzG1ns86Adz7C5hTMWa78JDd+X8tk69Z2CsWQGPKbv7ajwYU1CuUuyVv5OUng/J5jv1g2fI+Xchm6eYID7HfNA7/QfjXelozv1uARg596KyecWjfUtZS3+ee0dAuzvn/mouHvwGyr2nHrJ5qfcMc/CQfvCufEyu+N+1Q5v/5nzczn+2ZweD/2x1Dv2fl504u/VX7M/3/I8juRItuc5o/pXPobwN5XWccF9i/66/8j3q8JxHovXMPakNhvA4Yd7Ysx5Yr9hoizO0bh1zBIrwnNugvBDpufIPNMfnh/icB+YoDOWfCObGveNeeie5Wrs9NDfma8RcDuVqKEektH6svx6y9TVHbc3bYy7zUwRP+SIHrB1btwdczvtteiLcPO1Ji7Wjlehbgrak8So855Qwt8fn6xRuLf2G5y9prnwU8o7jmqu8D+V0tBg72VzhodyOI+Yqv4NjyjXxbZ+HUmMO+0fMPTk6xDO0gKf6Fz8kTsQ=
   </data>
  </layer>
+ <objectgroup name="BlockingObjects">
+  <object id="1" name="Block" type="Unpassable" x="384" y="2880" width="32" height="32"/>
+ </objectgroup>
  <layer name="BlockingLayer" width="50" height="50">
   <data encoding="base64" compression="zlib">
-   eJzt1ksOgCAQBFHO4f0P6sqFhsQII10h9RKXzNCGX2uSJEmSJEnS3fHTt9qzZ8W80zlG/mdvTDoHuWaiZzrHTuvqbR+T9/mX84h67l5zI9ZK9qbkmL0HKTlItZK9KTlG749erdXMwc1BqpXsnc5R+S6hoqz/WbvkkKQqJ7x1EEE=
+   eJztl0sOhSAQBD3Hu/9B3ZPgfLoFnqlK3OjQThlQuS4AAFjJb3J0xriPSg+zmijjbRw94OEDD2+GCh7eDBU8vBkqeHgzVPDwZqjg4c1QWenx5r5jtcd4Xt0v7fbI7uPGnHHMbg8XeNRrvj6vonV88jqvvI9Ofe9m87JUcvGI76d+B0/xUMGjVxPNqyynzis8nnOjHro1X18fKrs9nP8lnR66NdU1oI7LXI+eyyyj+73ujMv0AADwL9zh2yVh
   </data>
  </layer>
+ <objectgroup name="MissionObjects">
+  <object id="11" name="grunt" type="sprite" x="1456" y="2369.33" width="180" height="162.667">
+   <properties>
+    <property name="count" value="10"/>
+   </properties>
+  </object>
+  <object id="22" name="grunt" type="sprite" gid="24" x="1632" y="2365.33" width="64" height="64"/>
+ </objectgroup>
 </map>

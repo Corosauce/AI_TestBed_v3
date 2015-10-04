@@ -15,18 +15,12 @@ import com.corosus.game.entity.ActionRoutine;
  * @author Corosus
  *
  */
-public class ProfileData extends Component {
+public class ProjectileData extends Component {
 	
-	public float moveSpeed = 10;
-	public float fireDelay = 10;
+	//relocate to projectile data
+	public float prjDamage = 5;
 	
-	public List<ActionRoutine> listRoutines = new ArrayList<ActionRoutine>();
-	
-	public ProfileData() {
+	public ProjectileData() {
 		
-	}
-	
-	public void addAction(ActionRoutine action) {
-		listRoutines.add(action);
 	}
 }

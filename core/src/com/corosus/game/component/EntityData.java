@@ -14,6 +14,8 @@ public class EntityData extends Component {
 	
 	public EnumEntityType type = EnumEntityType.SPRITE;
 	
+	public int team = 0;
+	
 	public EntityData() {
 		
 	}

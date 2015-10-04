@@ -1,5 +1,7 @@
 package com.corosus.game;
 
+import javax.vecmath.Vector2f;
+
 import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.WorldConfiguration;
@@ -21,7 +23,7 @@ import com.corosus.game.factory.EntityFactory;
 import com.corosus.game.system.GameInput;
 import com.corosus.game.system.MapRender;
 import com.corosus.game.system.SpriteRender;
-import com.corosus.game.system.SpriteSimulate;
+import com.corosus.game.system.SpriteSim;
 import com.corosus.game.system.WorldSim;
 
 public class Game_AI_TestBed extends Game {
@@ -95,6 +97,20 @@ public class Game_AI_TestBed extends Game {
 	
 	public OrthographicCamera getCamera() {
 		return camera;
+	}
+	
+	public boolean isInView(Vector2f pos) {
+		return isInView(pos, 0);
+	}
+	
+	public boolean isInView(Vector2f pos, int padding) {
+		if (pos.x + padding >= camera.position.x - camera.viewportWidth/2 && 
+				pos.x - padding < camera.position.x + camera.viewportWidth/2 && 
+				pos.y + padding >= camera.position.y - camera.viewportHeight/2 && 
+				pos.y - padding < camera.position.y + camera.viewportHeight/2) {
+			return true;
+		}
+		return false;
 	}
 	
 	public Level getLevel() {

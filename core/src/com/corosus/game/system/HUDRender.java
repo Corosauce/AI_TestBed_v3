@@ -29,7 +29,7 @@ public class HUDRender extends IntervalEntityProcessingSystem {
 	
 	@Override
 	protected void processSystem() {
-		
+		//if (true) return;
 		//Logger.dbg("tick " + this);
 		
 		Game_AI_TestBed game = Game_AI_TestBed.instance();
@@ -54,6 +54,8 @@ public class HUDRender extends IntervalEntityProcessingSystem {
 			healthBoxOutline.rectLine(x - borderSize, y, x + sizeMax + borderSize, y, width + borderSize*2);
 			healthBoxOutline.end();
 			
+			healthBoxOutline.dispose();
+			
 			ShapeRenderer healthBox = new ShapeRenderer();
 			//orient to map coords
 			//healthBox.setProjectionMatrix(game.getCamera().combined);
@@ -61,6 +63,8 @@ public class HUDRender extends IntervalEntityProcessingSystem {
 			healthBox.setColor(1, 0, 0, 0);
 			healthBox.rectLine(x, y, x + size, y, width);
 			healthBox.end();
+			
+			healthBox.dispose();
 		}
 		
 	}

@@ -13,6 +13,10 @@ public class Velocity extends Component {
 	}
 	
 	public Velocity(float x, float y) {
+		set(x, y);
+	}
+	
+	public void set(float x, float y) {
 		this.x = x;
 		this.y = y;
 	}

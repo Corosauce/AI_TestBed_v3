@@ -237,7 +237,10 @@ public class GameInput extends IntervalEntityProcessingSystem {
 					double rot = Math.toRadians(pos.rotationYaw + 90);
 					float vecX = (float) (Math.sin(rot)) * profile.moveSpeed * 2F;
 					float vecY = (float) (-Math.cos(rot)) * profile.moveSpeed * 2F;
-					EntityFactory.createEntity(EnumEntityType.PROJECTILE, pos.x + vecX, pos.y + vecY, vecX, vecY);
+					//EntityFactory.createEntity(EnumEntityType.PROJECTILE, pos.x + vecX, pos.y + vecY, vecX, vecY);
+					EntityFactory.createEntity_Projectile(pos.x + vecX, pos.y + vecY).getComponent(Velocity.class).set(vecX, vecY);
+					//ent.getComponent(Velocity.class).set(vecX, vecY);
+					//.createEntity(EnumEntityType.PROJECTILE, pos.x + vecX, pos.y + vecY, vecX, vecY);
 				}
 				
 			} catch (Exception e) {
