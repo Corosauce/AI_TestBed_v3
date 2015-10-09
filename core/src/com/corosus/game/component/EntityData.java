@@ -1,6 +1,7 @@
 package com.corosus.game.component;
 
 import com.artemis.Component;
+import com.corosus.game.Cst;
 import com.corosus.game.entity.EnumEntityType;
 
 /**
@@ -14,7 +15,14 @@ public class EntityData extends Component {
 	
 	public EnumEntityType type = EnumEntityType.SPRITE;
 	
-	public int team = 0;
+	public int sizeDiameter = Cst.COLLIDESIZE_DEFAULT;
+	
+	//mainly for preventing same team collision of projectile to sprite
+	//team 0 will be considered player
+	public int team = TEAM_PLAYER;
+	
+	public static int TEAM_PLAYER = 0;
+	public static int TEAM_1 = 1;
 	
 	public EntityData() {
 		
@@ -22,5 +30,10 @@ public class EntityData extends Component {
 	
 	public EntityData(EnumEntityType profileID) {
 		this.type = profileID;
+	}
+	
+	public EntityData setTeam(int team) {
+		this.team = team;
+		return this;
 	}
 }

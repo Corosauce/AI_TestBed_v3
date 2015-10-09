@@ -26,15 +26,17 @@ public class PhysicsData extends Component {
 	
 	public boolean needInit = true;
 	
-	public static byte COLLIDE_PROJECTILE = 0x0001;
-	public static byte COLLIDE_SPRITE = 0x0002;
-	public static byte COLLIDE_PLAYER = 0x0004;
+	public static byte COLLIDE_TERRAIN = 0x0001;
+	public static byte COLLIDE_TEAM0_SPRITE = 0x0002;
+	public static byte COLLIDE_TEAM1_SPRITE = 0x0004;
+	public static byte COLLIDE_TEAM0_PROJECTILE = 0x0008;
+	public static byte COLLIDE_TEAM1_PROJECTILE = 0x0016;
 	
 	public PhysicsData() {
 		
 	}
 	
-	public void initPhysics(int entID, float x, float y, short categoryBits, short maskBits) {
+	public void initPhysics(int entID, float x, float y, int sizeDiameter, short categoryBits, short maskBits) {
 		World world = Game_AI_TestBed.instance().getLevel().getWorldBox2D();
 		
 		/*if (world.isLocked()) {
@@ -60,7 +62,7 @@ public class PhysicsData extends Component {
 		shape.setAsBox(Cst.SPRITESIZE/2, Cst.SPRITESIZE/2);*/
 		
 		CircleShape shape = new CircleShape();
-		shape.setRadius(Cst.SPRITECOLLIDESIZE/2);
+		shape.setRadius(sizeDiameter/2);
 		
 		FixtureDef fDef = new FixtureDef();
 		fDef.shape = shape;

@@ -18,7 +18,7 @@ import com.corosus.game.entity.ActionRoutine;
 public class ProjectileData extends Component {
 	
 	//relocate to projectile data
-	public float prjDamage = 5;
+	public float prjDamage = 50;
 	
 	public ProjectileData() {
 		

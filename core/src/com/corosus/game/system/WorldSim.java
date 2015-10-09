@@ -63,7 +63,7 @@ public class WorldSim extends IntervalEntityProcessingSystem {
 							//EntityFactory.createEntity(EnumEntityType.SPRITE, randX, randY);
 							//EntityFactory.createEntity_NPC(randX, randY);
 							
-							Logger.dbg("spawncount: " + Game_AI_TestBed.instance().getLevel().getEntityCount());
+							//Logger.dbg("spawncount: " + Game_AI_TestBed.instance().getLevel().getEntityCount());
 							
 							/*Entity ent = factorySprites.position(66,1).velocity(0, 0).create();
 							System.out.println("test: " + ent.getId());

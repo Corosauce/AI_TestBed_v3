@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import com.artemis.Entity;
 import com.artemis.utils.EntityBuilder;
+import com.corosus.game.Cst;
 import com.corosus.game.Game_AI_TestBed;
 import com.corosus.game.component.EntityData;
 import com.corosus.game.component.Health;
@@ -16,12 +17,16 @@ import com.corosus.game.component.RenderData;
 import com.corosus.game.component.Velocity;
 import com.corosus.game.entity.ActionRoutineDodge;
 import com.corosus.game.entity.EnumEntityType;
+import com.corosus.game.factory.spawnable.SpawnableBase;
+import com.corosus.game.factory.spawnable.SpawnableGrunt;
+import com.corosus.game.factory.spawnable.SpawnablePlayer;
 
 public class EntityFactory {
 	
 	private static HashMap<String, SpawnableBase> lookupSpawnables = new HashMap<String, SpawnableBase>();
 
 	static {
+		addEntity("player", new SpawnablePlayer());
 		addEntity("grunt", new SpawnableGrunt());
 	}
 	
@@ -48,11 +53,13 @@ public class EntityFactory {
 		EntityData data = new EntityData(EnumEntityType.SPRITE);
 		data.aiControlled = false;
 		data.inputControlled = true;
+		data.setTeam(EntityData.TEAM_PLAYER);
+		data.sizeDiameter = Cst.COLLIDESIZE_SPRITE;
 		
 		ProfileData profile = new ProfileData();
 		profile.addAction(new ActionRoutineDodge(3));
 		
-		RenderData render = new RenderData("civ1");
+		RenderData render = new RenderData("player");
 		
 		ent
 		.with(new PlayerData())
@@ -71,12 +78,13 @@ public class EntityFactory {
 		
 		EntityData data = new EntityData(EnumEntityType.SPRITE);
 		data.aiControlled = true;
+		data.sizeDiameter = Cst.COLLIDESIZE_SPRITE;
 		
 		ProfileData profile = new ProfileData();
 		
 		ent
 		.with(new Health(100))
-		.with(new RenderData("tanya"))
+		.with(new RenderData("general"))
 		.with(data)
 		.with(profile)
 		;
@@ -91,6 +99,7 @@ public class EntityFactory {
 		
 		EntityData data = new EntityData(EnumEntityType.PROJECTILE);
 		data.aiControlled = true;
+		data.sizeDiameter = Cst.COLLIDESIZE_PROJECTILE;
 		
 		ProfileData profile = new ProfileData();
 		

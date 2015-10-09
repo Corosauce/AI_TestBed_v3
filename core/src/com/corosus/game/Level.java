@@ -18,7 +18,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.corosus.game.component.Health;
 import com.corosus.game.component.Position;
 import com.corosus.game.factory.EntityFactory;
-import com.corosus.game.factory.SpawnableBase;
+import com.corosus.game.factory.spawnable.SpawnableBase;
 import com.corosus.game.system.GameInput;
 import com.corosus.game.system.HUDRender;
 import com.corosus.game.system.MapRender;
@@ -188,7 +188,7 @@ public class Level {
 			
 			SpawnableBase base = EntityFactory.getEntity(mapObj.getName());
 			if (base != null) {
-				base.prepare(mapObj);
+				base.prepareFromMap(mapObj);
 			}
 		}
 	}

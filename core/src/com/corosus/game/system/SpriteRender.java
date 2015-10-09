@@ -71,7 +71,7 @@ public class SpriteRender extends IntervalEntityProcessingSystem {
 			render.orient = Orient.fromAngleOld(pos.rotationYaw);
 			
 			if (vel.x != 0 || vel.y != 0) {
-				render.state = ActorState.WALK;
+				//render.state = ActorState.WALK;
 			} else {
 				render.state = ActorState.STATIC;
 			}

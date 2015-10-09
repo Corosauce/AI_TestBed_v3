@@ -17,6 +17,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.corosus.game.Game_AI_TestBed;
 import com.corosus.game.Logger;
 import com.corosus.game.client.input.XBox360Pad;
+import com.corosus.game.component.EntityData;
 import com.corosus.game.component.Position;
 import com.corosus.game.component.ProfileData;
 import com.corosus.game.component.Velocity;
@@ -233,12 +234,14 @@ public class GameInput extends IntervalEntityProcessingSystem {
 				vel.y *= profile.moveSpeed;
 				
 				//mouse shoot
-				if (mouseDown(0)) {
+				if (mouseDown(0) && Game_AI_TestBed.instance().getLevel().getGameTime() % 10 == 0) {
 					double rot = Math.toRadians(pos.rotationYaw + 90);
 					float vecX = (float) (Math.sin(rot)) * profile.moveSpeed * 2F;
 					float vecY = (float) (-Math.cos(rot)) * profile.moveSpeed * 2F;
 					//EntityFactory.createEntity(EnumEntityType.PROJECTILE, pos.x + vecX, pos.y + vecY, vecX, vecY);
-					EntityFactory.createEntity_Projectile(pos.x + vecX, pos.y + vecY).getComponent(Velocity.class).set(vecX, vecY);
+					Entity ent = EntityFactory.createEntity_Projectile(pos.x + vecX, pos.y + vecY);
+					ent.getComponent(Velocity.class).set(vecX, vecY);
+					ent.getComponent(EntityData.class).setTeam(EntityData.TEAM_PLAYER);
 					//ent.getComponent(Velocity.class).set(vecX, vecY);
 					//.createEntity(EnumEntityType.PROJECTILE, pos.x + vecX, pos.y + vecY, vecX, vecY);
 				}

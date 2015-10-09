@@ -1,0 +1,50 @@
+{
+static$up: {
+	class: sprite,
+	spriteTable: imgs/sprites/player.png,
+	row: 0,
+	column: 0
+},
+static$up_left: {
+	class: sprite,
+	spriteTable: imgs/sprites/player.png,
+	row: 0,
+	column: 1
+},
+static$left: {
+	class: sprite,
+	spriteTable: imgs/sprites/player.png,
+	row: 0,
+	column: 2
+},
+static$down_left: {
+	class: sprite,
+	spriteTable: imgs/sprites/player.png,
+	row: 0,
+	column: 3
+},
+static$down: {
+	class: sprite,
+	spriteTable: imgs/sprites/player.png,
+	row: 0,
+	column: 4
+},
+static$down_right: {
+	class: sprite,
+	spriteTable: imgs/sprites/player.png,
+	row: 0,
+	column: 5
+},
+static$right: {
+	class: sprite,
+	spriteTable: imgs/sprites/player.png,
+	row: 0,
+	column: 6
+},
+static$up_right: {
+	class: sprite,
+	spriteTable: imgs/sprites/player.png,
+	row: 0,
+	column: 7
+}
+}

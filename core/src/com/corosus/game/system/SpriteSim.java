@@ -85,19 +85,47 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 			
 			short categoryBits = 0;
 			if (data.type == EnumEntityType.SPRITE) {
-				categoryBits = PhysicsData.COLLIDE_SPRITE;
+				if (data.team == 0) {
+					categoryBits = PhysicsData.COLLIDE_TEAM0_SPRITE;
+				} else if (data.team == 1) {
+					categoryBits = PhysicsData.COLLIDE_TEAM1_SPRITE;
+				} else {
+					Logger.dbg("MISSING TEAM COLLIDE DATA");
+				}
+				
 			} else if (data.type == EnumEntityType.PROJECTILE) {
-				categoryBits = PhysicsData.COLLIDE_PROJECTILE;
+				if (data.team == 0) {
+					categoryBits = PhysicsData.COLLIDE_TEAM0_PROJECTILE;
+				} else if (data.team == 1) {
+					categoryBits = PhysicsData.COLLIDE_TEAM1_SPRITE;
+				} else {
+					Logger.dbg("MISSING TEAM COLLIDE DATA");
+				}
 			}
 			
 			short maskBits = 0;
 			if (data.type == EnumEntityType.SPRITE) {
-				maskBits = PhysicsData.COLLIDE_PROJECTILE;
+				if (data.team == 0) {
+					maskBits = PhysicsData.COLLIDE_TEAM1_PROJECTILE;
+				} else if (data.team == 1) {
+					maskBits = PhysicsData.COLLIDE_TEAM0_PROJECTILE;
+				} else {
+					Logger.dbg("MISSING TEAM COLLIDE DATA");
+				}
 			} else if (data.type == EnumEntityType.PROJECTILE) {
-				maskBits = PhysicsData.COLLIDE_SPRITE;
+				if (data.team == 0) {
+					maskBits = PhysicsData.COLLIDE_TEAM1_SPRITE;
+					
+					//make projectiles also collide with eachother
+					//maskBits = (short) (PhysicsData.COLLIDE_TEAM1_SPRITE | PhysicsData.COLLIDE_TEAM1_PROJECTILE);
+				} else if (data.team == 1) {
+					maskBits = PhysicsData.COLLIDE_TEAM0_SPRITE;
+				} else {
+					Logger.dbg("MISSING TEAM COLLIDE DATA");
+				}
 			}
 			
-			physics.initPhysics(e.getId(), pos.x, pos.y, categoryBits, maskBits);
+			physics.initPhysics(e.getId(), pos.x, pos.y, data.sizeDiameter, categoryBits, maskBits);
 		}
 		
 		List<Component> listComponents = new ArrayList<Component>();
@@ -167,7 +195,9 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 									float vecX = targVec.x * speed;
 									float vecY = targVec.y * speed;
 									//EntityFactory.createEntity(EnumEntityType.PROJECTILE, pos.x + vecX * 2, pos.y + vecY * 2, vecX, vecY);
-									EntityFactory.createEntity_Projectile(pos.x + vecX * 2, pos.y + vecY * 2).getComponent(Velocity.class).set(vecX, vecY);
+									Entity ent = EntityFactory.createEntity_Projectile(pos.x + vecX * 2, pos.y + vecY * 2);
+									ent.getComponent(Velocity.class).set(vecX, vecY);
+									ent.getComponent(EntityData.class).setTeam(data.team);
 								}
 							}
 						}
@@ -217,7 +247,7 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 		//Logger.dbg("real pos: " + fPosX + " - " + fPosY + " tile pos: " + fTileX + " - " + fTileY);
 		
 		boolean collide = false;
-		boolean bounce = true;
+		boolean bounce = false;
 		
 		if (!level.isPassable(fPosX, (int) pos.y) && motion.x < 0 && fPosX < vec.x + Cst.TILESIZE) {
 			//System.out.println("adjust -x!");
@@ -350,7 +380,7 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 		super.processSystem();
 		
 		for (CollisionEntry entry : listCollisionQueueStart) {
-			//Logger.dbg("collision start between " + entry.entIDA + " and " + entry.entIDB);
+			Logger.dbg("collision start between " + entry.entIDA + " and " + entry.entIDB);
 			
 			Entity entIDA = Game_AI_TestBed.instance().getLevel().getWorld().getEntity(entry.entIDA);
 			Entity entIDB = Game_AI_TestBed.instance().getLevel().getWorld().getEntity(entry.entIDB);
