@@ -24,9 +24,13 @@ import com.corosus.game.component.Position;
 import com.corosus.game.component.ProfileData;
 import com.corosus.game.component.ProjectileData;
 import com.corosus.game.component.Velocity;
+import com.corosus.game.component.WeaponData;
+import com.corosus.game.component.WeaponData.Weapon;
+import com.corosus.game.component.WeaponData.WeaponLocation;
 import com.corosus.game.entity.ActionRoutine;
 import com.corosus.game.entity.EnumEntityType;
 import com.corosus.game.factory.EntityFactory;
+import com.corosus.game.factory.spawnable.SpawnableTypes;
 import com.corosus.game.util.MathUtil;
 import com.corosus.game.util.VecUtil;
 
@@ -39,6 +43,7 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 	private ComponentMapper<ProfileData> mapProfile;
 	private ComponentMapper<PhysicsData> mapPhysics;
 	private ComponentMapper<ProjectileData> mapProjectile;
+	private ComponentMapper<WeaponData> mapWeapons;
 	
 	private List<CollisionEntry> listCollisionQueueStart = new ArrayList<CollisionEntry>();
 	private List<CollisionEntry> listCollisionQueueEnd = new ArrayList<CollisionEntry>();
@@ -75,6 +80,7 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 		EntityData data = mapData.get(e);
 		ProfileData profileData = mapProfile.get(e);
 		PhysicsData physics = mapPhysics.get(e);
+		WeaponData weapons = mapWeapons.get(e);
 		//ProjectileData projData = mapProjectile.get(e);
 		
 		if (physics.needInit) {
@@ -194,10 +200,7 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 									
 									float vecX = targVec.x * speed;
 									float vecY = targVec.y * speed;
-									//EntityFactory.createEntity(EnumEntityType.PROJECTILE, pos.x + vecX * 2, pos.y + vecY * 2, vecX, vecY);
-									Entity ent = EntityFactory.createEntity_Projectile(pos.x + vecX * 2, pos.y + vecY * 2);
-									ent.getComponent(Velocity.class).set(vecX, vecY);
-									ent.getComponent(EntityData.class).setTeam(data.team);
+									EntityFactory.getEntity(SpawnableTypes.PRJ_PULSE).prepareFromData(pos.x + vecX * 2, pos.y + vecY * 2, data.team, vecX, vecY);
 								}
 							}
 						}
@@ -213,9 +216,19 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 				//
 				
 				
-				
 			} else {
 				
+			}
+			
+			//TODO: is this proper ecs design? maybe we should have a subsystem for weapon logic? or just a separate system?
+			
+			//process weapons - cooldowns all weapons
+			for (WeaponLocation weapLoc : weapons.listWeaponLocations) {
+				for (Weapon weapon : weapLoc.listWeapons) {
+					if (weapon.ticksCooldownCur > 0) {
+						weapon.ticksCooldownCur--;
+					}
+				}
 			}
 			
 			/*float drag = 0.15F;

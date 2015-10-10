@@ -21,8 +21,10 @@ import com.corosus.game.component.EntityData;
 import com.corosus.game.component.Position;
 import com.corosus.game.component.ProfileData;
 import com.corosus.game.component.Velocity;
-import com.corosus.game.entity.EnumEntityType;
+import com.corosus.game.component.WeaponData;
+import com.corosus.game.component.WeaponData.Weapon;
 import com.corosus.game.factory.EntityFactory;
+import com.corosus.game.factory.spawnable.SpawnableTypes;
 
 public class GameInput extends IntervalEntityProcessingSystem {
 	
@@ -40,6 +42,7 @@ public class GameInput extends IntervalEntityProcessingSystem {
 	private ComponentMapper<Position> mapPos;
 	private ComponentMapper<Velocity> mapVelocity;
 	private ComponentMapper<ProfileData> mapProfile;
+	private ComponentMapper<WeaponData> mapWeapons;
 	
 	public GameInput(float interval) {
 		super(Aspect.exclude(), interval);
@@ -118,6 +121,7 @@ public class GameInput extends IntervalEntityProcessingSystem {
 			Velocity vel = mapVelocity.get(player);
 			Position pos = mapPos.get(player);
 			ProfileData profile = mapProfile.get(player);
+			WeaponData weapons = mapWeapons.get(player);
 			
 			//force no movement unless input
 			vel.x = 0F;
@@ -234,16 +238,22 @@ public class GameInput extends IntervalEntityProcessingSystem {
 				vel.y *= profile.moveSpeed;
 				
 				//mouse shoot
-				if (mouseDown(0) && Game_AI_TestBed.instance().getLevel().getGameTime() % 10 == 0) {
-					double rot = Math.toRadians(pos.rotationYaw + 90);
-					float vecX = (float) (Math.sin(rot)) * profile.moveSpeed * 2F;
-					float vecY = (float) (-Math.cos(rot)) * profile.moveSpeed * 2F;
-					//EntityFactory.createEntity(EnumEntityType.PROJECTILE, pos.x + vecX, pos.y + vecY, vecX, vecY);
-					Entity ent = EntityFactory.createEntity_Projectile(pos.x + vecX, pos.y + vecY);
-					ent.getComponent(Velocity.class).set(vecX, vecY);
-					ent.getComponent(EntityData.class).setTeam(EntityData.TEAM_PLAYER);
-					//ent.getComponent(Velocity.class).set(vecX, vecY);
-					//.createEntity(EnumEntityType.PROJECTILE, pos.x + vecX, pos.y + vecY, vecX, vecY);
+				if (mouseDown(0)) {
+					
+					if (weapons.hasPrimaryWeapon()) {
+						
+						Weapon weapon = weapons.getActivePrimary();
+						
+						if (weapon.canFire()) {
+							
+							//TODO: group this stuff together better
+							weapon.fire();
+							double rot = Math.toRadians(pos.rotationYaw + 90);
+							float vecX = (float) (Math.sin(rot)) * profile.moveSpeed * 2F;
+							float vecY = (float) (-Math.cos(rot)) * profile.moveSpeed * 2F;
+							EntityFactory.getEntity(SpawnableTypes.PRJ_PULSE).prepareFromData(pos.x + vecX, pos.y + vecY, EntityData.TEAM_PLAYER, vecX, vecY);
+						}
+					}
 				}
 				
 			} catch (Exception e) {

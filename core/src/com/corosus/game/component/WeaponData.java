@@ -13,7 +13,7 @@ import com.artemis.Component;
 public class WeaponData extends Component {
 
 	//list of simutaneously used weapons
-	public List<WeaponLocation> listWeaponSlots = new ArrayList<WeaponLocation>();
+	public List<WeaponLocation> listWeaponLocations = new ArrayList<WeaponLocation>();
 	
 	public static class WeaponLocation {
 		public int activeWeaponIndex = 0;
@@ -22,12 +22,38 @@ public class WeaponData extends Component {
 		public List<Weapon> listWeapons = new ArrayList<Weapon>();
 	}
 	
+	
+	
 	public static class Weapon {
+		public int ticksCooldownCur;
+		public int ticksCooldownRate = 10;
 		
+		public boolean canFire() {
+			return ticksCooldownCur <= 0;
+		}
+		
+		//bad design?
+		public void fire() {
+			ticksCooldownCur = ticksCooldownRate;
+		}
 	}
 	
 	public WeaponData() {
 		
+	}
+	
+	public boolean hasPrimaryWeapon() {
+		return listWeaponLocations.size() > 0 && listWeaponLocations.get(0).listWeapons.size() > 0;
+	}
+	
+	public Weapon getActivePrimary() {
+		if (listWeaponLocations.size() > 0) {
+			WeaponLocation loc = listWeaponLocations.get(0);
+			if (loc.listWeapons.size() > 0) {
+				return loc.listWeapons.get(loc.activeWeaponIndex);
+			}
+		}
+		return null;
 	}
 	
 }
