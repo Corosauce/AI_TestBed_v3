@@ -4,20 +4,20 @@ import java.util.List;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.MapProperties;
 import com.corosus.game.component.EntityData;
 import com.corosus.game.factory.EntityFactory;
 
-public class SpawnablePlayer implements SpawnableBase {
+public class SpawnablePrjPulse implements SpawnableBase {
 
 	@Override
 	public List<Entity> prepareFromMap(MapObject mapObj) {
+
 		return null;
 	}
 
 	@Override
 	public Entity prepareFromData(Object... objects) {
-		Entity ent = EntityFactory.createEntity_NPC((Float)objects[0], (Float)objects[1]);
+		Entity ent = EntityFactory.createEntity_Projectile((Float)objects[0], (Float)objects[1]);
 		ent.getComponent(EntityData.class).setTeam((int) objects[2]);
 		return ent;
 	}

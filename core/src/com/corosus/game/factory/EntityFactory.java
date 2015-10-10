@@ -15,19 +15,29 @@ import com.corosus.game.component.ProfileData;
 import com.corosus.game.component.ProjectileData;
 import com.corosus.game.component.RenderData;
 import com.corosus.game.component.Velocity;
+import com.corosus.game.component.WeaponData;
 import com.corosus.game.entity.ActionRoutineDodge;
 import com.corosus.game.entity.EnumEntityType;
 import com.corosus.game.factory.spawnable.SpawnableBase;
-import com.corosus.game.factory.spawnable.SpawnableGrunt;
+import com.corosus.game.factory.spawnable.SpawnableGeneral;
+import com.corosus.game.factory.spawnable.SpawnableSoldier;
 import com.corosus.game.factory.spawnable.SpawnablePlayer;
+import com.corosus.game.factory.spawnable.SpawnablePrjPulse;
+import com.corosus.game.factory.spawnable.SpawnableTypes;
 
 public class EntityFactory {
 	
+	/**
+	 * primary purpose of this design is for deserialization of map data
+	 * also to be used as final implementation of factory based spawning of entities
+	 */
 	private static HashMap<String, SpawnableBase> lookupSpawnables = new HashMap<String, SpawnableBase>();
 
 	static {
-		addEntity("player", new SpawnablePlayer());
-		addEntity("grunt", new SpawnableGrunt());
+		addEntity(SpawnableTypes.SPRITE_PLAYER, new SpawnablePlayer()); //TODO: USE THIS
+		addEntity(SpawnableTypes.SPRITE_SOLDIER, new SpawnableSoldier());
+		addEntity(SpawnableTypes.SPRITE_GENERAL, new SpawnableGeneral());
+		addEntity(SpawnableTypes.PRJ_PULSE, new SpawnablePrjPulse());
 	}
 	
 	public static void addEntity(String name, SpawnableBase base) {
@@ -39,13 +49,13 @@ public class EntityFactory {
 	}
 	
 	
-	public static Entity createEntity_Mission(String type, float posX, float posY) {
+	/*public static Entity createEntity_Mission(String type, float posX, float posY) {
 		Entity ent = createEntity_NPC(posX, posY);
 		
 		
 		
 		return ent;
-	}
+	}*/
 	
 	public static Entity createEntity_Player(float posX, float posY) {
 		EntityBuilder ent = getTemplate_Common(posX, posY);
@@ -64,6 +74,7 @@ public class EntityFactory {
 		ent
 		.with(new PlayerData())
 		.with(data)
+		.with(new WeaponData())
 		.with(profile)
 		.with(render)
 		;
@@ -84,8 +95,9 @@ public class EntityFactory {
 		
 		ent
 		.with(new Health(100))
-		.with(new RenderData("general"))
+		.with(new RenderData())
 		.with(data)
+		.with(new WeaponData())
 		.with(profile)
 		;
 		

@@ -1,11 +1,14 @@
 package com.corosus.game.factory.spawnable;
 
+import java.util.List;
+
+import com.artemis.Entity;
 import com.badlogic.gdx.maps.MapObject;
 
 public interface SpawnableBase {
 
-	public abstract void prepareFromMap(MapObject mapObj);
+	public abstract List<Entity> prepareFromMap(MapObject mapObj);
 	
-	public abstract void prepareFromData(Object... objects);
+	public abstract Entity prepareFromData(Object... objects);
 	
 }

@@ -6,6 +6,8 @@ import com.corosus.game.entity.EnumEntityType;
 
 /**
  * Used for defining clearly different types of entities, eg: living entity vs projectile
+ * 
+ * slowly becoming a generic use component for common entity attributes
  *
  */
 public class EntityData extends Component {

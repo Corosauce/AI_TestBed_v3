@@ -1,21 +1,25 @@
 package com.corosus.game.factory.spawnable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.artemis.Entity;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
 import com.corosus.game.component.EntityData;
 import com.corosus.game.factory.EntityFactory;
 
-public class SpawnableGrunt implements SpawnableBase {
+public class SpawnableBaseNPC implements SpawnableBase {
 
 	@Override
-	public void prepareFromMap(MapObject mapObj) {
+	public List<Entity> prepareFromMap(MapObject mapObj) {
 
 		MapProperties props = mapObj.getProperties();
 		
 		float x = (float) props.get("x");
 		float y = (float) props.get("y");
 		
+		//TODO: use this for area spawning
 		float width = (float) props.get("width");
 		float height = (float) props.get("height");
 		
@@ -31,19 +35,20 @@ public class SpawnableGrunt implements SpawnableBase {
 			count = Integer.valueOf((String) props.get("count"));
 		}
 		
+		List<Entity> listEnts = new ArrayList<>();
+		
 		for (int i = 0; i < count; i++) {
-			prepareFromData(x, y, team);
+			listEnts.add(prepareFromData(x, y, team));
 		}
 		
-		
-		
-		//ent.getComponent(Velocity.class).set(vecX, vecY)
+		return listEnts;
 	}
 
 	@Override
-	public void prepareFromData(Object... objects) {
+	public Entity prepareFromData(Object... objects) {
 		Entity ent = EntityFactory.createEntity_NPC((Float)objects[0], (Float)objects[1]);
 		ent.getComponent(EntityData.class).setTeam((int) objects[2]);
+		return ent;
 	}
 	
 }

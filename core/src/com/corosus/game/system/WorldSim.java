@@ -9,11 +9,7 @@ import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.systems.IntervalEntityProcessingSystem;
 import com.corosus.game.Game_AI_TestBed;
-import com.corosus.game.Logger;
 import com.corosus.game.component.Position;
-import com.corosus.game.entity.EnumEntityType;
-import com.corosus.game.factory.EntityFactory;
-import com.corosus.game.factory.FactorySprites;
 import com.corosus.game.util.VecUtil;
 
 public class WorldSim extends IntervalEntityProcessingSystem {

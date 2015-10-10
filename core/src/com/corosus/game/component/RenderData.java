@@ -19,7 +19,13 @@ public class RenderData extends Component {
 	}
 	
 	public RenderData(String spriteAsset) {
+		setAsset(spriteAsset);
+	}
+	
+	public void setAsset(String spriteAsset) {
 		anims = GameAssetManager.INSTANCE.getRenderAssets("imgs/sprites/" + spriteAsset + ".json");
+		orient = Orient.UP;
+		state = ActorState.STATIC;
 	}
 	
 }
