@@ -36,7 +36,7 @@ public class PhysicsData extends Component {
 		
 	}
 	
-	public void initPhysics(int entID, float x, float y, int sizeDiameter, short categoryBits, short maskBits) {
+	public void initPhysics(int entID, float x, float y, int sizeDiameter, short categoryBits, short maskBits, boolean useCCD) {
 		World world = Game_AI_TestBed.instance().getLevel().getWorldBox2D();
 		
 		/*if (world.isLocked()) {
@@ -50,9 +50,12 @@ public class PhysicsData extends Component {
 		
 		
 		BodyDef def = new BodyDef();
+		
+		//use static body on terrain objects, but keep sprites as dynamic
 		def.type = BodyType.DynamicBody;
 		
 		def.position.set(x, y);
+		def.bullet = useCCD;
 		
 		
 		//System.out.println("pos: " + x + " - " + y);

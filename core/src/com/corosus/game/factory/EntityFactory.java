@@ -23,6 +23,7 @@ import com.corosus.game.entity.EnumEntityType;
 import com.corosus.game.factory.spawnable.SpawnableBase;
 import com.corosus.game.factory.spawnable.SpawnableGeneral;
 import com.corosus.game.factory.spawnable.SpawnablePlayer;
+import com.corosus.game.factory.spawnable.SpawnableBaseProjectile;
 import com.corosus.game.factory.spawnable.SpawnablePrjPulse;
 import com.corosus.game.factory.spawnable.SpawnableSoldier;
 import com.corosus.game.factory.spawnable.SpawnableTypes;
@@ -103,11 +104,18 @@ public class EntityFactory {
 		
 		ProfileData profile = new ProfileData();
 		
+		WeaponData weaponData = new WeaponData();
+		WeaponLocation loc = new WeaponLocation();
+		Weapon weap = new Weapon();
+		
+		loc.listWeapons.add(weap);
+		weaponData.listWeaponLocations.add(loc);
+		
 		ent
 		.with(new Health(100))
 		.with(new RenderData())
 		.with(data)
-		.with(new WeaponData())
+		.with(weaponData)
 		.with(profile)
 		;
 		

@@ -80,7 +80,6 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 		EntityData data = mapData.get(e);
 		ProfileData profileData = mapProfile.get(e);
 		PhysicsData physics = mapPhysics.get(e);
-		WeaponData weapons = mapWeapons.get(e);
 		//ProjectileData projData = mapProjectile.get(e);
 		
 		if (physics.needInit) {
@@ -131,7 +130,8 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 				}
 			}
 			
-			physics.initPhysics(e.getId(), pos.x, pos.y, data.sizeDiameter, categoryBits, maskBits);
+			//TODO: refine use of CCD on fast moving projectiles only, determine best based on smallest sprite and prj size / speed
+			physics.initPhysics(e.getId(), pos.x, pos.y, data.sizeDiameter, categoryBits, maskBits, data.type == EnumEntityType.PROJECTILE);
 		}
 		
 		List<Component> listComponents = new ArrayList<Component>();
@@ -153,6 +153,9 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 		//Logger.dbg("data.type: " + data.type + " pos: " + pos.x + ", " + pos.y);
 		
 		if (data.type == EnumEntityType.SPRITE) {
+			
+			WeaponData weapons = mapWeapons.get(e);
+			
 			if (data.aiControlled) {
 				
 				//TEMP DUMMY AI
@@ -188,21 +191,29 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 							
 							pos.rotationYaw = (float) angle;
 							
-							if (Game_AI_TestBed.instance().getLevel().getGameTime() % 2 == 0) {
-								//for (int i = 0; i < 1; i++) {
-								if (rand.nextInt(5) == 0) {
-									//System.out.println("spawn");
-									float speed = profileData.moveSpeed * 4F;
-									//float vecX = rand.nextFloat() * speed - rand.nextFloat() * speed;
-									//float vecY = rand.nextFloat() * speed - rand.nextFloat() * speed;
+							if (weapons.hasPrimaryWeapon()) {
+								Weapon weapon = weapons.getActivePrimary();
+								
+								if (weapon.canFire()) {
+									weapon.fire();
 									
-									//Vector2 targVec = VecUtil.getTargetVector(pos.x, pos.y, posPlayer.x, posPlayer.y);
+									//float speed = proj.moveSpeed * 4F;
+									float vecX = targVec.x;
+									float vecY = targVec.y;
+									
+									EntityFactory.getEntity(weapon.projectileType).prepareFromData(pos.x + vecX * 2, pos.y + vecY * 2, data.team, vecX, vecY);
+								}
+							}
+							
+							/*if (Game_AI_TestBed.instance().getLevel().getGameTime() % 2 == 0) {
+								if (rand.nextInt(5) == 0) {
+									float speed = profileData.moveSpeed * 4F;
 									
 									float vecX = targVec.x * speed;
 									float vecY = targVec.y * speed;
 									EntityFactory.getEntity(SpawnableTypes.PRJ_PULSE).prepareFromData(pos.x + vecX * 2, pos.y + vecY * 2, data.team, vecX, vecY);
 								}
-							}
+							}*/
 						}
 					} else {
 						int speed = 10;

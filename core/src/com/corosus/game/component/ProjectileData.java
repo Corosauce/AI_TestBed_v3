@@ -19,6 +19,7 @@ public class ProjectileData extends Component {
 	
 	//relocate to projectile data
 	public float prjDamage = 50;
+	public float speed = 30F;
 	
 	public ProjectileData() {
 		

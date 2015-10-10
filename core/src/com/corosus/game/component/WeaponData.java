@@ -25,8 +25,13 @@ public class WeaponData extends Component {
 	
 	
 	public static class Weapon {
-		public int ticksCooldownCur;
+		
+		//weapon config
 		public int ticksCooldownRate = 10;
+		public String projectileType = "";
+		
+		//runtime
+		public int ticksCooldownCur;
 		
 		public boolean canFire() {
 			return ticksCooldownCur <= 0;
@@ -54,6 +59,10 @@ public class WeaponData extends Component {
 			}
 		}
 		return null;
+	}
+	
+	public void setActivePrimary(Weapon weapon) {
+		listWeaponLocations.get(0).listWeapons.set(0, weapon);
 	}
 	
 }
