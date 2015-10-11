@@ -14,9 +14,11 @@ import com.artemis.Entity;
 import com.artemis.systems.IntervalEntityProcessingSystem;
 import com.badlogic.gdx.math.MathUtils;
 import com.corosus.game.Cst;
+import com.corosus.game.GameSettings;
 import com.corosus.game.Game_AI_TestBed;
 import com.corosus.game.Level;
 import com.corosus.game.Logger;
+import com.corosus.game.client.assets.GameAssetManager;
 import com.corosus.game.component.EntityData;
 import com.corosus.game.component.Health;
 import com.corosus.game.component.PhysicsData;
@@ -196,6 +198,7 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 								
 								if (weapon.canFire()) {
 									weapon.fire();
+									GameAssetManager.instance().getSound("shoot").play(GameSettings.vol);
 									
 									//float speed = proj.moveSpeed * 4F;
 									float vecX = targVec.x;
@@ -425,10 +428,12 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 				ProjectileData projDataA = mapProjectile.get(entIDA);
 				healthB.hp -= projDataA.prjDamage;
 				healthA.hp = 0;
+				GameAssetManager.instance().getSound("hit").play(GameSettings.vol);
 			} else if (entIDB != null && dataB.type == EnumEntityType.PROJECTILE) {
 				ProjectileData projDataB = mapProjectile.get(entIDB);
 				healthA.hp -= projDataB.prjDamage;
 				healthB.hp = 0;
+				GameAssetManager.instance().getSound("hit").play(GameSettings.vol);
 			}
 		}
 		listCollisionQueueStart.clear();

@@ -3,6 +3,18 @@ button-click: {
 	class: sound,
 	soundFile: sounds/button-click.wav,
 },
+test: {
+	class: sound,
+	soundFile: sounds/Randomize213.wav,
+},
+hit: {
+	class: sound,
+	soundFile: sounds/hit-Randomize186.wav,
+},
+shoot: {
+	class: sound,
+	soundFile: sounds/shoot-Randomize77.wav,
+},
 footstep: {
 	class: sound,
 	soundFile: sounds/footstep-concrete.wav,

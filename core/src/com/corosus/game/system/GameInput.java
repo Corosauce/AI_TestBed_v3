@@ -14,8 +14,10 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.math.Vector2;
+import com.corosus.game.GameSettings;
 import com.corosus.game.Game_AI_TestBed;
 import com.corosus.game.Logger;
+import com.corosus.game.client.assets.GameAssetManager;
 import com.corosus.game.client.input.XBox360Pad;
 import com.corosus.game.component.EntityData;
 import com.corosus.game.component.Position;
@@ -221,6 +223,7 @@ public class GameInput extends IntervalEntityProcessingSystem {
 					
 					if (result) {
 						Logger.dbg("dodged!");
+						GameAssetManager.instance().getSound("test").play(0.3F);
 					} else {
 						Logger.dbg("cant dodge");
 					}
@@ -248,10 +251,13 @@ public class GameInput extends IntervalEntityProcessingSystem {
 							
 							//TODO: group this stuff together better
 							weapon.fire();
+							GameAssetManager.instance().getSound("shoot").play(GameSettings.vol);
+							
 							double rot = Math.toRadians(pos.rotationYaw + 90);
 							float vecX = (float) (Math.sin(rot))/* * profile.moveSpeed * 2F*/;
 							float vecY = (float) (-Math.cos(rot))/* * profile.moveSpeed * 2F*/;
 							EntityFactory.getEntity(SpawnableTypes.PRJ_PULSE).prepareFromData(pos.x + vecX, pos.y + vecY, EntityData.TEAM_PLAYER, vecX, vecY);
+							
 						}
 					}
 				}

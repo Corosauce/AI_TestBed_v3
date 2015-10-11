@@ -13,8 +13,9 @@ import com.corosus.game.client.render.IRenderable;
 import com.corosus.game.client.render.WrappedAnim;
 import com.corosus.game.client.render.WrappedSprite;
 
-public enum GameAssetManager {
-    INSTANCE;
+public class GameAssetManager {
+    //INSTANCE;
+	private static GameAssetManager instance;
 
     private HashMap<String, Animation>     animations = new HashMap<String, Animation>();
     private HashMap<String, Texture>       textures   = new HashMap<String, Texture>();
@@ -22,6 +23,13 @@ public enum GameAssetManager {
     private HashMap<String, Sound>         sounds     = new HashMap<String, Sound>();
 
     private HashMap<String, IRenderable>   cachedRenderable = new HashMap<String, IRenderable>();
+    
+    public static GameAssetManager instance() {
+    	if (instance == null) {
+    		instance = new GameAssetManager();
+    	}
+    	return instance;
+    }
 
     public void loadSounds(String jsonPath){
         Json json = new Json();

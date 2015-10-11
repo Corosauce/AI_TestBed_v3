@@ -62,9 +62,9 @@ public class Game_AI_TestBed extends Game {
 		 * TEST
 		 */
 		
-		GameAssetManager.INSTANCE.loadAnimations("imgs/sprites/animations.json");
-		GameAssetManager.INSTANCE.loadSprites("imgs/sprites/sprites.json");
-		GameAssetManager.INSTANCE.loadSounds("sounds/sounds.json");
+		GameAssetManager.instance().loadAnimations("imgs/sprites/animations.json");
+		GameAssetManager.instance().loadSprites("imgs/sprites/sprites.json");
+		GameAssetManager.instance().loadSounds("sounds/sounds.json");
 		
 		this.am = new AssetManager();
 		this.am.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
