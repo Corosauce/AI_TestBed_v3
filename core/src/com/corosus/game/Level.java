@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -37,7 +38,7 @@ public class Level {
 	private com.badlogic.gdx.physics.box2d.World worldBox2D;
 	
 	private TiledMap map;
-	private String levelName = "test_001.tmx";
+	private String levelName = "level_01.tmx";
 	private TiledMapRenderer mapRenderer;
 	private SpriteBatch batch;
 
@@ -250,6 +251,9 @@ public class Level {
 		//MapLayers mapLayers = getMap().getLayers();
 		
 		TiledMapTileLayer mapLayer = (TiledMapTileLayer)getMap().getLayers().get(layer);
+		
+		//TiledMapTileLayer mapLayerTest = (TiledMapTileLayer)getMap().getLayers().get(LAYER_COLLIDE);
+		
 		return mapLayer;
 	}
 	
@@ -260,6 +264,14 @@ public class Level {
 	public boolean isPassable(int x, int y) {
 		int tileX = MathUtil.floorF((float)x / (float)Cst.TILESIZE);
 		int tileY = MathUtil.floorF((float)y / (float)Cst.TILESIZE);
+		
+		/*if (this.getCell(tileX, tileY, LAYER_COLLIDE) != null) {
+			MapProperties props = this.getCell(tileX, tileY, LAYER_COLLIDE).getTile().getProperties();
+			if (props.containsKey("width")) {
+				System.out.println(props);
+			}
+		}*/
+		
         return this.getCell(tileX, tileY, LAYER_NAV) != null && this.getCell(tileX, tileY, LAYER_COLLIDE) == null;
     }
 	
