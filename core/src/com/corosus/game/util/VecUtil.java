@@ -9,6 +9,10 @@ import com.corosus.game.Logger;
 
 public class VecUtil {
 
+	public static Vector2f getTargetVector(Vector2f source, Vector2f targ) {
+		return getTargetVector(source.x, source.y, targ.x, targ.y);
+	}
+	
 	public static Vector2f getTargetVector(float x, float y, float xTarg, float yTarg) {
 		float vecX = xTarg - x;
 		float vecY = yTarg - y;

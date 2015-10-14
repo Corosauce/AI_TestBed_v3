@@ -223,7 +223,7 @@ public class GameInput extends IntervalEntityProcessingSystem {
 					
 					if (result) {
 						Logger.dbg("dodged!");
-						GameAssetManager.instance().getSound("test").play(0.3F);
+						//GameAssetManager.instance().getSound("test").play(0.3F);
 					} else {
 						Logger.dbg("cant dodge");
 					}

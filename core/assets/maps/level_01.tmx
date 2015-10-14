@@ -9,7 +9,16 @@
   </tile>
   <tile id="25">
    <objectgroup draworder="index">
-    <object id="0" x="7" y="8" width="48" height="47"/>
+    <object id="0" x="7" y="8" width="14" height="14"/>
+    <object id="0" x="35" y="5" width="22" height="21">
+     <ellipse/>
+    </object>
+    <object id="0" x="8" y="34">
+     <polygon points="0,0 17,4 11,19 0,21 -4,14"/>
+    </object>
+    <object id="0" x="34" y="34">
+     <polyline points="0,0 21,1 18,19 2,21 -5,9"/>
+    </object>
    </objectgroup>
   </tile>
  </tileset>

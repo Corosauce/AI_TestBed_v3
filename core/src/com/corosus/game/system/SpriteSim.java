@@ -172,66 +172,92 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 					
 					Position posPlayer = mapPos.get(player);
 					
-					float dist = VecUtil.getDist(new Vector2f(pos.x, pos.y), new Vector2f(posPlayer.x, posPlayer.y));
+					float distPlayer = VecUtil.getDist(new Vector2f(pos.x, pos.y), new Vector2f(posPlayer.x, posPlayer.y));
 					
+					boolean chase = false;
 					
-					if (dist < 400) {
+					if (distPlayer < 400) {
 						if (VecUtil.canSee(pos.toVec(), posPlayer.toVec())) {
-							Vector2f targVec = VecUtil.getTargetVector(pos.x, pos.y, posPlayer.x, posPlayer.y);
-							
-							if (dist > 64) {
-								motion.x = targVec.x * profileData.moveSpeed;
-								motion.y = targVec.y * profileData.moveSpeed;
-							} else {
-								motion.x = 0;
-								motion.y = 0;
-							}
-							
-							//make rotationYaw be aimed at motion
-							double angle = Math.toDegrees(Math.atan2(motion.y, motion.x));
-							if (angle < 0) angle += 360;
-							
-							pos.rotationYaw = (float) angle;
-							
-							if (weapons.hasPrimaryWeapon()) {
-								Weapon weapon = weapons.getActivePrimary();
-								
-								if (weapon.canFire()) {
-									weapon.fire();
-									GameAssetManager.instance().getSound("shoot").play(GameSettings.vol);
-									
-									//float speed = proj.moveSpeed * 4F;
-									float vecX = targVec.x;
-									float vecY = targVec.y;
-									
-									EntityFactory.getEntity(weapon.projectileType).prepareFromData(pos.x + vecX * 2, pos.y + vecY * 2, data.team, vecX, vecY);
-								}
-							}
-							
-							/*if (Game_AI_TestBed.instance().getLevel().getGameTime() % 2 == 0) {
-								if (rand.nextInt(5) == 0) {
-									float speed = profileData.moveSpeed * 4F;
-									
-									float vecX = targVec.x * speed;
-									float vecY = targVec.y * speed;
-									EntityFactory.getEntity(SpawnableTypes.PRJ_PULSE).prepareFromData(pos.x + vecX * 2, pos.y + vecY * 2, data.team, vecX, vecY);
-								}
-							}*/
+							chase = true;
 						}
+					}
+					
+					if (chase) {
+						Vector2f targVec = VecUtil.getTargetVector(pos.x, pos.y, posPlayer.x, posPlayer.y);
+						
+						data.getAIBlackboard().setPosTarget(new Vector2f(posPlayer.x, posPlayer.y));
+						
+						/*if (distPlayer > 64) {
+							motion.x = targVec.x * profileData.moveSpeed;
+							motion.y = targVec.y * profileData.moveSpeed;
+						} else {
+							motion.x = 0;
+							motion.y = 0;
+						}*/
+						
+						if (weapons.hasPrimaryWeapon()) {
+							Weapon weapon = weapons.getActivePrimary();
+							
+							if (weapon.canFire()) {
+								weapon.fire();
+								GameAssetManager.instance().getSound("shoot").play(GameSettings.vol);
+								
+								//float speed = proj.moveSpeed * 4F;
+								float vecX = targVec.x;
+								float vecY = targVec.y;
+								
+								EntityFactory.getEntity(weapon.projectileType).prepareFromData(pos.x + vecX * 2, pos.y + vecY * 2, data.team, vecX, vecY);
+							}
+						}
+						
+						/*if (Game_AI_TestBed.instance().getLevel().getGameTime() % 2 == 0) {
+							if (rand.nextInt(5) == 0) {
+								float speed = profileData.moveSpeed * 4F;
+								
+								float vecX = targVec.x * speed;
+								float vecY = targVec.y * speed;
+								EntityFactory.getEntity(SpawnableTypes.PRJ_PULSE).prepareFromData(pos.x + vecX * 2, pos.y + vecY * 2, data.team, vecX, vecY);
+							}
+						}*/
 					} else {
-						int speed = 10;
-						motion.x = rand.nextInt(speed)-rand.nextInt(speed);
-						motion.y = rand.nextInt(speed)-rand.nextInt(speed);
+						int distRand = Cst.TILESIZE * 10;
+						int tryCount = 10;
+						if (rand.nextInt(30) == 0) {
+							for (int i = 0; i < tryCount; i++) {
+								Vector2f tryPos = new Vector2f(rand.nextInt(distRand)-rand.nextInt(distRand), rand.nextInt(distRand)-rand.nextInt(distRand));
+								tryPos = new Vector2f(pos.x + tryPos.x, pos.y + tryPos.y);
+								if (Game_AI_TestBed.instance().getLevel().isPassable((int)tryPos.x, (int)tryPos.y)) {
+									data.getAIBlackboard().setPosTarget(tryPos);
+									break;
+								}
+							}
+						}
+						/*motion.x = rand.nextInt(distRand)-rand.nextInt(distRand);
+						motion.y = rand.nextInt(distRand)-rand.nextInt(distRand);*/
 					}
 				}
 				
-				//health.hp--;
+				//move to AI target position
+				if (data.getAIBlackboard().getPosTarget() != null) {
+					float distToTarg = VecUtil.getDist(new Vector2f(pos.x, pos.y), data.getAIBlackboard().getPosTarget());
+					
+					if (distToTarg > Cst.TILESIZE / 2) {
+						Vector2f targVec = VecUtil.getTargetVector(new Vector2f(pos.x, pos.y), data.getAIBlackboard().getPosTarget());
+						
+						motion.x = targVec.x * profileData.moveSpeed;
+						motion.y = targVec.y * profileData.moveSpeed;
+					}
+				}
 				
-				//
+				//make rotationYaw be aimed at motion
+				double angle = Math.toDegrees(Math.atan2(motion.y, motion.x));
+				if (angle < 0) angle += 360;
+				
+				pos.rotationYaw = (float) angle;
 				
 				
 			} else {
-				
+				//non AI player stuff...
 			}
 			
 			//TODO: is this proper ecs design? maybe we should have a subsystem for weapon logic? or just a separate system?
