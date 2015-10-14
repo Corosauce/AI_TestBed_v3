@@ -185,7 +185,7 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 					if (chase) {
 						Vector2f targVec = VecUtil.getTargetVector(pos.x, pos.y, posPlayer.x, posPlayer.y);
 						
-						data.getAIBlackboard().setPosTarget(new Vector2f(posPlayer.x, posPlayer.y));
+						data.getAgent().getAIBlackboard().setPosTarget(new Vector2f(posPlayer.x, posPlayer.y));
 						
 						/*if (distPlayer > 64) {
 							motion.x = targVec.x * profileData.moveSpeed;
@@ -227,7 +227,7 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 								Vector2f tryPos = new Vector2f(rand.nextInt(distRand)-rand.nextInt(distRand), rand.nextInt(distRand)-rand.nextInt(distRand));
 								tryPos = new Vector2f(pos.x + tryPos.x, pos.y + tryPos.y);
 								if (Game_AI_TestBed.instance().getLevel().isPassable((int)tryPos.x, (int)tryPos.y)) {
-									data.getAIBlackboard().setPosTarget(tryPos);
+									data.getAgent().getAIBlackboard().setPosTarget(tryPos);
 									break;
 								}
 							}
@@ -238,11 +238,11 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 				}
 				
 				//move to AI target position
-				if (data.getAIBlackboard().getPosTarget() != null) {
-					float distToTarg = VecUtil.getDist(new Vector2f(pos.x, pos.y), data.getAIBlackboard().getPosTarget());
+				if (data.getAgent().getAIBlackboard().getPosTarget() != null) {
+					float distToTarg = VecUtil.getDist(new Vector2f(pos.x, pos.y), data.getAgent().getAIBlackboard().getPosTarget());
 					
 					if (distToTarg > Cst.TILESIZE / 2) {
-						Vector2f targVec = VecUtil.getTargetVector(new Vector2f(pos.x, pos.y), data.getAIBlackboard().getPosTarget());
+						Vector2f targVec = VecUtil.getTargetVector(new Vector2f(pos.x, pos.y), data.getAgent().getAIBlackboard().getPosTarget());
 						
 						motion.x = targVec.x * profileData.moveSpeed;
 						motion.y = targVec.y * profileData.moveSpeed;

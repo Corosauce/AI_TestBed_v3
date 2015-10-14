@@ -2,6 +2,7 @@ package com.corosus.game.component;
 
 import com.artemis.Component;
 import com.corosus.game.Cst;
+import com.corosus.game.ai.Agent;
 import com.corosus.game.ai.Blackboard;
 import com.corosus.game.entity.EnumEntityType;
 
@@ -24,13 +25,13 @@ public class EntityData extends Component {
 	//team 0 will be considered player
 	public int team = TEAM_PLAYER;
 	
-	private Blackboard aiBlackboard;
+	private Agent agent;
 	
 	public static int TEAM_PLAYER = 0;
 	public static int TEAM_1 = 1;
 	
 	public EntityData() {
-		setAIBlackboard(new Blackboard());
+		setAgent(new Agent());
 	}
 	
 	public EntityData(EnumEntityType profileID) {
@@ -43,11 +44,11 @@ public class EntityData extends Component {
 		return this;
 	}
 
-	public Blackboard getAIBlackboard() {
-		return aiBlackboard;
+	public Agent getAgent() {
+		return agent;
 	}
 
-	public void setAIBlackboard(Blackboard aiBlackboard) {
-		this.aiBlackboard = aiBlackboard;
+	public void setAgent(Agent agent) {
+		this.agent = agent;
 	}
 }
