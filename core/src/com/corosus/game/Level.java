@@ -221,6 +221,14 @@ public class Level {
 	public int getLevelSizeY() {
 		return mapTilesY * mapTileHeight;
 	}
+	
+	public int getTileSizeX() {
+		return mapTilesX;
+	}
+	
+	public int getTileSizeY() {
+		return mapTilesY;
+	}
 
 	public float getPartialTick() {
 		return (getStateTime() - WorldTimer.lastTime) / GameSettings.tickDelayGame;
@@ -232,6 +240,10 @@ public class Level {
 
 	public void setWorldBox2D(com.badlogic.gdx.physics.box2d.World worldBox2D) {
 		this.worldBox2D = worldBox2D;
+	}
+	
+	public long getTime() {
+		return gameTime;
 	}
 
 	public long getGameTime() {
@@ -266,18 +278,15 @@ public class Level {
 		return this.map;
 	}
 	
+	public boolean isTilePassable(int tileX, int tileY) {
+        return this.getCell(tileX, tileY, LAYER_NAV) != null && this.getCell(tileX, tileY, LAYER_COLLIDE) == null;
+    }
+	
 	public boolean isPassable(int x, int y) {
 		int tileX = MathUtil.floorF((float)x / (float)Cst.TILESIZE);
 		int tileY = MathUtil.floorF((float)y / (float)Cst.TILESIZE);
 		
-		/*if (this.getCell(tileX, tileY, LAYER_COLLIDE) != null) {
-			MapProperties props = this.getCell(tileX, tileY, LAYER_COLLIDE).getTile().getProperties();
-			if (props.containsKey("width")) {
-				System.out.println(props);
-			}
-		}*/
-		
-        return this.getCell(tileX, tileY, LAYER_NAV) != null && this.getCell(tileX, tileY, LAYER_COLLIDE) == null;
+		return isTilePassable(tileX, tileY);
     }
 	
 	public Vector4f getCellBorder(int x, int y) {

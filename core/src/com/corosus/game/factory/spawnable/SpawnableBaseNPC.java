@@ -47,7 +47,9 @@ public class SpawnableBaseNPC implements SpawnableBase {
 	@Override
 	public Entity prepareFromData(int levelID, Object... objects) {
 		Entity ent = EntityFactory.createEntity_NPC(levelID, (Float)objects[0], (Float)objects[1]);
-		ent.getComponent(EntityData.class).setTeam((int) objects[2]);
+		EntityData data = ent.getComponent(EntityData.class);
+		data.setTeam((int) objects[2]);
+		data.initAI(levelID, ent.getId());
 		return ent;
 	}
 	

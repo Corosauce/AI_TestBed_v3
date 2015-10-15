@@ -162,6 +162,8 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 			
 			if (data.aiControlled) {
 				
+				data.getAgent().tick();
+				
 				//TEMP DUMMY AI
 				profileData.moveSpeed = 5;
 				
@@ -187,7 +189,7 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 					if (chase) {
 						Vector2f targVec = VecUtil.getTargetVector(pos.x, pos.y, posPlayer.x, posPlayer.y);
 						
-						data.getAgent().getAIBlackboard().setPosTarget(new Vector2f(posPlayer.x, posPlayer.y));
+						data.getAgent().getAIBlackboard().moveTo(posPlayer.toVec());
 						
 						/*if (distPlayer > 64) {
 							motion.x = targVec.x * profileData.moveSpeed;
@@ -201,14 +203,13 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 							Weapon weapon = weapons.getActivePrimary();
 							
 							if (weapon.canFire()) {
-								weapon.fire();
-								GameAssetManager.instance().getSound("shoot").play(GameSettings.vol);
-								
 								//float speed = proj.moveSpeed * 4F;
 								float vecX = targVec.x;
 								float vecY = targVec.y;
 								
-								EntityFactory.getEntity(weapon.projectileType).prepareFromData(data.levelID, pos.x + vecX * 2, pos.y + vecY * 2, data.team, vecX, vecY);
+								weapon.fire();
+								/*GameAssetManager.instance().getSound("shoot").play(GameSettings.vol);
+								EntityFactory.getEntity(weapon.projectileType).prepareFromData(data.levelID, pos.x + vecX * 2, pos.y + vecY * 2, data.team, vecX, vecY);*/
 							}
 						}
 						

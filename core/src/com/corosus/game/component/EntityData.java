@@ -33,12 +33,17 @@ public class EntityData extends Component {
 	public static int TEAM_1 = 1;
 	
 	public EntityData() {
-		setAgent(new Agent());
+		
 	}
 	
 	public EntityData(EnumEntityType profileID) {
 		this();
 		this.type = profileID;
+	}
+	
+	public void initAI(int levelID, int entID) {
+		this.levelID = levelID;
+		setAgent(new Agent(levelID, entID));
 	}
 	
 	public EntityData setTeam(int team) {
