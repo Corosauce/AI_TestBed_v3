@@ -36,8 +36,8 @@ public class PhysicsData extends Component {
 		
 	}
 	
-	public void initPhysics(int entID, float x, float y, int sizeDiameter, short categoryBits, short maskBits, boolean useCCD) {
-		World world = Game_AI_TestBed.instance().getLevel().getWorldBox2D();
+	public void initPhysics(int levelID, int entID, float x, float y, int sizeDiameter, short categoryBits, short maskBits, boolean useCCD) {
+		World world = Game_AI_TestBed.instance().getLevel(levelID).getWorldBox2D();
 		
 		/*if (world.isLocked()) {
 			System.out.println("CANCELLING PHYSICS, WORLD LOCKED");
@@ -83,8 +83,8 @@ public class PhysicsData extends Component {
 		shape.dispose();
 	}
 	
-	public void dispose() {
-		World world = Game_AI_TestBed.instance().getLevel().getWorldBox2D();
+	public void dispose(int levelID) {
+		World world = Game_AI_TestBed.instance().getLevel(levelID).getWorldBox2D();
 		if (body != null) {
 			body.setUserData(null);
 			world.destroyBody(body);

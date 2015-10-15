@@ -49,6 +49,7 @@ public class Level {
 	private int entityCount = 0;
 	
 	private int playerID = -1;
+	private int levelID = 0;
 
 	private int mapTilesX;
 	private int mapTilesY;
@@ -59,6 +60,10 @@ public class Level {
 	public static int LAYER_BLOCKINGOBJECTS = 1;
 	public static int LAYER_COLLIDE = 2;
 	public static int LAYER_MISSIONOBJECTS = 3;
+	
+	public Level(int levelID) {
+		this.levelID = levelID;
+	}
 	
 	public void restart() {
 		
@@ -189,7 +194,7 @@ public class Level {
 			
 			SpawnableBase base = EntityFactory.getEntity(mapObj.getName());
 			if (base != null) {
-				base.prepareFromMap(mapObj);
+				base.prepareFromMap(levelID, mapObj);
 			}
 		}
 	}
@@ -204,7 +209,7 @@ public class Level {
 			pos.setPos(100, 100);
 		} else {
 			//setPlayer(EntityFactory.createPlayer(100, 100).getId());
-			setPlayer(EntityFactory.createEntity_Player(100, 100).getId());
+			setPlayer(EntityFactory.createEntity_Player(levelID, 100, 100).getId());
 		}
 		
 	}
@@ -218,7 +223,7 @@ public class Level {
 	}
 
 	public float getPartialTick() {
-		return (Game_AI_TestBed.instance().getLevel().getStateTime() - WorldTimer.lastTime) / GameSettings.tickDelayGame;
+		return (getStateTime() - WorldTimer.lastTime) / GameSettings.tickDelayGame;
 	}
 
 	public com.badlogic.gdx.physics.box2d.World getWorldBox2D() {

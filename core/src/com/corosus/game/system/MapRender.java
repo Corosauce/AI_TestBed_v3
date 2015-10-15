@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.corosus.game.GameSettings;
 import com.corosus.game.Game_AI_TestBed;
+import com.corosus.game.Level;
 import com.corosus.game.component.Position;
 
 public class MapRender extends IntervalEntityProcessingSystem {
@@ -28,27 +29,28 @@ public class MapRender extends IntervalEntityProcessingSystem {
 		//Logger.dbg("tick " + this);
 		
 		Game_AI_TestBed game = Game_AI_TestBed.instance();
+		Level level = game.getActiveLevel();
 		
-		game.getLevel().setStateTime(game.getLevel().getStateTime() + game.getLevel().getWorld().getDelta());
+		level.setStateTime(level.getStateTime() + level.getWorld().getDelta());
 		
 		//game.getCamera().position.x += 1;
 		//camera.position.y += 1;
 		game.getCamera().zoom = 1F;
 		game.getCamera().update();
 		
-		ComponentMapper<Position> mapPos = ComponentMapper.getFor(Position.class, Game_AI_TestBed.instance().getLevel().getWorld());
-		Entity player = Game_AI_TestBed.instance().getLevel().getPlayerEntity();
+		ComponentMapper<Position> mapPos = ComponentMapper.getFor(Position.class, level.getWorld());
+		Entity player = level.getPlayerEntity();
 		
 		if (player != null) {
 			Position pos = mapPos.get(player);
 			
-			float partialTick = Game_AI_TestBed.instance().getLevel().getPartialTick();
+			float partialTick = level.getPartialTick();
 			
 			float rX = pos.prevX + (pos.x - pos.prevX) * partialTick;
 			float rY = pos.prevY + (pos.y - pos.prevY) * partialTick;
 			
-			Game_AI_TestBed.instance().getCamera().position.x = rX;
-			Game_AI_TestBed.instance().getCamera().position.y = rY;
+			game.getCamera().position.x = rX;
+			game.getCamera().position.y = rY;
 			
 			//System.out.println(pos.x + " - " + pos.y);
 		}
@@ -62,8 +64,8 @@ public class MapRender extends IntervalEntityProcessingSystem {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		//update map position and render
-		game.getLevel().getMapRenderer().setView(game.getCamera());
-		game.getLevel().getMapRenderer().render();
+		level.getMapRenderer().setView(game.getCamera());
+		level.getMapRenderer().render();
 		
 	}
 

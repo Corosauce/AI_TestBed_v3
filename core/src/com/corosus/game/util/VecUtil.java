@@ -28,8 +28,8 @@ public class VecUtil {
 		return (float) Math.sqrt(x * x + y * y);
 	}
 	
-	public static boolean canSee(Vector2f source, Vector2f target) {
-		return rayTraceCheap(source, target) == null;
+	public static boolean canSee(int levelID, Vector2f source, Vector2f target) {
+		return rayTraceCheap(levelID, source, target) == null;
 	}
 	
 	/**
@@ -39,8 +39,8 @@ public class VecUtil {
 	 * @param target
 	 * @return
 	 */
-	public static Vector2f rayTraceCheap(Vector2f source, Vector2f target) {
-		Level level = Game_AI_TestBed.instance().getLevel();
+	public static Vector2f rayTraceCheap(int levelID, Vector2f source, Vector2f target) {
+		Level level = Game_AI_TestBed.instance().getLevel(levelID);
 		
 		float vecX = target.x - source.x;
 		float vecY = target.y - source.y;

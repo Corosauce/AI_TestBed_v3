@@ -61,8 +61,8 @@ public class EntityFactory {
 	}*/
 	
 	//TODO: maybe relocate this to spawnable player
-	public static Entity createEntity_Player(float posX, float posY) {
-		EntityBuilder ent = getTemplate_Common(posX, posY);
+	public static Entity createEntity_Player(int levelID, float posX, float posY) {
+		EntityBuilder ent = getTemplate_Common(levelID, posX, posY);
 		
 		EntityData data = new EntityData(EnumEntityType.SPRITE);
 		data.aiControlled = false;
@@ -90,13 +90,13 @@ public class EntityFactory {
 		.with(render)
 		;
 		
-		Game_AI_TestBed.instance().getLevel().addToEntityCount(1);
+		Game_AI_TestBed.instance().getLevel(levelID).addToEntityCount(1);
 		
 		return ent.build();
 	}
 	
-	public static Entity createEntity_NPC(float posX, float posY) {
-		EntityBuilder ent = getTemplate_Common(posX, posY);
+	public static Entity createEntity_NPC(int levelID, float posX, float posY) {
+		EntityBuilder ent = getTemplate_Common(levelID, posX, posY);
 		
 		EntityData data = new EntityData(EnumEntityType.SPRITE);
 		data.aiControlled = true;
@@ -119,13 +119,13 @@ public class EntityFactory {
 		.with(profile)
 		;
 		
-		Game_AI_TestBed.instance().getLevel().addToEntityCount(1);
+		Game_AI_TestBed.instance().getLevel(levelID).addToEntityCount(1);
 		
 		return ent.build();
 	}
 	
-	public static Entity createEntity_Projectile(float posX, float posY) {
-		EntityBuilder ent = getTemplate_Common(posX, posY);
+	public static Entity createEntity_Projectile(int levelID, float posX, float posY) {
+		EntityBuilder ent = getTemplate_Common(levelID, posX, posY);
 		
 		EntityData data = new EntityData(EnumEntityType.PROJECTILE);
 		data.aiControlled = true;
@@ -141,13 +141,13 @@ public class EntityFactory {
 		.with(new ProjectileData())
 		;
 		
-		Game_AI_TestBed.instance().getLevel().addToEntityCount(1);
+		Game_AI_TestBed.instance().getLevel(levelID).addToEntityCount(1);
 		
 		return ent.build();
 	}
 	
-	public static EntityBuilder getTemplate_Common(float posX, float posY) {
-		EntityBuilder ent = new EntityBuilder(Game_AI_TestBed.instance().getLevel().getWorld())
+	public static EntityBuilder getTemplate_Common(int levelID, float posX, float posY) {
+		EntityBuilder ent = new EntityBuilder(Game_AI_TestBed.instance().getLevel(levelID).getWorld())
 		.with(new Position(posX, posY))
 		.with(new Velocity())
 		.with(new PhysicsData())

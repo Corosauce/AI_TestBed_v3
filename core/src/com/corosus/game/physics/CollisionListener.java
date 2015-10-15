@@ -12,14 +12,14 @@ public class CollisionListener implements ContactListener {
 	@Override
 	public void beginContact(Contact contact) {
 	    
-	    SpriteSim sys = Game_AI_TestBed.instance().getLevel().getWorld().getSystem(SpriteSim.class);
+	    SpriteSim sys = Game_AI_TestBed.instance().getActiveLevel().getWorld().getSystem(SpriteSim.class);
 	    sys.triggerCollisionEvent((Integer)contact.getFixtureA().getUserData(), (Integer)contact.getFixtureB().getUserData());
 	}
 
 	@Override
 	public void endContact(Contact contact) {
 	    
-	    SpriteSim sys = Game_AI_TestBed.instance().getLevel().getWorld().getSystem(SpriteSim.class);
+	    SpriteSim sys = Game_AI_TestBed.instance().getActiveLevel().getWorld().getSystem(SpriteSim.class);
 	    sys.triggerCollisionEndEvent((Integer)contact.getFixtureA().getUserData(), (Integer)contact.getFixtureB().getUserData());
 	}
 

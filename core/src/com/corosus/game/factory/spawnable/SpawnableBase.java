@@ -7,8 +7,8 @@ import com.badlogic.gdx.maps.MapObject;
 
 public interface SpawnableBase {
 
-	public abstract List<Entity> prepareFromMap(MapObject mapObj);
+	public abstract List<Entity> prepareFromMap(int levelID, MapObject mapObj);
 	
-	public abstract Entity prepareFromData(Object... objects);
+	public abstract Entity prepareFromData(int levelID, Object... objects);
 	
 }

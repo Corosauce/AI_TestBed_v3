@@ -43,11 +43,12 @@ public class SpriteRender extends IntervalEntityProcessingSystem {
 		//Logger.dbg("tick " + this);
 		
 		Game_AI_TestBed game = Game_AI_TestBed.instance();
+		Level level = game.getActiveLevel();
 		
-		game.getLevel().getBatch().setProjectionMatrix(game.getCamera().combined);
-		game.getLevel().getBatch().begin();
+		level.getBatch().setProjectionMatrix(game.getCamera().combined);
+		level.getBatch().begin();
 		super.processSystem();
-		game.getLevel().getBatch().end();
+		level.getBatch().end();
 		
 	}
 
@@ -81,7 +82,7 @@ public class SpriteRender extends IntervalEntityProcessingSystem {
 		
 		//render.anims = GameAssetManager.INSTANCE.getRenderAssets("imgs/sprites/tanya.json");
 		
-		Level level = game.getLevel();
+		Level level = game.getActiveLevel();
 		
 		float partialTick = level.getPartialTick();//(level.getStateTime() - WorldTimer.lastTime) / GameSettings.tickDelayGame;
 		

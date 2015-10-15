@@ -14,6 +14,8 @@ import com.corosus.game.entity.EnumEntityType;
  */
 public class EntityData extends Component {
 
+	public int levelID = 0;
+	
 	public boolean aiControlled = false;
 	public boolean inputControlled = false;
 	

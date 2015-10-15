@@ -34,7 +34,7 @@ public class HUDRender extends IntervalEntityProcessingSystem {
 		
 		Game_AI_TestBed game = Game_AI_TestBed.instance();
 		
-		Entity player = Game_AI_TestBed.instance().getLevel().getPlayerEntity();
+		Entity player = Game_AI_TestBed.instance().getActiveLevel().getPlayerEntity();
 		
 		if (player != null) {
 			Health health = mapHealth.get(player);

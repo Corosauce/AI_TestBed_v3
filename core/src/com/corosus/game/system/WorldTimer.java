@@ -23,7 +23,7 @@ public class WorldTimer extends IntervalEntityProcessingSystem {
 	protected void processSystem() {
 		
 		gameTime++;
-		lastTime = Game_AI_TestBed.instance().getLevel().getStateTime();
+		lastTime = Game_AI_TestBed.instance().getActiveLevel().getStateTime();
 		
 		super.processSystem();
 	}

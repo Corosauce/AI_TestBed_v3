@@ -8,8 +8,8 @@ import com.corosus.game.component.WeaponData.Weapon;
 public class SpawnableSoldier extends SpawnableBaseNPC {
 
 	@Override
-	public Entity prepareFromData(Object... objects) {
-		Entity ent = super.prepareFromData(objects);
+	public Entity prepareFromData(int levelID, Object... objects) {
+		Entity ent = super.prepareFromData(levelID, objects);
 		ent.getComponent(RenderData.class).setAsset("soldier");
 		
 		Weapon weapon = new Weapon();

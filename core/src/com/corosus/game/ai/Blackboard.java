@@ -2,6 +2,9 @@ package com.corosus.game.ai;
 
 import javax.vecmath.Vector2f;
 
+import com.corosus.game.Game_AI_TestBed;
+import com.corosus.game.util.IntPair;
+
 public class Blackboard {
 
 	private Vector2f posTarget = null;
@@ -24,6 +27,8 @@ public class Blackboard {
 		//if within 2 tiles and both tiles have no collision then vec move
 		//otherwise try to path
 		//dont assume you can strait move to if you can see, we plan on PIT blocks
+		
+		//IntPair coord = Game_AI_TestBed.instance().
 	}
 	
 }

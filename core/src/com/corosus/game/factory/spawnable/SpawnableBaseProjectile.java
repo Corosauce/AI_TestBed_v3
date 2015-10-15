@@ -12,14 +12,14 @@ import com.corosus.game.factory.EntityFactory;
 public class SpawnableBaseProjectile implements SpawnableBase {
 
 	@Override
-	public List<Entity> prepareFromMap(MapObject mapObj) {
+	public List<Entity> prepareFromMap(int levelID, MapObject mapObj) {
 
 		return null;
 	}
 
 	@Override
-	public Entity prepareFromData(Object... objects) {
-		Entity ent = EntityFactory.createEntity_Projectile((Float)objects[0], (Float)objects[1]);
+	public Entity prepareFromData(int levelID, Object... objects) {
+		Entity ent = EntityFactory.createEntity_Projectile(levelID, (Float)objects[0], (Float)objects[1]);
 		ent.getComponent(EntityData.class).setTeam((int) objects[2]);
 		
 		ProjectileData data = ent.getComponent(ProjectileData.class);

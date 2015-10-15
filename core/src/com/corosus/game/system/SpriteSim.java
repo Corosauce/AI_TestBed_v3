@@ -84,6 +84,8 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 		PhysicsData physics = mapPhysics.get(e);
 		//ProjectileData projData = mapProjectile.get(e);
 		
+		Level level = Game_AI_TestBed.instance().getLevel(data.levelID);
+		
 		if (physics.needInit) {
 			physics.needInit = false;
 			
@@ -133,7 +135,7 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 			}
 			
 			//TODO: refine use of CCD on fast moving projectiles only, determine best based on smallest sprite and prj size / speed
-			physics.initPhysics(e.getId(), pos.x, pos.y, data.sizeDiameter, categoryBits, maskBits, data.type == EnumEntityType.PROJECTILE);
+			physics.initPhysics(data.levelID, e.getId(), pos.x, pos.y, data.sizeDiameter, categoryBits, maskBits, data.type == EnumEntityType.PROJECTILE);
 		}
 		
 		List<Component> listComponents = new ArrayList<Component>();
@@ -166,7 +168,7 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 				/*motion.x = rand.nextInt(2)-rand.nextInt(2);
 				motion.y = rand.nextInt(2)-rand.nextInt(2);*/
 				
-				Entity player = Game_AI_TestBed.instance().getLevel().getPlayerEntity();
+				Entity player = level.getPlayerEntity();
 				
 				if (player != null) {
 					
@@ -177,7 +179,7 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 					boolean chase = false;
 					
 					if (distPlayer < 400) {
-						if (VecUtil.canSee(pos.toVec(), posPlayer.toVec())) {
+						if (VecUtil.canSee(data.levelID, pos.toVec(), posPlayer.toVec())) {
 							chase = true;
 						}
 					}
@@ -206,11 +208,11 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 								float vecX = targVec.x;
 								float vecY = targVec.y;
 								
-								EntityFactory.getEntity(weapon.projectileType).prepareFromData(pos.x + vecX * 2, pos.y + vecY * 2, data.team, vecX, vecY);
+								EntityFactory.getEntity(weapon.projectileType).prepareFromData(data.levelID, pos.x + vecX * 2, pos.y + vecY * 2, data.team, vecX, vecY);
 							}
 						}
 						
-						/*if (Game_AI_TestBed.instance().getLevel().getGameTime() % 2 == 0) {
+						/*if (level.getGameTime() % 2 == 0) {
 							if (rand.nextInt(5) == 0) {
 								float speed = profileData.moveSpeed * 4F;
 								
@@ -226,7 +228,7 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 							for (int i = 0; i < tryCount; i++) {
 								Vector2f tryPos = new Vector2f(rand.nextInt(distRand)-rand.nextInt(distRand), rand.nextInt(distRand)-rand.nextInt(distRand));
 								tryPos = new Vector2f(pos.x + tryPos.x, pos.y + tryPos.y);
-								if (Game_AI_TestBed.instance().getLevel().isPassable((int)tryPos.x, (int)tryPos.y)) {
+								if (level.isPassable((int)tryPos.x, (int)tryPos.y)) {
 									data.getAgent().getAIBlackboard().setPosTarget(tryPos);
 									break;
 								}
@@ -280,7 +282,7 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 			if (health.lifeTime > 100) {
 				
 				//TODO: RELOCATE TO PROPER CLEANUP METHOD
-				killEntity(e);
+				killEntity(data.levelID, e);
 			}
 		}
 		
@@ -288,14 +290,12 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 		pos.prevX = pos.x;
 		pos.prevY = pos.y;
 		
-		Level level = Game_AI_TestBed.instance().getLevel();
-		
 		int fPosX = (int) (pos.x + motion.x);
 		int fPosY = (int) (pos.y + motion.y);
 		int fTileX = MathUtil.floorF((float)fPosX / (float)Cst.TILESIZE);
 		int fTileY = MathUtil.floorF((float)fPosY / (float)Cst.TILESIZE);
 		
-		Vector4f vec = Game_AI_TestBed.instance().getLevel().getCellBorder(fPosX, (int) pos.y);
+		Vector4f vec = level.getCellBorder(fPosX, (int) pos.y);
 		//Logger.dbg("x: " + fPosX + " - y: " + fPosY + " vs " + vec + " passable: " + level.isPassable(fPosX, fPosY));
 		//Logger.dbg("real pos: " + fPosX + " - " + fPosY + " tile pos: " + fTileX + " - " + fTileY);
 		
@@ -313,7 +313,7 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 			collide = true;
 		}
 		
-		vec = Game_AI_TestBed.instance().getLevel().getCellBorder(fPosX, (int) pos.y);
+		vec = level.getCellBorder(fPosX, (int) pos.y);
 		if (!level.isPassable(fPosX, (int) pos.y) && motion.x > 0 && fPosX > vec.x) {
 			//System.out.println("adjust +x!");
 			fPosX = (int) (vec.x) - 1;
@@ -327,7 +327,7 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 			collide = true;
 		}
 		
-		vec = Game_AI_TestBed.instance().getLevel().getCellBorder((int) pos.x, fPosY);
+		vec = level.getCellBorder((int) pos.x, fPosY);
 		if (!level.isPassable((int) pos.x, fPosY) && motion.y < 0 && fPosY < vec.y + Cst.TILESIZE) {
 			//System.out.println("adjust -y!");
 			fPosY = (int) (vec.y + Cst.TILESIZE) + 1;
@@ -341,7 +341,7 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 			collide = true;
 		}
 		
-		vec = Game_AI_TestBed.instance().getLevel().getCellBorder((int) pos.x, fPosY);
+		vec = level.getCellBorder((int) pos.x, fPosY);
 		if (!level.isPassable((int) pos.x, fPosY) && motion.y > 0 && fPosY > vec.y) {
 			//System.out.println("adjust +y!");
 			fPosY = (int) (vec.y) - 1;
@@ -366,7 +366,7 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 			
 		
 		
-		vec = Game_AI_TestBed.instance().getLevel().getCellBorder(fPosX, fPosY);
+		vec = level.getCellBorder(fPosX, fPosY);
 		
 		if (!level.isPassable(fPosX, fPosY)) {
 			
@@ -394,36 +394,37 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 			pos.setPos(0, pos.y);
 		}
 		
-		if (pos.x > Game_AI_TestBed.instance().getLevel().getLevelSizeX()) {
-			pos.setPos(Game_AI_TestBed.instance().getLevel().getLevelSizeX(), pos.y);
+		if (pos.x > level.getLevelSizeX()) {
+			pos.setPos(level.getLevelSizeX(), pos.y);
 		}
 		
 		if (pos.y < 0) {
 			pos.setPos(pos.x, 0);
 		}
 		
-		if (pos.y > Game_AI_TestBed.instance().getLevel().getLevelSizeY()) {
-			pos.setPos(pos.x, Game_AI_TestBed.instance().getLevel().getLevelSizeY());
+		if (pos.y > level.getLevelSizeY()) {
+			pos.setPos(pos.x, level.getLevelSizeY());
 		}*/
 		
-		/*if (pos.x < 0 || pos.x > Game_AI_TestBed.instance().getLevel().getLevelSizeX() || pos.y < 0 || pos.y > Game_AI_TestBed.instance().getLevel().getLevelSizeY()) {
+		/*if (pos.x < 0 || pos.x > level.getLevelSizeX() || pos.y < 0 || pos.y > level.getLevelSizeY()) {
 			//System.out.println("killed out of bound entity");
-			Game_AI_TestBed.instance().getLevel().killEntity(e);
+			level.killEntity(e);
 		}*/
 		
 		if (health.isDead()) {
 			//System.out.println("killed entity");
-			killEntity(e);
+			killEntity(data.levelID, e);
 		}
 	}
 	
-	public void killEntity(Entity e) {
-		if (e.getId() == Game_AI_TestBed.instance().getLevel().getPlayerEntity().getId()) {
-			Game_AI_TestBed.instance().getLevel().respawnPlayer();
+	public void killEntity(int levelID, Entity e) {
+		Level level = Game_AI_TestBed.instance().getLevel(levelID);
+		if (e.getId() == level.getPlayerEntity().getId()) {
+			level.respawnPlayer();
 		} else {
 			PhysicsData phys = mapPhysics.get(e);
-			phys.dispose();
-			Game_AI_TestBed.instance().getLevel().killEntity(e);
+			phys.dispose(levelID);
+			level.killEntity(e);
 		}
 		
 	}
@@ -435,8 +436,11 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 		for (CollisionEntry entry : listCollisionQueueStart) {
 			Logger.dbg("collision start between " + entry.entIDA + " and " + entry.entIDB);
 			
-			Entity entIDA = Game_AI_TestBed.instance().getLevel().getWorld().getEntity(entry.entIDA);
-			Entity entIDB = Game_AI_TestBed.instance().getLevel().getWorld().getEntity(entry.entIDB);
+			//TODO: WE ARE ASSUMING LEVEL 0 HERE, FIX!!!
+			Level level = Game_AI_TestBed.instance().getLevel(0);
+			
+			Entity entIDA = level.getWorld().getEntity(entry.entIDA);
+			Entity entIDB = level.getWorld().getEntity(entry.entIDB);
 			
 			//needed?
 			if (entIDA == null || entIDB == null) continue;

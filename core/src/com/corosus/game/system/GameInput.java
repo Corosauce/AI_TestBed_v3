@@ -45,6 +45,7 @@ public class GameInput extends IntervalEntityProcessingSystem {
 	private ComponentMapper<Velocity> mapVelocity;
 	private ComponentMapper<ProfileData> mapProfile;
 	private ComponentMapper<WeaponData> mapWeapons;
+	private ComponentMapper<EntityData> mapEntData;
 	
 	public GameInput(float interval) {
 		super(Aspect.exclude(), interval);
@@ -77,7 +78,7 @@ public class GameInput extends IntervalEntityProcessingSystem {
 		
 		Iterator<Entry<Integer, Boolean>> iter = lookupKeysDown.entrySet().iterator();
 		
-		Entity player = Game_AI_TestBed.instance().getLevel().getPlayerEntity();
+		Entity player = Game_AI_TestBed.instance().getActiveLevel().getPlayerEntity();
 		
 		while (iter.hasNext()) {
 			Map.Entry<Integer, Boolean> entry = iter.next();
@@ -124,6 +125,7 @@ public class GameInput extends IntervalEntityProcessingSystem {
 			Position pos = mapPos.get(player);
 			ProfileData profile = mapProfile.get(player);
 			WeaponData weapons = mapWeapons.get(player);
+			EntityData entData = mapEntData.get(player);
 			
 			//force no movement unless input
 			vel.x = 0F;
@@ -256,7 +258,7 @@ public class GameInput extends IntervalEntityProcessingSystem {
 							double rot = Math.toRadians(pos.rotationYaw + 90);
 							float vecX = (float) (Math.sin(rot))/* * profile.moveSpeed * 2F*/;
 							float vecY = (float) (-Math.cos(rot))/* * profile.moveSpeed * 2F*/;
-							EntityFactory.getEntity(SpawnableTypes.PRJ_PULSE).prepareFromData(pos.x + vecX, pos.y + vecY, EntityData.TEAM_PLAYER, vecX, vecY);
+							EntityFactory.getEntity(SpawnableTypes.PRJ_PULSE).prepareFromData(entData.levelID, pos.x + vecX, pos.y + vecY, EntityData.TEAM_PLAYER, vecX, vecY);
 							
 						}
 					}

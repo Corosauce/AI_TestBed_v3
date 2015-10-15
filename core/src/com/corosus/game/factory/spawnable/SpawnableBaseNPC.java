@@ -12,7 +12,7 @@ import com.corosus.game.factory.EntityFactory;
 public class SpawnableBaseNPC implements SpawnableBase {
 
 	@Override
-	public List<Entity> prepareFromMap(MapObject mapObj) {
+	public List<Entity> prepareFromMap(int levelID, MapObject mapObj) {
 
 		MapProperties props = mapObj.getProperties();
 		
@@ -38,15 +38,15 @@ public class SpawnableBaseNPC implements SpawnableBase {
 		List<Entity> listEnts = new ArrayList<>();
 		
 		for (int i = 0; i < count; i++) {
-			listEnts.add(prepareFromData(x, y, team));
+			listEnts.add(prepareFromData(levelID, x, y, team));
 		}
 		
 		return listEnts;
 	}
 
 	@Override
-	public Entity prepareFromData(Object... objects) {
-		Entity ent = EntityFactory.createEntity_NPC((Float)objects[0], (Float)objects[1]);
+	public Entity prepareFromData(int levelID, Object... objects) {
+		Entity ent = EntityFactory.createEntity_NPC(levelID, (Float)objects[0], (Float)objects[1]);
 		ent.getComponent(EntityData.class).setTeam((int) objects[2]);
 		return ent;
 	}

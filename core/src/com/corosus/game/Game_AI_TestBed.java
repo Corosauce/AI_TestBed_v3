@@ -1,5 +1,7 @@
 package com.corosus.game;
 
+import java.util.HashMap;
+
 import javax.vecmath.Vector2f;
 
 import com.artemis.Entity;
@@ -40,7 +42,8 @@ public class Game_AI_TestBed extends Game {
     
 	
 	private OrthographicCamera camera;
-	private Level level;
+	//private Level level;
+	private HashMap<Integer, Level> lookupLevels = new HashMap<Integer, Level>();
 	
 	public static Game_AI_TestBed instance() {
 		return instance;
@@ -51,7 +54,7 @@ public class Game_AI_TestBed extends Game {
 		instance = this;
 		
 		inputHandler = new InputHandler();
-		level = new Level();
+		lookupLevels.put(0, new Level(0));
 
 		restart();
 	}
@@ -68,7 +71,7 @@ public class Game_AI_TestBed extends Game {
 		
 		this.am = new AssetManager();
 		this.am.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
-		this.am.load(getLevel().getLevel(), TiledMap.class);
+		this.am.load(getLevel(0).getLevel(), TiledMap.class);
 		this.am.finishLoading();
 		
 		
@@ -80,7 +83,7 @@ public class Game_AI_TestBed extends Game {
         this.camera.setToOrtho(false, w, h);
         this.camera.update();
         
-        getLevel().restart();
+        getLevel(0).restart();
         
         /*world = new World();
         
@@ -113,19 +116,28 @@ public class Game_AI_TestBed extends Game {
 		return false;
 	}
 	
-	public Level getLevel() {
-		return this.level;
+	/**
+	 * Mainly for artemis/gdx calls to the level we wanna render, a sort of placeholder for potential future multi level handling
+	 * 
+	 * @return
+	 */
+	public Level getActiveLevel() {
+		return getLevel(0);
+	}
+	
+	public Level getLevel(int levelID) {
+		return lookupLevels.get(levelID);
 	}
 	
 	public void process(float delta) {
-		getLevel().process(delta);
+		getActiveLevel().process(delta);
 	}
 	
 	@Override
 	public void dispose() {
 		super.dispose();
 		
-		getLevel().dispose();
+		getActiveLevel().dispose();
 	}
 
 }

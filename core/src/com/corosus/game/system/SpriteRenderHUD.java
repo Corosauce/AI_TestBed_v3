@@ -53,7 +53,7 @@ public class SpriteRenderHUD extends IntervalEntityProcessingSystem {
 		EntityData entData = mapEntityData.get(e);
 		Health health = mapHealth.get(e);
 		
-		Level level = game.getLevel();
+		Level level = game.getLevel(entData.levelID);
 		
 		float partialTick = level.getPartialTick();
 		
@@ -63,7 +63,7 @@ public class SpriteRenderHUD extends IntervalEntityProcessingSystem {
 		//TODO: use batching properly
 		
 		if (/*false && */game.isInView(pos.toVec(), Cst.SPRITESIZE)) {
-			if (health.hp < health.hpMax && entData.type == EnumEntityType.SPRITE && (game.getLevel().getPlayerEntity() == null || game.getLevel().getPlayerEntity().getId() != e.getId())) {
+			if (health.hp < health.hpMax && entData.type == EnumEntityType.SPRITE && (level.getPlayerEntity() == null || level.getPlayerEntity().getId() != e.getId())) {
 				float widthScale = 0.3F;
 				float size = health.hp * widthScale;
 				float sizeMax = health.hpMax * widthScale;

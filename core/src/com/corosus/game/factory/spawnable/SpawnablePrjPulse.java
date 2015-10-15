@@ -5,8 +5,8 @@ import com.artemis.Entity;
 public class SpawnablePrjPulse extends SpawnableBaseProjectile {
 
 	@Override
-	public Entity prepareFromData(Object... objects) {
-		return super.prepareFromData(objects);
+	public Entity prepareFromData(int levelID, Object... objects) {
+		return super.prepareFromData(levelID, objects);
 	}
 	
 }
