@@ -62,7 +62,7 @@ public class Level {
 	public static int LAYER_MISSIONOBJECTS = 3;
 	
 	public Level(int levelID) {
-		this.levelID = levelID;
+		this.setLevelID(levelID);
 	}
 	
 	public void restart() {
@@ -194,7 +194,7 @@ public class Level {
 			
 			SpawnableBase base = EntityFactory.getEntity(mapObj.getName());
 			if (base != null) {
-				base.prepareFromMap(levelID, mapObj);
+				base.prepareFromMap(getLevelID(), mapObj);
 			}
 		}
 	}
@@ -209,7 +209,7 @@ public class Level {
 			pos.setPos(100, 100);
 		} else {
 			//setPlayer(EntityFactory.createPlayer(100, 100).getId());
-			setPlayer(EntityFactory.createEntity_Player(levelID, 100, 100).getId());
+			setPlayer(EntityFactory.createEntity_Player(getLevelID(), 100, 100).getId());
 		}
 		
 	}
@@ -295,5 +295,13 @@ public class Level {
 		
 		//Cell cell = getCell(x / Cst.TILESIZE, y / Cst.TILESIZE, 0);
 		return new Vector4f(tileX, tileY, tileX + Cst.TILESIZE, tileY + Cst.TILESIZE);
+	}
+
+	public int getLevelID() {
+		return levelID;
+	}
+
+	public void setLevelID(int levelID) {
+		this.levelID = levelID;
 	}
 }

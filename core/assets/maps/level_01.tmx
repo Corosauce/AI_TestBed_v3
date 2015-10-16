@@ -32,19 +32,18 @@
  </objectgroup>
  <layer name="BlockingLayer" width="50" height="300">
   <data encoding="base64" compression="zlib">
-   eJzt10EOhSAMBcB/Du9/0L8nUaAtQsxM4kah8hIQuX4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQNR1c0X6VF8zY7hr06uxWsUY5KgjR22NLDlqa2TJUVsjS47aGlly1NbIkqO2RtabOVaeO97O0d7Pnpd25xg9x7V12j67c1SRY77N1+dVbx2fvM5nvkenfndH642aqStH/33ZffCUHFlyxNr05tWoU+eVHM91e2OItvn6+sjanaPyvyQyhmib2TWQ7TfyPLoHR/fr1e8AON0fqmMm5w==
+   eJzt10ESwiAMBVDP0fsf1D0zlZCkLXbem+lGQ+QrtHJ8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAICs4+TKjOm+VuZwVjPrcbWOOcjRR47eHlVy9PaokqO3R5UcvT2q5OjtUSVHb4+qO3Ncee64O8f4evW89HSO6Dlu7DOOeTpHFznWa96+rmb7eOd9vnI/2vW+G+0XtdJXjvnnVZ+Du+SokiNXM1tXUbuuKzl+953NIVvz9v1R9XSOzv8lmTlka1b3QHVc5P3o9xOp7fg9snMA+Bdfkz4mSw==
   </data>
  </layer>
  <objectgroup name="MissionObjects">
-  <object id="11" name="soldier" type="sprite" x="1456" y="18369.3" width="180" height="162.667">
+  <object id="11" name="soldier" type="sprite" x="1386" y="17637.3" width="180" height="162.667">
    <properties>
-    <property name="count" value="10"/>
+    <property name="count" value="100"/>
    </properties>
   </object>
-  <object id="22" name="soldier" type="sprite" gid="24" x="1632" y="18365.3" width="64" height="64"/>
-  <object id="32" name="general" type="sprite" x="1735.33" y="18357.3" width="180" height="162.667">
+  <object id="32" name="general" type="sprite" x="1749.33" y="17645.3" width="180" height="162.667">
    <properties>
-    <property name="count" value="10"/>
+    <property name="count" value="100"/>
    </properties>
   </object>
  </objectgroup>

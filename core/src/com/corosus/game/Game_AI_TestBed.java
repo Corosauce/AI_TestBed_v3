@@ -107,10 +107,10 @@ public class Game_AI_TestBed extends Game {
 	}
 	
 	public boolean isInView(Vector2f pos, int padding) {
-		if (pos.x + padding >= camera.position.x - camera.viewportWidth/2 && 
-				pos.x - padding < camera.position.x + camera.viewportWidth/2 && 
-				pos.y + padding >= camera.position.y - camera.viewportHeight/2 && 
-				pos.y - padding < camera.position.y + camera.viewportHeight/2) {
+		if (pos.x + padding >= camera.position.x - (camera.viewportWidth/2 * camera.zoom) && 
+				pos.x - padding < camera.position.x + (camera.viewportWidth/2 * camera.zoom) && 
+				pos.y + padding >= camera.position.y - (camera.viewportHeight/2 * camera.zoom) && 
+				pos.y - padding < camera.position.y + (camera.viewportHeight/2 * camera.zoom)) {
 			return true;
 		}
 		return false;

@@ -180,16 +180,36 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 					
 					boolean chase = false;
 					
-					if (distPlayer < 400) {
+					if (distPlayer < 800) {
 						if (VecUtil.canSee(data.levelID, pos.toVec(), posPlayer.toVec())) {
 							chase = true;
+							data.getAgent().getAIBlackboard().setTargetID(player.getId());
+						}
+					}
+					
+					
+					
+					if (data.getAgent().getAIBlackboard().getTargetID() != -1) {
+						data.getAgent().getAIBlackboard().moveTo(posPlayer.toVec());
+					} else {
+						int distRand = Cst.TILESIZE * 10;
+						int tryCount = 10;
+						if (rand.nextInt(30) == 0) {
+							for (int i = 0; i < tryCount; i++) {
+								Vector2f tryPos = new Vector2f(rand.nextInt(distRand)-rand.nextInt(distRand), rand.nextInt(distRand)-rand.nextInt(distRand));
+								tryPos = new Vector2f(pos.x + tryPos.x, pos.y + tryPos.y);
+								if (level.isPassable((int)tryPos.x, (int)tryPos.y)) {
+									data.getAgent().getAIBlackboard().setPosTarget(tryPos);
+									break;
+								}
+							}
 						}
 					}
 					
 					if (chase) {
+						
 						Vector2f targVec = VecUtil.getTargetVector(pos.x, pos.y, posPlayer.x, posPlayer.y);
 						
-						data.getAgent().getAIBlackboard().moveTo(posPlayer.toVec());
 						
 						/*if (distPlayer > 64) {
 							motion.x = targVec.x * profileData.moveSpeed;
@@ -208,8 +228,8 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 								float vecY = targVec.y;
 								
 								weapon.fire();
-								/*GameAssetManager.instance().getSound("shoot").play(GameSettings.vol);
-								EntityFactory.getEntity(weapon.projectileType).prepareFromData(data.levelID, pos.x + vecX * 2, pos.y + vecY * 2, data.team, vecX, vecY);*/
+								GameAssetManager.instance().getSound("shoot").play(GameSettings.vol);
+								EntityFactory.getEntity(weapon.projectileType).prepareFromData(data.levelID, pos.x + vecX * 2, pos.y + vecY * 2, data.team, vecX, vecY);
 							}
 						}
 						
@@ -223,18 +243,7 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 							}
 						}*/
 					} else {
-						int distRand = Cst.TILESIZE * 10;
-						int tryCount = 10;
-						if (rand.nextInt(30) == 0) {
-							for (int i = 0; i < tryCount; i++) {
-								Vector2f tryPos = new Vector2f(rand.nextInt(distRand)-rand.nextInt(distRand), rand.nextInt(distRand)-rand.nextInt(distRand));
-								tryPos = new Vector2f(pos.x + tryPos.x, pos.y + tryPos.y);
-								if (level.isPassable((int)tryPos.x, (int)tryPos.y)) {
-									data.getAgent().getAIBlackboard().setPosTarget(tryPos);
-									break;
-								}
-							}
-						}
+						
 						/*motion.x = rand.nextInt(distRand)-rand.nextInt(distRand);
 						motion.y = rand.nextInt(distRand)-rand.nextInt(distRand);*/
 					}
@@ -365,7 +374,9 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 				fPosX = (int) (vec.x) - 1;
 			}*/
 			
-		
+		if (collide && data.type == EnumEntityType.PROJECTILE) {
+			health.hp = 0;
+		}
 		
 		vec = level.getCellBorder(fPosX, fPosY);
 		

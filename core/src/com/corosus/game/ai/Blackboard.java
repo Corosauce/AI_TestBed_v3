@@ -1,5 +1,7 @@
 package com.corosus.game.ai;
 
+import java.util.List;
+
 import javax.vecmath.Vector2f;
 
 import com.artemis.Entity;
@@ -16,7 +18,14 @@ public class Blackboard {
 	
 	private Agent agent;
 
+	private int targetID = -1;
+	
 	private Vector2f posTarget = null;
+	private long pfTimeCooldown = 400;
+	private long lastPFTime = -pfTimeCooldown;
+	
+	private List<IntPair> listPath = null;
+	private int indexPath = 0;
 
 	public Blackboard(Agent agent) {
 		this.setAgent(agent);
@@ -28,6 +37,14 @@ public class Blackboard {
 
 	public void setPosTarget(Vector2f posTarget) {
 		this.posTarget = posTarget;
+	}
+
+	public int getTargetID() {
+		return targetID;
+	}
+
+	public void setTargetID(int targetID) {
+		this.targetID = targetID;
 	}
 	
 	/**
@@ -48,22 +65,51 @@ public class Blackboard {
 		float dist = VecUtil.getDist(pos, posData.toVec());
 		if (dist < Cst.TILESIZE * 2) {
 			setPosTarget(pos);
+			//resetPath();
 		} else {
 			//pathfind
 			IntPair coordFrom = new IntPair(posData.x / (float)Cst.TILESIZE, posData.y / (float)Cst.TILESIZE);
 			IntPair coordTo = new IntPair(pos.x / (float)Cst.TILESIZE, pos.y / (float)Cst.TILESIZE);
 			
 			Level level = Game_AI_TestBed.instance().getLevel(agent.getLevelID());
-			if (level.getTime() % 40 == 0 && level.isPassable(coordFrom.x, coordFrom.y)) {
+			if (level.isPassable(coordFrom.x, coordFrom.y) && (lastPFTime + pfTimeCooldown <= level.getTime() || !hasPath())) {
 				if (level.isPassable(coordTo.x, coordTo.y)) {
 					Logger.dbg("pathfind try!");
 					
-					PathfinderHelper.instance().getPath(agent.getLevelID(), coordFrom, coordTo);
+					lastPFTime = level.getTime();
+					setPath(PathfinderHelper.instance().getPath(agent.getLevelID(), coordFrom, coordTo));
+					
+					System.out.println("path size: " + listPath.size());
 				}
 			}
 		}
 		
 		
+	}
+	
+	public void setPath(List<IntPair> path) {
+		this.listPath = path;
+		indexPath = 0;
+	}
+	
+	public boolean hasPath() {
+		return listPath != null && listPath.size() > 0;
+	}
+	
+	public IntPair getPathPoint() {
+		return listPath.get(indexPath);
+	}
+	
+	public void incPathPoint() {
+		indexPath++;
+		if (indexPath >= listPath.size()) {
+			resetPath();
+		}
+	}
+	
+	public void resetPath() {
+		listPath = null;
+		indexPath = 0;
 	}
 
 	public Agent getAgent() {

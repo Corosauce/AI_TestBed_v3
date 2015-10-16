@@ -35,7 +35,7 @@ public class MapRender extends IntervalEntityProcessingSystem {
 		
 		//game.getCamera().position.x += 1;
 		//camera.position.y += 1;
-		game.getCamera().zoom = 1F;
+		game.getCamera().zoom = 2F;
 		game.getCamera().update();
 		
 		ComponentMapper<Position> mapPos = ComponentMapper.getFor(Position.class, level.getWorld());

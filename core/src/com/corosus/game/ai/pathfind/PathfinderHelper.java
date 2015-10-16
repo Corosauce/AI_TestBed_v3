@@ -77,19 +77,24 @@ public class PathfinderHelper {
     }
 	
 	private List<IntPair> calcPath(IntPair from, IntPair to) {
-		path.clear();
-		
-		Node startNode = nodes[from.x][from.y];
-		Node endNode = nodes[to.x][to.y];
+		List<IntPair> listPaths = new ArrayList<IntPair>();
+		try {
+			path.clear();
+			
+			Node startNode = nodes[from.x][from.y];
+			Node endNode = nodes[to.x][to.y];
 
-        pathFinder.searchNodePath(startNode, endNode, heuristic, path);
-        
-        List<IntPair> listPaths = new ArrayList<IntPair>();
-        
-        for (Node node : path.nodes) {
-            listPaths.add(new IntPair(node.x, node.y));
-            System.out.println(node);
-        }
+	        pathFinder.searchNodePath(startNode, endNode, heuristic, path);
+	        
+	        
+	        
+	        for (Node node : path.nodes) {
+	            listPaths.add(new IntPair(node.x, node.y));
+	            //System.out.println(node);
+	        }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
         
         return listPaths;
 	}
