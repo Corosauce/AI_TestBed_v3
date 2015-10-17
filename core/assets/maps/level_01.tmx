@@ -38,12 +38,12 @@
  <objectgroup name="MissionObjects">
   <object id="11" name="soldier" type="sprite" x="1386" y="17637.3" width="180" height="162.667">
    <properties>
-    <property name="count" value="100"/>
+    <property name="count" value="200"/>
    </properties>
   </object>
   <object id="32" name="general" type="sprite" x="1749.33" y="17645.3" width="180" height="162.667">
    <properties>
-    <property name="count" value="0"/>
+    <property name="count" value="200"/>
    </properties>
   </object>
  </objectgroup>

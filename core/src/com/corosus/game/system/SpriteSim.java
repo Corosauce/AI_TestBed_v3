@@ -191,13 +191,13 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 					
 					if (omnipotent || (distPlayer < 800 && VecUtil.canSee(data.levelID, pos.toVec(), posPlayer.toVec()))) {
 						chase = true;
-						data.getAgent().getAIBlackboard().setTargetID(player.getId());
+						data.getAgent().getBlackboard().setTargetID(player.getId());
 					}
 					
 					
 					
-					if (data.getAgent().getAIBlackboard().getTargetID() != -1) {
-						data.getAgent().getAIBlackboard().moveTo(posPlayer.toVec());
+					if (data.getAgent().getBlackboard().getTargetID() != -1) {
+						data.getAgent().moveTo(posPlayer.toVec());
 					} else {
 						int distRand = Cst.TILESIZE * 30;
 						int tryCount = 10;
@@ -206,7 +206,7 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 								Vector2f tryPos = new Vector2f(rand.nextInt(distRand)-rand.nextInt(distRand), rand.nextInt(distRand)-rand.nextInt(distRand));
 								tryPos = new Vector2f(pos.x + tryPos.x, pos.y + tryPos.y);
 								if (level.isPassable((int)tryPos.x, (int)tryPos.y)) {
-									data.getAgent().getAIBlackboard().moveTo(tryPos);
+									data.getAgent().moveTo(tryPos);
 									break;
 								}
 							}
@@ -257,11 +257,11 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 				}
 				
 				//move to AI target position
-				if (data.getAgent().getAIBlackboard().getPosTarget() != null) {
-					float distToTarg = VecUtil.getDist(new Vector2f(pos.x, pos.y), data.getAgent().getAIBlackboard().getPosTarget());
+				if (data.getAgent().getBlackboard().getPosTarget() != null) {
+					float distToTarg = VecUtil.getDist(new Vector2f(pos.x, pos.y), data.getAgent().getBlackboard().getPosTarget());
 					
 					if (distToTarg > Cst.TILESIZE / 32) {
-						Vector2f targVec = VecUtil.getTargetVector(new Vector2f(pos.x, pos.y), data.getAgent().getAIBlackboard().getPosTarget());
+						Vector2f targVec = VecUtil.getTargetVector(new Vector2f(pos.x, pos.y), data.getAgent().getBlackboard().getPosTarget());
 						
 						motion.x = targVec.x * profileData.moveSpeed;
 						motion.y = targVec.y * profileData.moveSpeed;
@@ -310,104 +310,122 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 		//process specific entity collision before applying motion to pos
 		//List<CollisionEntry> listCollisions = lookupEntIDToCollisionList.get(e.getId());
 		//if (listCollisions != null) {
-		for (int entry : physics.listEntitiesCollidingWith) {
-			int entIDTarget = entry;
-			
-			/*if (entry.entIDA == e.getId()) {
-				entIDTarget = entry.entIDB;
-			} else {
-				entIDTarget = entry.entIDA;
-			}*/
-			
-			Entity entHit = level.getWorld().getEntity(entIDTarget);
-			
-			if (entHit != null) {
-				EntityData dataHit = mapData.get(entHit);
-				if (dataHit != null && data.type == EnumEntityType.SPRITE && dataHit.type == EnumEntityType.SPRITE) {
-					Position posB = mapPos.get(entHit);
-					
-					
-					Vector2f futurePos = new Vector2f(pos.x + motion.x, pos.y + motion.y);
-					
-					//Vector2f pushA = VecUtil.getTargetVector(pos.toVec(), posB.toVec());
-					//Vector2f pushB = VecUtil.getTargetVector(posB.toVec(), pos.toVec());
-					
-					//float pushForce = 0.5F;
-					
-					try {
+		boolean spreadOutNPCs = true;
+		if (spreadOutNPCs) {
+			for (int entry : physics.listEntitiesCollidingWith) {
+				int entIDTarget = entry;
+				
+				/*if (entry.entIDA == e.getId()) {
+					entIDTarget = entry.entIDB;
+				} else {
+					entIDTarget = entry.entIDA;
+				}*/
+				
+				Entity entHit = level.getWorld().getEntity(entIDTarget);
+				
+				if (entHit != null) {
+					EntityData dataHit = mapData.get(entHit);
+					if (dataHit != null && data.type == EnumEntityType.SPRITE && dataHit.type == EnumEntityType.SPRITE) {
+						Position posB = mapPos.get(entHit);
 						
-						//player?
-						if (data.getAgent() == null || dataHit.getAgent() == null) continue;
 						
-						float distA = VecUtil.getDist(pos.toVec(), data.getAgent().getAIBlackboard().getPosTarget());
-						float distB = VecUtil.getDist(posB.toVec(), dataHit.getAgent().getAIBlackboard().getPosTarget());
+						Vector2f futurePos = new Vector2f(pos.x + motion.x, pos.y + motion.y);
 						
-						float distNow = VecUtil.getDist(pos.toVec(), posB.toVec());
-						float distFuture = VecUtil.getDist(futurePos, posB.toVec());
+						Vector2f pushA = VecUtil.getTargetVector(pos.toVec(), posB.toVec());
+						//Vector2f pushB = VecUtil.getTargetVector(posB.toVec(), pos.toVec());
 						
-						/*Vector2f pushVec = new Vector2f();
+						float pushDistA = VecUtil.getDist(pos.toVec(), posB.toVec());
+						//float pushDistB = VecUtil.getDist(posB.toVec(), pos.toVec());
 						
-						if (Float.isNaN(pushA.x)) {
-							pushVec.x = rand.nextFloat() * pushForce;
-						} else {
-							pushVec.x = -pushA.x * pushForce;
+						float cusionSize = Cst.COLLIDESIZE_SPRITE + 1;
+						
+						float pushForce = 5.5F / (cusionSize / (cusionSize - pushDistA));
+						
+						if (pushForce > 3F) {
+							pushForce = 3F;
 						}
 						
-						if (Float.isNaN(pushA.y)) {
-							pushVec.y = rand.nextFloat() * pushForce;
-						} else {
-							pushVec.y = -pushA.y * pushForce;
-						}*/
-						
-						float speedReduce = (rand.nextFloat() * 0.5F) + 0.5F;
-						speedReduce = (rand.nextFloat() * 1F);
-						speedReduce = 0.3F;
-						float speedIncrease = 0.8F;
-						//speedReduce = 1F;
-						
-						//motion.x += pushVec.x;
-						//motion.y += pushVec.y;
-						
-						//Logger.dbg("processing collision, distA: " + distA + ", distB: " + distB);
-						
-						/*if (e.getId() > entIDTarget && level.getPlayerEntity().getId() != e.getId()) {
-							motion.x *= speedReduce;
-							motion.y *= speedReduce;
-							break;
-						}*/
-						
-						if (distFuture < distNow) {
-							motion.x *= speedReduce;
-							motion.y *= speedReduce;
-							break;
-						} else {
-							motion.x /= speedIncrease;
-							motion.y /= speedIncrease;
-							break;
+						try {
+							
+							//player?
+							if (data.getAgent() == null || dataHit.getAgent() == null) continue;
+							
+							//float distA = VecUtil.getDist(pos.toVec(), data.getAgent().getBlackboard().getPosTarget());
+							//float distB = VecUtil.getDist(posB.toVec(), dataHit.getAgent().getBlackboard().getPosTarget());
+							
+							float distNow = VecUtil.getDist(pos.toVec(), posB.toVec());
+							float distFuture = VecUtil.getDist(futurePos, posB.toVec());
+							
+							Vector2f pushVec = new Vector2f();
+							
+							if (Float.isNaN(pushA.x)) {
+								pushVec.x = rand.nextFloat() * pushForce;
+							} else {
+								pushVec.x = -pushA.x * pushForce;
+							}
+							
+							if (Float.isNaN(pushA.y)) {
+								pushVec.y = rand.nextFloat() * pushForce;
+							} else {
+								pushVec.y = -pushA.y * pushForce;
+							}
+							
+							float speedReduce = (rand.nextFloat() * 0.5F) + 0.5F;
+							speedReduce = (rand.nextFloat() * 1F);
+							speedReduce = 0.001F;
+							float speedIncrease = 0.8F;
+							//speedReduce = 1F;
+							
+							//motion.x += pushVec.x;
+							//motion.y += pushVec.y;
+							
+							//Logger.dbg("processing collision, distA: " + distA + ", distB: " + distB);
+							
+							/*if (e.getId() > entIDTarget && level.getPlayerEntity().getId() != e.getId()) {
+								motion.x *= speedReduce;
+								motion.y *= speedReduce;
+								break;
+							}*/
+							
+							if (pushVec != null) {
+								motion.x += pushVec.x;
+								motion.y += pushVec.y;
+								//break;
+							}
+							
+							if (distFuture < distNow) {
+								/*motion.x *= speedReduce;
+								motion.y *= speedReduce;
+								break;*/
+							} else {
+								/*motion.x /= speedIncrease;
+								motion.y /= speedIncrease;
+								break;*/
+							}
+							
+							/*if (distA < distB) {
+								motion.x /= speedReduce;
+								motion.y /= speedReduce;
+								break;
+							}  else if (distA > distB) {
+								motion.x *= speedReduce;
+								motion.y *= speedReduce;
+								break;
+							}*//* else if (e.getId() > entIDTarget && level.getPlayerEntity().getId() != e.getId()) {
+								motion.x *= speedReduce;
+								motion.y *= speedReduce;
+								break;
+							}*/
+							
+						} catch (Exception e2) {
+							e2.printStackTrace();
 						}
-						
-						/*if (distA < distB) {
-							motion.x /= speedReduce;
-							motion.y /= speedReduce;
-							break;
-						}  else if (distA > distB) {
-							motion.x *= speedReduce;
-							motion.y *= speedReduce;
-							break;
-						}*//* else if (e.getId() > entIDTarget && level.getPlayerEntity().getId() != e.getId()) {
-							motion.x *= speedReduce;
-							motion.y *= speedReduce;
-							break;
-						}*/
-						
-					} catch (Exception e2) {
-						e2.printStackTrace();
 					}
 				}
+				
+				//for now only process first collision for speed reduction
+				
 			}
-			
-			//for now only process first collision for speed reduction
-			
 		}
 		//}
 		

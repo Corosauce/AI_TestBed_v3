@@ -101,7 +101,8 @@ public class PhysicsData extends Component {
 	
 	public void addCollision(Integer ID) {
 		if (listEntitiesCollidingWith.contains(ID)) {
-			Logger.err("collision list contains this id already!");
+			//TODO: find out why its redundantly trying to add collisions
+			//Logger.err("collision list contains this id already!");
 		} else {
 			listEntitiesCollidingWith.add(ID);
 		}

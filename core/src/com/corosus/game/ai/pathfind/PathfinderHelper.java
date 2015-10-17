@@ -23,6 +23,8 @@ public class PathfinderHelper {
 	IndexedAStarPathFinder<FlatTiledNode> pathFinder;
 	PathSmoother<FlatTiledNode, Vector2> pathSmoother;
 	
+	public boolean initLevelData = true;
+	
 	//level data
 	//TODO: make level data only be loaded when level loads unless we do dynamic stuff later on(?)
 	public int[][] nodes;
@@ -33,6 +35,8 @@ public class PathfinderHelper {
 		}
 		return instance;
 	}
+	
+	
 	
 	public List<IntPair> getPath(int levelID, IntPair from, IntPair to) {
 		
@@ -48,22 +52,24 @@ public class PathfinderHelper {
 		
 		Level level = Game_AI_TestBed.instance().getLevel(levelID);
 		
+		if (initLevelData) {
+			initLevelData = false;
+			
+			nodes = new int[level.getTileSizeX()][level.getTileSizeY()];//new FlatTiledNode[level.getTileSizeX()][level.getTileSizeY()];
+			for (int x = 0; x < level.getTileSizeX(); x++) {
+	            for (int y = 0; y < level.getTileSizeY(); y++) {
+	                if (level.isTilePassable(x, y)) {
+	                	nodes[x][y] = TiledNode.TILE_FLOOR;//new FlatTiledNode(x*Cst.TILESIZE, y*Cst.TILESIZE, TiledNode.TILE_FLOOR, 4);
+	                } else {
+	                	nodes[x][y] = TiledNode.TILE_WALL;
+	                }
+	            }
+	        }
+			
+			graph = new FlatTiledGraph(level.getTileSizeX(), level.getTileSizeY());
+			graph.init(nodes);
+		}
 		
-		nodes = new int[level.getTileSizeX()][level.getTileSizeY()];//new FlatTiledNode[level.getTileSizeX()][level.getTileSizeY()];
-		
-		for (int x = 0; x < level.getTileSizeX(); x++) {
-            for (int y = 0; y < level.getTileSizeY(); y++) {
-                if (level.isTilePassable(x, y)) {
-                	nodes[x][y] = TiledNode.TILE_FLOOR;//new FlatTiledNode(x*Cst.TILESIZE, y*Cst.TILESIZE, TiledNode.TILE_FLOOR, 4);
-                } else {
-                	nodes[x][y] = TiledNode.TILE_WALL;
-                }
-            }
-        }
-		
-		graph = new FlatTiledGraph(level.getTileSizeX(), level.getTileSizeY());
-		
-		graph.init(nodes);
 		
 		path = new TiledSmoothableGraphPath<FlatTiledNode>();
 		heuristic = new TiledManhattanDistance<FlatTiledNode>();
@@ -81,7 +87,7 @@ public class PathfinderHelper {
 		//smoooooooth
 		pathSmoother.smoothPath(path);
 		
-		Logger.dbg("nodes: " + path.nodes.size);
+		//Logger.dbg("nodes: " + path.nodes.size);
 		
 		List<IntPair> listPaths = new ArrayList<IntPair>();
 		for (FlatTiledNode node : path.nodes) {

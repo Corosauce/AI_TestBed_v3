@@ -204,7 +204,7 @@ public class Level {
 	public void respawnPlayer() {
 		
 		int spawnX = 1222;
-		//spawnX = 722;
+		spawnX = 722;
 		int spawnY = getLevelSizeY() - 17682;
 		
 		Entity ent = getPlayerEntity();

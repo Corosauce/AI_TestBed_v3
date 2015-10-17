@@ -5,6 +5,9 @@ import javax.vecmath.Vector2f;
 import com.artemis.Entity;
 import com.corosus.game.Cst;
 import com.corosus.game.Game_AI_TestBed;
+import com.corosus.game.Level;
+import com.corosus.game.Logger;
+import com.corosus.game.ai.pathfind.PathfinderHelper;
 import com.corosus.game.component.Position;
 import com.corosus.game.util.IntPair;
 import com.corosus.game.util.VecUtil;
@@ -22,7 +25,7 @@ public class Agent {
 		setAIBlackboard(new Blackboard(this));
 	}
 
-	public Blackboard getAIBlackboard() {
+	public Blackboard getBlackboard() {
 		return blackboard;
 	}
 
@@ -44,6 +47,10 @@ public class Agent {
 
 	public void setLevelID(int levelID) {
 		this.levelID = levelID;
+	}
+	
+	public Entity getEntity() {
+		return Game_AI_TestBed.instance().getLevel(getLevelID()).getWorld().getEntity(getEntID());
 	}
 	
 	public void tick() {
@@ -74,6 +81,59 @@ public class Agent {
 		} else {
 			//System.out.println("no path");
 		}
+	}
+	
+	/**
+	 * Main interface method to tell an entity to move to a position
+	 * Will determine if it should request a path first or just move to it
+	 * 
+	 * @param pos
+	 */
+	public void moveTo(Vector2f pos) {
+		//if within 2 tiles and both tiles have no collision then vec move
+		//otherwise try to path
+		//dont assume you can strait move to if you can see, we plan on PIT blocks
+		
+		
+		
+		Position posData = getEntity().getComponent(Position.class);
+		
+		float dist = VecUtil.getDist(pos, posData.toVec());
+		if (dist < Cst.TILESIZE * 2) {
+			blackboard.setPosTarget(pos);
+			//resetPath();
+		} else {
+			//pathfind
+			IntPair coordFrom = new IntPair(posData.x / (float)Cst.TILESIZE, posData.y / (float)Cst.TILESIZE);
+			IntPair coordTo = new IntPair(pos.x / (float)Cst.TILESIZE, pos.y / (float)Cst.TILESIZE);
+			
+			Level level = Game_AI_TestBed.instance().getLevel(getLevelID());
+			if (level.isPassable(coordFrom.x, coordFrom.y) && (blackboard.lastPFTime + blackboard.pfTimeCooldown <= level.getTime() || !blackboard.hasPath())) {
+				if (level.isPassable(coordTo.x, coordTo.y)) {
+					//Logger.dbg("pathfind try!");
+					
+					blackboard.lastPFTime = level.getTime();
+					blackboard.setPath(PathfinderHelper.instance().getPath(getLevelID(), coordFrom, coordTo));
+					
+					//attempt to skip first node if we are close to it so we dont backtrack
+					//this might sabatoge pathfollowing, keep eye on it
+					if (blackboard.hasPath()) {
+						IntPair pointTile = blackboard.getPathPoint();
+						Vector2f pointCoord = new Vector2f((pointTile.x * Cst.TILESIZE) + (Cst.TILESIZE / 2), (pointTile.y * Cst.TILESIZE) + (Cst.TILESIZE / 2));
+						
+						float distToNode = VecUtil.getDist(pointCoord, posData.toVec());
+						if (distToNode <= Cst.TILESIZE) {
+							//Logger.dbg("skip first node!");
+							blackboard.incPathPoint();
+						}
+					}
+					
+					//System.out.println("path size: " + listPath.size());
+				}
+			}
+		}
+		
+		
 	}
 	
 }
