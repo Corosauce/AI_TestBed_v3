@@ -74,12 +74,12 @@ public class Blackboard {
 			Level level = Game_AI_TestBed.instance().getLevel(agent.getLevelID());
 			if (level.isPassable(coordFrom.x, coordFrom.y) && (lastPFTime + pfTimeCooldown <= level.getTime() || !hasPath())) {
 				if (level.isPassable(coordTo.x, coordTo.y)) {
-					Logger.dbg("pathfind try!");
+					//Logger.dbg("pathfind try!");
 					
 					lastPFTime = level.getTime();
 					setPath(PathfinderHelper.instance().getPath(agent.getLevelID(), coordFrom, coordTo));
 					
-					System.out.println("path size: " + listPath.size());
+					//System.out.println("path size: " + listPath.size());
 				}
 			}
 		}

@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.ai.pfa.DefaultGraphPath;
+import com.badlogic.gdx.ai.pfa.PathSmoother;
 import com.badlogic.gdx.ai.pfa.indexed.IndexedAStarPathFinder;
+import com.badlogic.gdx.math.Vector2;
 import com.corosus.game.Cst;
 import com.corosus.game.Game_AI_TestBed;
 import com.corosus.game.Level;
@@ -19,6 +21,7 @@ public class PathfinderHelper {
 	public DistHeuristic heuristic;
 	public IndexedAStarPathFinder<Node> pathFinder;
 	public Node[][] nodes;
+	public PathSmoother<Node, Vector2> pathSmoother;
 	
 	public static PathfinderHelper instance() {
 		if (instance == null) {
@@ -34,6 +37,7 @@ public class PathfinderHelper {
 		graph = new Graph(128);
 		path = new DefaultGraphPath<Node>();
 		heuristic = new DistHeuristic();
+		//pathSmoother = new PathSmoother<>(new Tiled)
 		
 		Level level = Game_AI_TestBed.instance().getLevel(levelID);
 		

@@ -59,12 +59,14 @@ public class Agent {
 			
 			float dist = VecUtil.getDist(pointCoord, pos.toVec());
 			
+			blackboard.moveTo(pointCoord);
+			
 			if (dist < 8) {
 				//System.out.println("inc point!");
 				blackboard.incPathPoint();
 			} else {
 				//System.out.println("pathnav to " + dist);
-				blackboard.moveTo(pointCoord);
+				
 			}
 		} else {
 			//System.out.println("no path");

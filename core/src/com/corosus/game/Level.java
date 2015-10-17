@@ -197,19 +197,26 @@ public class Level {
 				base.prepareFromMap(getLevelID(), mapObj);
 			}
 		}
+		
+		Logger.dbg("map objects loaded!");
 	}
 	
 	public void respawnPlayer() {
+		
+		int spawnX = 1222;
+		//spawnX = 722;
+		int spawnY = getLevelSizeY() - 17682;
+		
 		Entity ent = getPlayerEntity();
 		if (ent != null) {
 			Health health = ent.getComponent(Health.class);
 			health.reset();
 			
 			Position pos = ent.getComponent(Position.class);
-			pos.setPos(100, 100);
+			pos.setPos(spawnX, spawnY);
 		} else {
 			//setPlayer(EntityFactory.createPlayer(100, 100).getId());
-			setPlayer(EntityFactory.createEntity_Player(getLevelID(), 100, 100).getId());
+			setPlayer(EntityFactory.createEntity_Player(getLevelID(), spawnX, spawnY).getId());
 		}
 		
 	}

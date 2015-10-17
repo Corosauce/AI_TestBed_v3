@@ -1,18 +1,18 @@
 package com.corosus.game.component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.artemis.Component;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
-import com.corosus.game.Cst;
 import com.corosus.game.Game_AI_TestBed;
 import com.corosus.game.Logger;
-import com.corosus.game.entity.EnumEntityType;
 import com.corosus.game.physics.CollisionListener;
 
 /**
@@ -32,6 +32,8 @@ public class PhysicsData extends Component {
 	public static byte COLLIDE_TEAM0_PROJECTILE = 0x0008;
 	public static byte COLLIDE_TEAM1_PROJECTILE = 0x0016;
 	
+	public List<Integer> listEntitiesCollidingWith = new ArrayList<Integer>();
+	
 	public PhysicsData() {
 		
 	}
@@ -39,10 +41,10 @@ public class PhysicsData extends Component {
 	public void initPhysics(int levelID, int entID, float x, float y, int sizeDiameter, short categoryBits, short maskBits, boolean useCCD) {
 		World world = Game_AI_TestBed.instance().getLevel(levelID).getWorldBox2D();
 		
-		/*if (world.isLocked()) {
+		if (world.isLocked()) {
 			System.out.println("CANCELLING PHYSICS, WORLD LOCKED");
 			return;
-		}*/
+		}
 		
 		collisionListener = new CollisionListener();
 		
@@ -59,6 +61,8 @@ public class PhysicsData extends Component {
 		
 		
 		//System.out.println("pos: " + x + " - " + y);
+		//crashes sometimes, suggestion: [05:15:04] <burakkurkcu> you need to queue your removals and destroy/remove them end of the iteration of box2d
+		//crash is related to projectile collisions to player, only happens when lots are occuring....
 		body = world.createBody(def);
 		
 		/*PolygonShape shape = new PolygonShape();
@@ -83,7 +87,7 @@ public class PhysicsData extends Component {
 		shape.dispose();
 	}
 	
-	public void dispose(int levelID) {
+	public void disposeBox2D(int levelID) {
 		World world = Game_AI_TestBed.instance().getLevel(levelID).getWorldBox2D();
 		if (body != null) {
 			body.setUserData(null);
@@ -93,5 +97,27 @@ public class PhysicsData extends Component {
 			//occurs during double kill calls from sprite sim, need some sort of queue remove system? also one for stopping further code processing
 			Logger.warn("tried to kill phys body when it was already null'd");
 		}
+	}
+	
+	public void addCollision(Integer ID) {
+		if (listEntitiesCollidingWith.contains(ID)) {
+			Logger.err("collision list contains this id already!");
+		} else {
+			listEntitiesCollidingWith.add(ID);
+		}
+	}
+	
+	public void removeCollision(Integer ID) {
+		/*String data = "";
+		for (int entry : listEntitiesCollidingWith) {
+			data += entry + ", ";
+		}
+		System.out.println("before: " + data);*/
+		listEntitiesCollidingWith.remove(ID);
+		/*data = "";
+		for (int entry : listEntitiesCollidingWith) {
+			data += entry + ", ";
+		}
+		System.out.println("after: " + data);*/
 	}
 }

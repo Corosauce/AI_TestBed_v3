@@ -1,6 +1,7 @@
 package com.corosus.game.system;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -12,7 +13,6 @@ import com.artemis.Component;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.systems.IntervalEntityProcessingSystem;
-import com.badlogic.gdx.math.MathUtils;
 import com.corosus.game.Cst;
 import com.corosus.game.GameSettings;
 import com.corosus.game.Game_AI_TestBed;
@@ -32,7 +32,6 @@ import com.corosus.game.component.WeaponData.WeaponLocation;
 import com.corosus.game.entity.ActionRoutine;
 import com.corosus.game.entity.EnumEntityType;
 import com.corosus.game.factory.EntityFactory;
-import com.corosus.game.factory.spawnable.SpawnableTypes;
 import com.corosus.game.util.MathUtil;
 import com.corosus.game.util.VecUtil;
 
@@ -46,30 +45,33 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 	private ComponentMapper<PhysicsData> mapPhysics;
 	private ComponentMapper<ProjectileData> mapProjectile;
 	private ComponentMapper<WeaponData> mapWeapons;
-	
+
 	private List<CollisionEntry> listCollisionQueueStart = new ArrayList<CollisionEntry>();
 	private List<CollisionEntry> listCollisionQueueEnd = new ArrayList<CollisionEntry>();
-	
+
+	//private HashMap<Integer, List<CollisionEntry>> lookupEntIDToCollisionList = new HashMap<Integer, List<CollisionEntry>>();
+
 	public class CollisionEntry {
-		
+
 		public int entIDA;
 		public int entIDB;
-		
+
 		public CollisionEntry(int entIDA, int entIDB) {
 			this.entIDA = entIDA;
 			this.entIDB = entIDB;
 		}
 	}
-	
+
 	public SpriteSim(float interval) {
-		super(Aspect.one(Position.class, Health.class, Velocity.class, EntityData.class, ProfileData.class, PhysicsData.class, ProjectileData.class), interval);
+		super(Aspect.one(Position.class, Health.class, Velocity.class,
+				EntityData.class, ProfileData.class, PhysicsData.class,
+				ProjectileData.class), interval);
 	}
-	
+
 	@Override
 	protected void initialize() {
 		super.initialize();
-		
-		
+
 	}
 
 	@Override
@@ -115,9 +117,9 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 			short maskBits = 0;
 			if (data.type == EnumEntityType.SPRITE) {
 				if (data.team == 0) {
-					maskBits = PhysicsData.COLLIDE_TEAM1_PROJECTILE;
+					maskBits = (short) (PhysicsData.COLLIDE_TEAM1_PROJECTILE | PhysicsData.COLLIDE_TEAM0_SPRITE | PhysicsData.COLLIDE_TEAM1_SPRITE);
 				} else if (data.team == 1) {
-					maskBits = PhysicsData.COLLIDE_TEAM0_PROJECTILE;
+					maskBits = (short) (PhysicsData.COLLIDE_TEAM0_PROJECTILE | PhysicsData.COLLIDE_TEAM1_SPRITE | PhysicsData.COLLIDE_TEAM0_SPRITE);
 				} else {
 					Logger.dbg("MISSING TEAM COLLIDE DATA");
 				}
@@ -164,6 +166,12 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 				
 				data.getAgent().tick();
 				
+				/*if (weapons.hasPrimaryWeapon()) {
+					Weapon weapon = weapons.getActivePrimary();
+					float distRand = 1F;
+					EntityFactory.getEntity(weapon.projectileType).prepareFromData(data.levelID, pos.x, pos.y, data.team, rand.nextFloat()-rand.nextFloat(), rand.nextFloat()-rand.nextFloat());
+				}*/
+				
 				//TEMP DUMMY AI
 				profileData.moveSpeed = 5;
 				
@@ -179,12 +187,11 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 					float distPlayer = VecUtil.getDist(new Vector2f(pos.x, pos.y), new Vector2f(posPlayer.x, posPlayer.y));
 					
 					boolean chase = false;
+					boolean omnipotent = true;
 					
-					if (distPlayer < 800) {
-						if (VecUtil.canSee(data.levelID, pos.toVec(), posPlayer.toVec())) {
-							chase = true;
-							data.getAgent().getAIBlackboard().setTargetID(player.getId());
-						}
+					if (omnipotent || (distPlayer < 800 && VecUtil.canSee(data.levelID, pos.toVec(), posPlayer.toVec()))) {
+						chase = true;
+						data.getAgent().getAIBlackboard().setTargetID(player.getId());
 					}
 					
 					
@@ -192,14 +199,14 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 					if (data.getAgent().getAIBlackboard().getTargetID() != -1) {
 						data.getAgent().getAIBlackboard().moveTo(posPlayer.toVec());
 					} else {
-						int distRand = Cst.TILESIZE * 10;
+						int distRand = Cst.TILESIZE * 30;
 						int tryCount = 10;
 						if (rand.nextInt(30) == 0) {
 							for (int i = 0; i < tryCount; i++) {
 								Vector2f tryPos = new Vector2f(rand.nextInt(distRand)-rand.nextInt(distRand), rand.nextInt(distRand)-rand.nextInt(distRand));
 								tryPos = new Vector2f(pos.x + tryPos.x, pos.y + tryPos.y);
 								if (level.isPassable((int)tryPos.x, (int)tryPos.y)) {
-									data.getAgent().getAIBlackboard().setPosTarget(tryPos);
+									data.getAgent().getAIBlackboard().moveTo(tryPos);
 									break;
 								}
 							}
@@ -228,8 +235,8 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 								float vecY = targVec.y;
 								
 								weapon.fire();
-								GameAssetManager.instance().getSound("shoot").play(GameSettings.vol);
-								EntityFactory.getEntity(weapon.projectileType).prepareFromData(data.levelID, pos.x + vecX * 2, pos.y + vecY * 2, data.team, vecX, vecY);
+								//GameAssetManager.instance().getSound("shoot").play(GameSettings.vol);
+								//EntityFactory.getEntity(weapon.projectileType).prepareFromData(data.levelID, pos.x + vecX * 2, pos.y + vecY * 2, data.team, vecX, vecY);
 							}
 						}
 						
@@ -253,7 +260,7 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 				if (data.getAgent().getAIBlackboard().getPosTarget() != null) {
 					float distToTarg = VecUtil.getDist(new Vector2f(pos.x, pos.y), data.getAgent().getAIBlackboard().getPosTarget());
 					
-					if (distToTarg > Cst.TILESIZE / 2) {
+					if (distToTarg > Cst.TILESIZE / 32) {
 						Vector2f targVec = VecUtil.getTargetVector(new Vector2f(pos.x, pos.y), data.getAgent().getAIBlackboard().getPosTarget());
 						
 						motion.x = targVec.x * profileData.moveSpeed;
@@ -300,10 +307,133 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 		pos.prevX = pos.x;
 		pos.prevY = pos.y;
 		
+		//process specific entity collision before applying motion to pos
+		//List<CollisionEntry> listCollisions = lookupEntIDToCollisionList.get(e.getId());
+		//if (listCollisions != null) {
+		for (int entry : physics.listEntitiesCollidingWith) {
+			int entIDTarget = entry;
+			
+			/*if (entry.entIDA == e.getId()) {
+				entIDTarget = entry.entIDB;
+			} else {
+				entIDTarget = entry.entIDA;
+			}*/
+			
+			Entity entHit = level.getWorld().getEntity(entIDTarget);
+			
+			if (entHit != null) {
+				EntityData dataHit = mapData.get(entHit);
+				if (dataHit != null && data.type == EnumEntityType.SPRITE && dataHit.type == EnumEntityType.SPRITE) {
+					Position posB = mapPos.get(entHit);
+					
+					
+					Vector2f futurePos = new Vector2f(pos.x + motion.x, pos.y + motion.y);
+					
+					//Vector2f pushA = VecUtil.getTargetVector(pos.toVec(), posB.toVec());
+					//Vector2f pushB = VecUtil.getTargetVector(posB.toVec(), pos.toVec());
+					
+					//float pushForce = 0.5F;
+					
+					try {
+						
+						//player?
+						if (data.getAgent() == null || dataHit.getAgent() == null) continue;
+						
+						float distA = VecUtil.getDist(pos.toVec(), data.getAgent().getAIBlackboard().getPosTarget());
+						float distB = VecUtil.getDist(posB.toVec(), dataHit.getAgent().getAIBlackboard().getPosTarget());
+						
+						float distNow = VecUtil.getDist(pos.toVec(), posB.toVec());
+						float distFuture = VecUtil.getDist(futurePos, posB.toVec());
+						
+						/*Vector2f pushVec = new Vector2f();
+						
+						if (Float.isNaN(pushA.x)) {
+							pushVec.x = rand.nextFloat() * pushForce;
+						} else {
+							pushVec.x = -pushA.x * pushForce;
+						}
+						
+						if (Float.isNaN(pushA.y)) {
+							pushVec.y = rand.nextFloat() * pushForce;
+						} else {
+							pushVec.y = -pushA.y * pushForce;
+						}*/
+						
+						float speedReduce = (rand.nextFloat() * 0.5F) + 0.5F;
+						speedReduce = (rand.nextFloat() * 1F);
+						speedReduce = 0.3F;
+						float speedIncrease = 0.8F;
+						//speedReduce = 1F;
+						
+						//motion.x += pushVec.x;
+						//motion.y += pushVec.y;
+						
+						//Logger.dbg("processing collision, distA: " + distA + ", distB: " + distB);
+						
+						/*if (e.getId() > entIDTarget && level.getPlayerEntity().getId() != e.getId()) {
+							motion.x *= speedReduce;
+							motion.y *= speedReduce;
+							break;
+						}*/
+						
+						if (distFuture < distNow) {
+							motion.x *= speedReduce;
+							motion.y *= speedReduce;
+							break;
+						} else {
+							motion.x /= speedIncrease;
+							motion.y /= speedIncrease;
+							break;
+						}
+						
+						/*if (distA < distB) {
+							motion.x /= speedReduce;
+							motion.y /= speedReduce;
+							break;
+						}  else if (distA > distB) {
+							motion.x *= speedReduce;
+							motion.y *= speedReduce;
+							break;
+						}*//* else if (e.getId() > entIDTarget && level.getPlayerEntity().getId() != e.getId()) {
+							motion.x *= speedReduce;
+							motion.y *= speedReduce;
+							break;
+						}*/
+						
+					} catch (Exception e2) {
+						e2.printStackTrace();
+					}
+				}
+			}
+			
+			//for now only process first collision for speed reduction
+			
+		}
+		//}
+		
+		/*motion.x *= 0.98F;
+		motion.y *= 0.98F;*/
+		
+		//temp code \\
+		/*float maxAxisSpeed = 7;
+		
+		if (motion.x > maxAxisSpeed) {
+			motion.x = maxAxisSpeed;
+		} else if (motion.x < -maxAxisSpeed) {
+			motion.x = -maxAxisSpeed;
+		}
+		
+		if (motion.y > maxAxisSpeed) {
+			motion.y = maxAxisSpeed;
+		} else if (motion.y < -maxAxisSpeed) {
+			motion.y = -maxAxisSpeed;
+		}*/
+		//temp code //
+		
 		int fPosX = (int) (pos.x + motion.x);
 		int fPosY = (int) (pos.y + motion.y);
-		int fTileX = MathUtil.floorF((float)fPosX / (float)Cst.TILESIZE);
-		int fTileY = MathUtil.floorF((float)fPosY / (float)Cst.TILESIZE);
+		//int fTileX = MathUtil.floorF((float)fPosX / (float)Cst.TILESIZE);
+		//int fTileY = MathUtil.floorF((float)fPosY / (float)Cst.TILESIZE);
 		
 		Vector4f vec = level.getCellBorder(fPosX, (int) pos.y);
 		//Logger.dbg("x: " + fPosX + " - y: " + fPosY + " vs " + vec + " passable: " + level.isPassable(fPosX, fPosY));
@@ -428,74 +558,129 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 			killEntity(data.levelID, e);
 		}
 	}
-	
+
 	public void killEntity(int levelID, Entity e) {
 		Level level = Game_AI_TestBed.instance().getLevel(levelID);
 		if (e.getId() == level.getPlayerEntity().getId()) {
 			level.respawnPlayer();
 		} else {
 			PhysicsData phys = mapPhysics.get(e);
-			phys.dispose(levelID);
+			// phys.dispose(levelID);
+			PhysicsWrapper.pendRemoveBody(phys);
 			level.killEntity(e);
 		}
-		
+
 	}
 
 	@Override
 	protected void processSystem() {
 		super.processSystem();
-		
-		for (CollisionEntry entry : listCollisionQueueStart) {
-			Logger.dbg("collision start between " + entry.entIDA + " and " + entry.entIDB);
-			
-			//TODO: WE ARE ASSUMING LEVEL 0 HERE, FIX!!!
-			Level level = Game_AI_TestBed.instance().getLevel(0);
-			
-			Entity entIDA = level.getWorld().getEntity(entry.entIDA);
-			Entity entIDB = level.getWorld().getEntity(entry.entIDB);
-			
-			//needed?
-			if (entIDA == null || entIDB == null) continue;
-			
-			EntityData dataA = mapData.get(entIDA);
-			EntityData dataB = mapData.get(entIDB);
-			
-			Health healthA = mapHealth.get(entIDA);
-			Health healthB = mapHealth.get(entIDB);
-			
-			//Entity projectile = null;
-			//Entity other = null;
-			
-			if (entIDA != null && dataA.type == EnumEntityType.PROJECTILE) {
-				ProjectileData projDataA = mapProjectile.get(entIDA);
-				healthB.hp -= projDataA.prjDamage;
-				healthA.hp = 0;
-				GameAssetManager.instance().getSound("hit").play(GameSettings.vol);
-			} else if (entIDB != null && dataB.type == EnumEntityType.PROJECTILE) {
-				ProjectileData projDataB = mapProjectile.get(entIDB);
-				healthA.hp -= projDataB.prjDamage;
-				healthB.hp = 0;
-				GameAssetManager.instance().getSound("hit").play(GameSettings.vol);
-			}
-		}
-		listCollisionQueueStart.clear();
-		
-		for (CollisionEntry entry : listCollisionQueueEnd) {
-			//Logger.dbg("collision end between " + entry.entIDA + " and " + entry.entIDB);
-		}
-		listCollisionQueueEnd.clear();
+
+		processCollisionPairs();
 	}
 
 	public List<CollisionEntry> getListCollisionQueueStart() {
 		return listCollisionQueueStart;
 	}
-	
+
 	public void triggerCollisionEvent(int entIDA, int entIDB) {
-		listCollisionQueueStart.add(new CollisionEntry(entIDA, entIDB));
+		CollisionEntry entry = new CollisionEntry(entIDA, entIDB);
+		listCollisionQueueStart.add(entry);
+		addToLookup(entIDA, entIDB);
+		addToLookup(entIDB, entIDA);
+	}
+
+	public void addToLookup(int id, int idHit) {
+		// TODO: WE ARE ASSUMING LEVEL 0 HERE, FIX!!!
+		Level level = Game_AI_TestBed.instance().getLevel(0);
+		Entity entA = level.getWorld().getEntity(id);
+		Entity entB = level.getWorld().getEntity(idHit);
+		
+		if (entA != null && entB != null) {
+			PhysicsData dataA = entA.getComponent(PhysicsData.class);
+			PhysicsData dataB = entB.getComponent(PhysicsData.class);
+			
+			dataA.addCollision(idHit);
+			dataB.addCollision(id);
+		}
 	}
 	
+	public void removeFromLookup(int id, int idHit) {
+		// TODO: WE ARE ASSUMING LEVEL 0 HERE, FIX!!!
+		Level level = Game_AI_TestBed.instance().getLevel(0);
+		Entity entA = level.getWorld().getEntity(id);
+		Entity entB = level.getWorld().getEntity(idHit);
+		
+		if (entA != null && entB != null) {
+			PhysicsData dataA = entA.getComponent(PhysicsData.class);
+			PhysicsData dataB = entB.getComponent(PhysicsData.class);
+			
+			if (dataA != null) dataA.removeCollision(idHit);
+			if (dataB != null) dataB.removeCollision(id);
+		}
+	}
+
 	public void triggerCollisionEndEvent(int entIDA, int entIDB) {
 		listCollisionQueueEnd.add(new CollisionEntry(entIDA, entIDB));
+		removeFromLookup(entIDA, entIDB);
+		removeFromLookup(entIDB, entIDA);
 	}
-	
+
+	public void processCollisionPairs() {
+
+		for (CollisionEntry entry : listCollisionQueueStart) {
+			Logger.dbg("collision start between " + entry.entIDA + " and "
+					+ entry.entIDB);
+
+			// TODO: WE ARE ASSUMING LEVEL 0 HERE, FIX!!!
+			Level level = Game_AI_TestBed.instance().getLevel(0);
+
+			Entity entA = level.getWorld().getEntity(entry.entIDA);
+			Entity entB = level.getWorld().getEntity(entry.entIDB);
+
+			// needed?
+			if (entA == null || entB == null)
+				continue;
+
+			EntityData dataA = mapData.get(entA);
+			EntityData dataB = mapData.get(entB);
+
+			Health healthA = mapHealth.get(entA);
+			Health healthB = mapHealth.get(entB);
+
+			// Entity projectile = null;
+			// Entity other = null;
+
+			if (dataA != null && dataB != null) {
+
+				if (entA != null && dataA.type == EnumEntityType.PROJECTILE) {
+					ProjectileData projDataA = mapProjectile.get(entA);
+					//healthB.hp -= projDataA.prjDamage;
+					healthA.hp = 0;
+					GameAssetManager.instance().getSound("hit")
+							.play(GameSettings.vol);
+				} else if (entB != null
+						&& dataB.type == EnumEntityType.PROJECTILE) {
+					ProjectileData projDataB = mapProjectile.get(entB);
+					//healthA.hp -= projDataB.prjDamage;
+					healthB.hp = 0;
+					GameAssetManager.instance().getSound("hit")
+							.play(GameSettings.vol);
+				}
+
+			} else {
+				Logger.dbg("cant process collision, dataA or dataB is null");
+			}
+		}
+		listCollisionQueueStart.clear();
+
+		//lookupEntIDToCollisionList.clear();
+
+		for (CollisionEntry entry : listCollisionQueueEnd) {
+			// Logger.dbg("collision end between " + entry.entIDA + " and " +
+			// entry.entIDB);
+		}
+		listCollisionQueueEnd.clear();
+	}
+
 }

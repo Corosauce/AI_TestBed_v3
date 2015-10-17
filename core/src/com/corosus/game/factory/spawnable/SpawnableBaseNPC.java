@@ -2,6 +2,7 @@ package com.corosus.game.factory.spawnable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.maps.MapObject;
@@ -23,6 +24,8 @@ public class SpawnableBaseNPC implements SpawnableBase {
 		float width = (float) props.get("width");
 		float height = (float) props.get("height");
 		
+		Random rand = new Random();
+		
 		//default to main enemy team if no data
 		int team = EntityData.TEAM_1;
 		if (props.containsKey("team")) {
@@ -38,7 +41,7 @@ public class SpawnableBaseNPC implements SpawnableBase {
 		List<Entity> listEnts = new ArrayList<>();
 		
 		for (int i = 0; i < count; i++) {
-			listEnts.add(prepareFromData(levelID, x, y, team));
+			listEnts.add(prepareFromData(levelID, x + rand.nextFloat() * width, y + rand.nextFloat() * height, team));
 		}
 		
 		return listEnts;
