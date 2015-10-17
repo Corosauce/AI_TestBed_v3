@@ -4,20 +4,15 @@ import com.badlogic.gdx.ai.utils.Collision;
 import com.badlogic.gdx.ai.utils.Ray;
 import com.badlogic.gdx.ai.utils.RaycastCollisionDetector;
 import com.badlogic.gdx.math.Vector2;
+import com.corosus.game.ai.pathfind.node.TiledNode;
 
-/** A raycast collision detector used for path smoothing against a {@link TiledGraph}.
- * 
- * @param <N> Type of node, either flat or hierarchical, extending the {@link TiledNode} class
- * 
- * @author davebaol */
-public class TiledRaycastCollisionDetector<N extends Node> implements RaycastCollisionDetector<Vector2> {
-	Graph worldMap;
+public class TiledRaycastCollisionDetector<N extends TiledNode<N>> implements RaycastCollisionDetector<Vector2> {
+	TiledGraph<N> worldMap;
 
-	public TiledRaycastCollisionDetector (Graph worldMap) {
+	public TiledRaycastCollisionDetector (TiledGraph<N> worldMap) {
 		this.worldMap = worldMap;
 	}
 
-	// See http://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
 	@Override
 	public boolean collides (Ray<Vector2> ray) {
 		int x0 = (int)ray.start.x;

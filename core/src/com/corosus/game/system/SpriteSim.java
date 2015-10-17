@@ -629,8 +629,7 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 	public void processCollisionPairs() {
 
 		for (CollisionEntry entry : listCollisionQueueStart) {
-			Logger.dbg("collision start between " + entry.entIDA + " and "
-					+ entry.entIDB);
+			//Logger.dbg("collision start between " + entry.entIDA + " and " + entry.entIDB);
 
 			// TODO: WE ARE ASSUMING LEVEL 0 HERE, FIX!!!
 			Level level = Game_AI_TestBed.instance().getLevel(0);

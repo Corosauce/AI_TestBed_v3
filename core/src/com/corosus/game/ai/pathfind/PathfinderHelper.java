@@ -3,25 +3,29 @@ package com.corosus.game.ai.pathfind;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.ai.pfa.DefaultGraphPath;
 import com.badlogic.gdx.ai.pfa.PathSmoother;
 import com.badlogic.gdx.ai.pfa.indexed.IndexedAStarPathFinder;
 import com.badlogic.gdx.math.Vector2;
-import com.corosus.game.Cst;
 import com.corosus.game.Game_AI_TestBed;
 import com.corosus.game.Level;
+import com.corosus.game.Logger;
+import com.corosus.game.ai.pathfind.node.FlatTiledNode;
+import com.corosus.game.ai.pathfind.node.TiledNode;
 import com.corosus.game.util.IntPair;
 
 public class PathfinderHelper {
 
 	public static PathfinderHelper instance;
 	
-	public Graph graph;
-	public DefaultGraphPath<Node> path;
-	public DistHeuristic heuristic;
-	public IndexedAStarPathFinder<Node> pathFinder;
-	public Node[][] nodes;
-	public PathSmoother<Node, Vector2> pathSmoother;
+	FlatTiledGraph graph;
+	TiledSmoothableGraphPath<FlatTiledNode> path;
+	TiledManhattanDistance<FlatTiledNode> heuristic;
+	IndexedAStarPathFinder<FlatTiledNode> pathFinder;
+	PathSmoother<FlatTiledNode, Vector2> pathSmoother;
+	
+	//level data
+	//TODO: make level data only be loaded when level loads unless we do dynamic stuff later on(?)
+	public int[][] nodes;
 	
 	public static PathfinderHelper instance() {
 		if (instance == null) {
@@ -34,17 +38,59 @@ public class PathfinderHelper {
 		
 		
 		
-		graph = new Graph(128);
+		/*graph = new Graph(128);
 		path = new DefaultGraphPath<Node>();
 		heuristic = new DistHeuristic();
 		//pathSmoother = new PathSmoother<>(new Tiled)
+		pathSmoother = new PathSmoother<Node, Vector2>(new TiledRaycastCollisionDetector<Node>(graph));*/
+		
+
 		
 		Level level = Game_AI_TestBed.instance().getLevel(levelID);
 		
 		
-		nodes = new Node[level.getTileSizeX()][level.getTileSizeY()];
+		nodes = new int[level.getTileSizeX()][level.getTileSizeY()];//new FlatTiledNode[level.getTileSizeX()][level.getTileSizeY()];
 		
-        int index = 0;
+		for (int x = 0; x < level.getTileSizeX(); x++) {
+            for (int y = 0; y < level.getTileSizeY(); y++) {
+                if (level.isTilePassable(x, y)) {
+                	nodes[x][y] = TiledNode.TILE_FLOOR;//new FlatTiledNode(x*Cst.TILESIZE, y*Cst.TILESIZE, TiledNode.TILE_FLOOR, 4);
+                } else {
+                	nodes[x][y] = TiledNode.TILE_WALL;
+                }
+            }
+        }
+		
+		graph = new FlatTiledGraph(level.getTileSizeX(), level.getTileSizeY());
+		
+		graph.init(nodes);
+		
+		path = new TiledSmoothableGraphPath<FlatTiledNode>();
+		heuristic = new TiledManhattanDistance<FlatTiledNode>();
+		pathFinder = new IndexedAStarPathFinder<FlatTiledNode>(graph, true);
+		pathSmoother = new PathSmoother<FlatTiledNode, Vector2>(new TiledRaycastCollisionDetector<FlatTiledNode>(graph));
+		
+		FlatTiledNode nodeStart = graph.getNode(from.x, from.y);
+		FlatTiledNode nodeEnd = graph.getNode(to.x, to.y);
+		
+		path.clear();
+		
+		graph.startNode = nodeStart;
+		pathFinder.searchNodePath(nodeStart, nodeEnd, heuristic, path);
+		
+		//smoooooooth
+		pathSmoother.smoothPath(path);
+		
+		Logger.dbg("nodes: " + path.nodes.size);
+		
+		List<IntPair> listPaths = new ArrayList<IntPair>();
+		for (FlatTiledNode node : path.nodes) {
+            listPaths.add(new IntPair(node.x, node.y));
+            //System.out.println(node);
+        }
+		return listPaths;
+		
+        /*int index = 0;
         for (int x = 0; x < level.getTileSizeX(); x++) {
             for (int y = 0; y < level.getTileSizeY(); y++) {
                 if (level.isTilePassable(x, y)) {
@@ -66,15 +112,13 @@ public class PathfinderHelper {
                     addNodeNeighbour(nodes, nodes[x][y], x, y + 1);
                 }
             }
-        }
-		
-		pathFinder = new IndexedAStarPathFinder<Node>(graph, true);
+        }*/
 		
 		
-		return calcPath(from, to);
+		//return calcPath(from, to);
 	}
 	
-	private void addNodeNeighbour(Node[][] nodes, Node aNode, int aX, int aY) {
+	/*private void addNodeNeighbour(Node[][] nodes, Node aNode, int aX, int aY) {
         if (aX >= 0 && aX < nodes.length && aY >=0 && aY < nodes[0].length) {
             aNode.addNeighbour(nodes[aX][aY]);
         }
@@ -101,6 +145,6 @@ public class PathfinderHelper {
 		}
         
         return listPaths;
-	}
+	}*/
 	
 }

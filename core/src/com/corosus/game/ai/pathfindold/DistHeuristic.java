@@ -1,4 +1,4 @@
-package com.corosus.game.ai.pathfind;
+package com.corosus.game.ai.pathfindold;
 
 import com.badlogic.gdx.ai.pfa.Heuristic;
 

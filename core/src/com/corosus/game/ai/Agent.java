@@ -52,16 +52,19 @@ public class Agent {
 		Entity ent = Game_AI_TestBed.instance().getLevel(levelID).getWorld().getEntity(entID);
 		Position pos = ent.getComponent(Position.class);
 		
+		int pathFollowAccuracy = 4;
+		
 		//pathfollow
 		if (blackboard.hasPath()) {
 			IntPair pointTile = blackboard.getPathPoint();
-			Vector2f pointCoord = new Vector2f((pointTile.x) + (Cst.TILESIZE / 2), (pointTile.y) + (Cst.TILESIZE / 2));
+			Vector2f pointCoord = new Vector2f((pointTile.x * Cst.TILESIZE) + (Cst.TILESIZE / 2), (pointTile.y * Cst.TILESIZE) + (Cst.TILESIZE / 2));
 			
 			float dist = VecUtil.getDist(pointCoord, pos.toVec());
 			
-			blackboard.moveTo(pointCoord);
+			//was moveTo
+			blackboard.setPosTarget(pointCoord);
 			
-			if (dist < 8) {
+			if (dist < pathFollowAccuracy) {
 				//System.out.println("inc point!");
 				blackboard.incPathPoint();
 			} else {

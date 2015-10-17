@@ -8,7 +8,6 @@ import com.artemis.Entity;
 import com.corosus.game.Cst;
 import com.corosus.game.Game_AI_TestBed;
 import com.corosus.game.Level;
-import com.corosus.game.Logger;
 import com.corosus.game.ai.pathfind.PathfinderHelper;
 import com.corosus.game.component.Position;
 import com.corosus.game.util.IntPair;
@@ -21,7 +20,7 @@ public class Blackboard {
 	private int targetID = -1;
 	
 	private Vector2f posTarget = null;
-	private long pfTimeCooldown = 400;
+	private long pfTimeCooldown = 40;
 	private long lastPFTime = -pfTimeCooldown;
 	
 	private List<IntPair> listPath = null;
