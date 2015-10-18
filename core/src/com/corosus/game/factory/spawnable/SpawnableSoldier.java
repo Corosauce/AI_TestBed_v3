@@ -13,8 +13,8 @@ public class SpawnableSoldier extends SpawnableBaseNPC {
 		ent.getComponent(RenderData.class).setAsset("soldier");
 		
 		Weapon weapon = new Weapon();
-		weapon.projectileType = SpawnableTypes.PRJ_PULSE;
-		weapon.ticksCooldownRate = 20;
+		weapon.projectileType = SpawnableTypes.PRJ_BULLET;
+		weapon.ticksCooldownRate = 5;
 		
 		ent.getComponent(WeaponData.class).setActivePrimary(weapon);
 		

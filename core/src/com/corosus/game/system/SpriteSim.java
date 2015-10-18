@@ -46,11 +46,6 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 	private ComponentMapper<ProjectileData> mapProjectile;
 	private ComponentMapper<WeaponData> mapWeapons;
 
-	//private List<CollisionEntry> listCollisionQueueStart = new ArrayList<CollisionEntry>();
-	//private List<CollisionEntry> listCollisionQueueEnd = new ArrayList<CollisionEntry>();
-
-	//private HashMap<Integer, List<CollisionEntry>> lookupEntIDToCollisionList = new HashMap<Integer, List<CollisionEntry>>();
-
 	public class CollisionEntry {
 
 		public int entIDA;
@@ -625,17 +620,9 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 	@Override
 	protected void processSystem() {
 		super.processSystem();
-
-		processCollisionPairs();
 	}
 
-	/*public List<CollisionEntry> getListCollisionQueueStart() {
-		return listCollisionQueueStart;
-	}*/
-
 	public void triggerCollisionEvent(int entIDA, int entIDB) {
-		CollisionEntry entry = new CollisionEntry(entIDA, entIDB);
-		//listCollisionQueueStart.add(entry);
 		addToLookup(entIDA, entIDB);
 		addToLookup(entIDB, entIDA);
 	}
@@ -671,65 +658,8 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 	}
 
 	public void triggerCollisionEndEvent(int entIDA, int entIDB) {
-		//listCollisionQueueEnd.add(new CollisionEntry(entIDA, entIDB));
 		removeFromLookup(entIDA, entIDB);
 		removeFromLookup(entIDB, entIDA);
-	}
-
-	public void processCollisionPairs() {
-
-		/*for (CollisionEntry entry : listCollisionQueueStart) {
-			//Logger.dbg("collision start between " + entry.entIDA + " and " + entry.entIDB);
-
-			// TODO: WE ARE ASSUMING LEVEL 0 HERE, FIX!!!
-			Level level = Game_AI_TestBed.instance().getLevel(0);
-
-			Entity entA = level.getWorld().getEntity(entry.entIDA);
-			Entity entB = level.getWorld().getEntity(entry.entIDB);
-
-			// needed?
-			if (entA == null || entB == null)
-				continue;
-
-			EntityData dataA = mapData.get(entA);
-			EntityData dataB = mapData.get(entB);
-
-			Health healthA = mapHealth.get(entA);
-			Health healthB = mapHealth.get(entB);
-
-			// Entity projectile = null;
-			// Entity other = null;
-
-			if (dataA != null && dataB != null) {
-
-				if (entA != null && dataA.type == EnumEntityType.PROJECTILE) {
-					ProjectileData projDataA = mapProjectile.get(entA);
-					//healthB.hp -= projDataA.prjDamage;
-					healthA.hp = 0;
-					GameAssetManager.instance().getSound("hit")
-							.play(GameSettings.vol);
-				} else if (entB != null
-						&& dataB.type == EnumEntityType.PROJECTILE) {
-					ProjectileData projDataB = mapProjectile.get(entB);
-					//healthA.hp -= projDataB.prjDamage;
-					healthB.hp = 0;
-					GameAssetManager.instance().getSound("hit")
-							.play(GameSettings.vol);
-				}
-
-			} else {
-				Logger.dbg("cant process collision, dataA or dataB is null");
-			}
-		}*/
-		/*listCollisionQueueStart.clear();
-
-		//lookupEntIDToCollisionList.clear();
-
-		for (CollisionEntry entry : listCollisionQueueEnd) {
-			// Logger.dbg("collision end between " + entry.entIDA + " and " +
-			// entry.entIDB);
-		}
-		listCollisionQueueEnd.clear();*/
 	}
 
 }

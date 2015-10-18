@@ -10,9 +10,14 @@ import com.corosus.game.client.render.IRenderable;
 
 public class RenderData extends Component {
 
+	public int renderType = 0;
+	
 	public Orient orient = Orient.UP;
 	public ActorState state = ActorState.STATIC;
 	public HashMap<ActorState, HashMap<Orient, IRenderable>> anims;
+	
+	public static int TYPE_SPRITE_ANIM = 0;
+	public static int TYPE_LINE = 1;
 	
 	public RenderData() {
 		

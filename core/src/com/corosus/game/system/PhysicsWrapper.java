@@ -12,6 +12,8 @@ import com.corosus.game.component.PhysicsData;
 
 public class PhysicsWrapper extends IntervalEntityProcessingSystem {
 	
+	//in an attempt to solve a box2d createBody crash this removal queue was added, was most likely pointless
+	//crashes are related to projectiles / collisions and their deaths somehow
 	public static List<PhysicsData> listBodiesToRemove = new ArrayList<PhysicsData>();
 	
 	public PhysicsWrapper(float interval) {

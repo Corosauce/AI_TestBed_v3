@@ -92,6 +92,27 @@ public class SpriteRenderHUD extends IntervalEntityProcessingSystem {
 				
 				healthBox.dispose();
 			}
+			
+			if (render.renderType == RenderData.TYPE_LINE) {
+				float width = 3;
+				float length = 16;
+				ShapeRenderer line = new ShapeRenderer();
+				line.setProjectionMatrix(game.getCamera().combined);
+				line.begin(ShapeType.Filled);
+				line.setColor(1, 0, 0, 0);
+				
+				double angle = Math.atan2(vel.y, vel.x);
+				
+				float x1 = (float) (Math.cos(angle)) * length;
+				float y1 = (float) (Math.sin(angle)) * length;
+				float x2 = (float) (Math.cos(angle + Math.PI/1D)) * length;
+				float y2 = (float) (Math.sin(angle + Math.PI/1D)) * length;
+				
+				line.rectLine(rX + x1, rY + y1, rX + x2, rY + y2, width);
+				line.end();
+				
+				line.dispose();
+			}
 		}
 	}
 

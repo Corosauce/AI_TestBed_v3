@@ -21,6 +21,7 @@ import com.corosus.game.component.Health;
 import com.corosus.game.component.Position;
 import com.corosus.game.factory.EntityFactory;
 import com.corosus.game.factory.spawnable.SpawnableBase;
+import com.corosus.game.factory.spawnable.SpawnableTypes;
 import com.corosus.game.system.GameInput;
 import com.corosus.game.system.HUDRender;
 import com.corosus.game.system.MapRender;
@@ -217,7 +218,7 @@ public class Level {
 			pos.setPos(spawnX, spawnY);
 		} else {
 			//setPlayer(EntityFactory.createPlayer(100, 100).getId());
-			SpawnableBase base = EntityFactory.getEntity("player");
+			SpawnableBase base = EntityFactory.getEntity(SpawnableTypes.SPRITE_PLAYER);
 			setPlayer(base.prepareFromData(levelID, spawnX, spawnY, EntityData.TEAM_PLAYER).getId());
 			//setPlayer(EntityFactory.createEntity_Player(getLevelID(), spawnX, spawnY).getId());
 		}

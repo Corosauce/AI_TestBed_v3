@@ -24,6 +24,7 @@ import com.corosus.game.factory.spawnable.SpawnableBase;
 import com.corosus.game.factory.spawnable.SpawnableGeneral;
 import com.corosus.game.factory.spawnable.SpawnablePlayer;
 import com.corosus.game.factory.spawnable.SpawnableBaseProjectile;
+import com.corosus.game.factory.spawnable.SpawnablePrjBullet;
 import com.corosus.game.factory.spawnable.SpawnablePrjPulse;
 import com.corosus.game.factory.spawnable.SpawnableSoldier;
 import com.corosus.game.factory.spawnable.SpawnableTypes;
@@ -41,6 +42,7 @@ public class EntityFactory {
 		addEntity(SpawnableTypes.SPRITE_SOLDIER, new SpawnableSoldier());
 		addEntity(SpawnableTypes.SPRITE_GENERAL, new SpawnableGeneral());
 		addEntity(SpawnableTypes.PRJ_PULSE, new SpawnablePrjPulse());
+		addEntity(SpawnableTypes.PRJ_BULLET, new SpawnablePrjBullet());
 	}
 	
 	public static void addEntity(String name, SpawnableBase base) {

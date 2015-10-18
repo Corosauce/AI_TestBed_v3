@@ -258,7 +258,7 @@ public class GameInput extends IntervalEntityProcessingSystem {
 							double rot = Math.toRadians(pos.rotationYaw + 90);
 							float vecX = (float) (Math.sin(rot))/* * profile.moveSpeed * 2F*/;
 							float vecY = (float) (-Math.cos(rot))/* * profile.moveSpeed * 2F*/;
-							EntityFactory.getEntity(SpawnableTypes.PRJ_PULSE).prepareFromData(entData.levelID, pos.x + vecX, pos.y + vecY, EntityData.TEAM_PLAYER, vecX, vecY);
+							EntityFactory.getEntity(weapon.projectileType).prepareFromData(entData.levelID, pos.x + vecX, pos.y + vecY, EntityData.TEAM_PLAYER, vecX, vecY);
 							
 						}
 					}

@@ -91,14 +91,20 @@ public class SpriteRender extends IntervalEntityProcessingSystem {
 		
 		//Logger.dbg("rx: " + rX + " vs x: " + pos.x + " delta: " + level.getWorld().getDelta() + " state time: " + level.getStateTime() + " partialTick: " + partialTick);
 
-		if (game.isInView(pos.toVec(), Cst.SPRITESIZE)) {
-			try {
-				render.anims.get(render.state).get(render.orient).draw(level.getBatch(), level.getStateTime(), level.getWorld().getDelta(), rX - Cst.SPRITESIZE / 2, rY - Cst.SPRITESIZE / 2);
-			} catch (Exception e2) {
-				e2.printStackTrace();
+		try {
+			if (render.renderType == RenderData.TYPE_SPRITE_ANIM) {
+				if (game.isInView(pos.toVec(), Cst.SPRITESIZE)) {
+					
+					render.anims.get(render.state).get(render.orient).draw(level.getBatch(), level.getStateTime(), level.getWorld().getDelta(), rX - Cst.SPRITESIZE / 2, rY - Cst.SPRITESIZE / 2);
+					
+				} else {
+					//Logger.dbg("not in view!");
+				}
+			} else if (render.renderType == RenderData.TYPE_LINE) {
+				//do in hud system
 			}
-		} else {
-			//Logger.dbg("not in view!");
+		} catch (Exception e2) {
+			e2.printStackTrace();
 		}
 	}
 
