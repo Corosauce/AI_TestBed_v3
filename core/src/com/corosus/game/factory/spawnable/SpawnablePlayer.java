@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.MapProperties;
 import com.corosus.game.component.EntityData;
+import com.corosus.game.component.Health;
 import com.corosus.game.factory.EntityFactory;
 
 public class SpawnablePlayer implements SpawnableBase {
@@ -17,8 +17,11 @@ public class SpawnablePlayer implements SpawnableBase {
 
 	@Override
 	public Entity prepareFromData(int levelID, Object... objects) {
-		Entity ent = EntityFactory.createEntity_NPC(levelID, (Float)objects[0], (Float)objects[1]);
+		Entity ent = EntityFactory.createEntity_Player(levelID, (Float)objects[0], (Float)objects[1]);
 		ent.getComponent(EntityData.class).setTeam((int) objects[2]);
+		
+		ent.getComponent(Health.class).setStartHealth(3000);
+		
 		return ent;
 	}
 	

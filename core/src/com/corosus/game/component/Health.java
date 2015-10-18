@@ -15,8 +15,12 @@ public class Health extends Component {
 	}
 	
 	public Health(int startHealth) {
-		this.hp = startHealth;
-		this.hpMax = startHealth;
+		setStartHealth(startHealth);
+	}
+	
+	public void setStartHealth(int amount) {
+		this.hp = amount;
+		this.hpMax = amount;
 	}
 	
 	public boolean isDead() {

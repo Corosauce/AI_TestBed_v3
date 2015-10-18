@@ -224,10 +224,10 @@ public class GameInput extends IntervalEntityProcessingSystem {
 					boolean result = profile.listRoutines.get(0).tryActivate(new Vector2(velX, velY));
 					
 					if (result) {
-						Logger.dbg("dodged!");
+						//Logger.dbg("dodged!");
 						//GameAssetManager.instance().getSound("test").play(0.3F);
 					} else {
-						Logger.dbg("cant dodge");
+						//Logger.dbg("cant dodge");
 					}
 				}
 				

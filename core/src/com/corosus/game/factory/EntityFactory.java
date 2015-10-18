@@ -79,6 +79,8 @@ public class EntityFactory {
 		WeaponLocation loc = new WeaponLocation();
 		Weapon weap = new Weapon();
 		
+		weap.ticksCooldownRate = 3;
+		
 		loc.listWeapons.add(weap);
 		weaponData.listWeaponLocations.add(loc);
 		

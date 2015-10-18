@@ -16,6 +16,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.corosus.game.component.EntityData;
 import com.corosus.game.component.Health;
 import com.corosus.game.component.Position;
 import com.corosus.game.factory.EntityFactory;
@@ -203,9 +204,9 @@ public class Level {
 	
 	public void respawnPlayer() {
 		
-		int spawnX = 1222;
+		float spawnX = 1222;
 		spawnX = 722;
-		int spawnY = getLevelSizeY() - 17682;
+		float spawnY = getLevelSizeY() - 17682;
 		
 		Entity ent = getPlayerEntity();
 		if (ent != null) {
@@ -216,7 +217,9 @@ public class Level {
 			pos.setPos(spawnX, spawnY);
 		} else {
 			//setPlayer(EntityFactory.createPlayer(100, 100).getId());
-			setPlayer(EntityFactory.createEntity_Player(getLevelID(), spawnX, spawnY).getId());
+			SpawnableBase base = EntityFactory.getEntity("player");
+			setPlayer(base.prepareFromData(levelID, spawnX, spawnY, EntityData.TEAM_PLAYER).getId());
+			//setPlayer(EntityFactory.createEntity_Player(getLevelID(), spawnX, spawnY).getId());
 		}
 		
 	}
