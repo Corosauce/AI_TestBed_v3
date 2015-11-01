@@ -6,7 +6,6 @@ import com.artemis.Entity;
 import com.corosus.game.Cst;
 import com.corosus.game.Game_AI_TestBed;
 import com.corosus.game.Level;
-import com.corosus.game.Logger;
 import com.corosus.game.ai.pathfind.PathfinderHelper;
 import com.corosus.game.component.Position;
 import com.corosus.game.util.IntPair;
@@ -19,10 +18,13 @@ public class Agent {
 	
 	private Blackboard blackboard;
 	
+	private BehaviorManagerTest behavior;
+	
 	public Agent(int levelID, int entID) {
 		setLevelID(levelID);
 		setEntID(entID);
 		setAIBlackboard(new Blackboard(this));
+		setBehavior(new BehaviorManagerTest(this));
 	}
 
 	public Blackboard getBlackboard() {
@@ -81,6 +83,9 @@ public class Agent {
 		} else {
 			//System.out.println("no path");
 		}
+		
+		//test
+		behavior.tick();
 	}
 	
 	/**
@@ -134,6 +139,14 @@ public class Agent {
 		}
 		
 		
+	}
+
+	public BehaviorManagerTest getBehavior() {
+		return behavior;
+	}
+
+	public void setBehavior(BehaviorManagerTest behavior) {
+		this.behavior = behavior;
 	}
 	
 }
