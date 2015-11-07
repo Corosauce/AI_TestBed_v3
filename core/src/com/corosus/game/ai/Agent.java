@@ -56,6 +56,8 @@ public class Agent {
 	}
 	
 	public void tick() {
+		//testing contrib graph use of commits and merged branches
+		
 		//System.out.println("AI tick!");
 		
 		Entity ent = Game_AI_TestBed.instance().getLevel(levelID).getWorld().getEntity(entID);
