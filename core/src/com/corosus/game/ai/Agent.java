@@ -57,6 +57,7 @@ public class Agent {
 	
 	public void tick() {
 		//testing contrib graph use of commits and merged branches
+		//test 2 - day 1
 		
 		//System.out.println("AI tick!");
 		
