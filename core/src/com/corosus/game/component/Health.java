@@ -9,6 +9,9 @@ public class Health extends Component {
 	public int hp;
 	public int hpMax;
 	public int lifeTime = 0;
+	public int water = 0;
+	public int food = 0;
+	public int rest = 0;
 	
 	public Health() {
 		

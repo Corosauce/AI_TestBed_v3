@@ -1,0 +1,50 @@
+{
+static$up: {
+	class: sprite,
+	spriteTable: imgs/sprites/res_water.png,
+	row: 0,
+	column: 0
+},
+static$up_left: {
+	class: sprite,
+	spriteTable: imgs/sprites/res_water.png,
+	row: 0,
+	column: 0
+},
+static$left: {
+	class: sprite,
+	spriteTable: imgs/sprites/res_water.png,
+	row: 0,
+	column: 0
+},
+static$down_left: {
+	class: sprite,
+	spriteTable: imgs/sprites/res_water.png,
+	row: 0,
+	column: 0
+},
+static$down: {
+	class: sprite,
+	spriteTable: imgs/sprites/res_water.png,
+	row: 0,
+	column: 0
+},
+static$down_right: {
+	class: sprite,
+	spriteTable: imgs/sprites/res_water.png,
+	row: 0,
+	column: 0
+},
+static$right: {
+	class: sprite,
+	spriteTable: imgs/sprites/res_water.png,
+	row: 0,
+	column: 0
+},
+static$up_right: {
+	class: sprite,
+	spriteTable: imgs/sprites/res_water.png,
+	row: 0,
+	column: 0
+}
+}

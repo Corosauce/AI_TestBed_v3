@@ -1,5 +1,7 @@
 package com.corosus.game;
 
+import java.util.Random;
+
 import javax.vecmath.Vector4f;
 
 import com.artemis.Entity;
@@ -9,7 +11,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
-import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -95,6 +96,8 @@ public class Level {
 		worldBox2D = new com.badlogic.gdx.physics.box2d.World(new Vector2(0, 0), true);
 
         loadLevelObjects();
+        
+        initProceduralGen();
 		
 		respawnPlayer();
 	}
@@ -201,6 +204,24 @@ public class Level {
 		}
 		
 		Logger.dbg("map objects loaded!");
+	}
+	
+	public void initProceduralGen() {
+		
+		int spawnCount = 100;
+		for (int i = 0; i < spawnCount; i++) {
+		
+			SpawnableBase base = EntityFactory.getEntity(SpawnableTypes.RES_WATER);
+			Random rand = new Random();
+			int tryX = rand.nextInt(this.getLevelSizeX());
+			int tryY = rand.nextInt(this.getLevelSizeY());
+			if (this.isPassable(tryX, tryY)) {
+				base.prepareFromData(getLevelID(), (float)tryX, (float)tryY);
+			}
+		}
+		
+		
+		Logger.dbg("procedural features initialized!");
 	}
 	
 	public void respawnPlayer() {

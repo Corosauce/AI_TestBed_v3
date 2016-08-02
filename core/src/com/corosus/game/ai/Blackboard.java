@@ -1,6 +1,7 @@
 package com.corosus.game.ai;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.vecmath.Vector2f;
 
@@ -18,6 +19,20 @@ public class Blackboard {
 	
 	private List<IntPair> listPath = null;
 	private int indexPath = 0;
+	
+	private AtomicBoolean isFighting = new AtomicBoolean(false);
+	private AtomicBoolean shouldTrySurvival = new AtomicBoolean(false);
+	private AtomicBoolean shouldWander = new AtomicBoolean(false);
+	
+	private int closestPossibleThreatID = -1;
+
+	public int getClosestPossibleThreatID() {
+		return closestPossibleThreatID;
+	}
+
+	public void setClosestPossibleThreatID(int closestPossibleThreatID) {
+		this.closestPossibleThreatID = closestPossibleThreatID;
+	}
 
 	public Blackboard(Agent agent) {
 		this.setAgent(agent);
@@ -70,6 +85,30 @@ public class Blackboard {
 
 	public void setAgent(Agent agent) {
 		this.agent = agent;
+	}
+
+	public AtomicBoolean getIsFighting() {
+		return isFighting;
+	}
+
+	public void setIsFighting(boolean isFighting) {
+		this.isFighting.set(isFighting);
+	}
+
+	public AtomicBoolean getShouldTrySurvival() {
+		return shouldTrySurvival;
+	}
+
+	public void setShouldTrySurvival(boolean shouldTrySurvival) {
+		this.shouldTrySurvival.set(shouldTrySurvival);
+	}
+
+	public AtomicBoolean getShouldWander() {
+		return shouldWander;
+	}
+
+	public void setShouldWander(boolean shouldWander) {
+		this.shouldWander.set(shouldWander);
 	}
 	
 }

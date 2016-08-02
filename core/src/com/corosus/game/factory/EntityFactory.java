@@ -23,9 +23,9 @@ import com.corosus.game.entity.EnumEntityType;
 import com.corosus.game.factory.spawnable.SpawnableBase;
 import com.corosus.game.factory.spawnable.SpawnableGeneral;
 import com.corosus.game.factory.spawnable.SpawnablePlayer;
-import com.corosus.game.factory.spawnable.SpawnableBaseProjectile;
 import com.corosus.game.factory.spawnable.SpawnablePrjBullet;
 import com.corosus.game.factory.spawnable.SpawnablePrjPulse;
+import com.corosus.game.factory.spawnable.SpawnableResourceWater;
 import com.corosus.game.factory.spawnable.SpawnableSoldier;
 import com.corosus.game.factory.spawnable.SpawnableTypes;
 
@@ -43,6 +43,7 @@ public class EntityFactory {
 		addEntity(SpawnableTypes.SPRITE_GENERAL, new SpawnableGeneral());
 		addEntity(SpawnableTypes.PRJ_PULSE, new SpawnablePrjPulse());
 		addEntity(SpawnableTypes.PRJ_BULLET, new SpawnablePrjBullet());
+		addEntity(SpawnableTypes.RES_WATER, new SpawnableResourceWater());
 	}
 	
 	public static void addEntity(String name, SpawnableBase base) {
@@ -143,6 +144,37 @@ public class EntityFactory {
 		.with(data)
 		.with(profile)
 		.with(new ProjectileData())
+		;
+		
+		Game_AI_TestBed.instance().getLevel(levelID).addToEntityCount(1);
+		
+		return ent.build();
+	}
+	
+	public static Entity createEntity_Resource(int levelID, float posX, float posY) {
+		EntityBuilder ent = getTemplate_Common(levelID, posX, posY);
+		
+		EntityData data = new EntityData(EnumEntityType.RESOURCE);
+		data.aiControlled = true;
+		data.sizeDiameter = Cst.COLLIDESIZE_SPRITE;
+		
+		ProfileData profile = new ProfileData();
+		
+		/*WeaponData weaponData = new WeaponData();
+		WeaponLocation loc = new WeaponLocation();
+		Weapon weap = new Weapon();*/
+		
+		/*loc.listWeapons.add(weap);
+		weaponData.listWeaponLocations.add(loc);*/
+		
+		RenderData render = new RenderData("res_water");
+		
+		ent
+		.with(new Health(100))
+		.with(render)
+		.with(data)
+		//.with(weaponData)
+		.with(profile)
 		;
 		
 		Game_AI_TestBed.instance().getLevel(levelID).addToEntityCount(1);

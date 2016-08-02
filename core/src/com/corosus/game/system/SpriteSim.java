@@ -86,9 +86,6 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 		if (physics.needInit) {
 			physics.needInit = false;
 			
-			//need to make enemy projectiles not able to hurt enemies
-			//teams?
-			
 			short categoryBits = 0;
 			if (data.type == EnumEntityType.SPRITE) {
 				if (data.team == 0) {
@@ -184,12 +181,14 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 					boolean chase = false;
 					boolean omnipotent = false;
 					
+					//targetting AI
+					
 					if (omnipotent || (distPlayer < 800 && VecUtil.canSee(data.levelID, pos.toVec(), posPlayer.toVec()))) {
 						chase = true;
 						data.getAgent().getBlackboard().setTargetID(player.getId());
 					}
 					
-					
+					//chase AI / random wander AI
 					
 					if (data.getAgent().getBlackboard().getTargetID() != -1) {
 						data.getAgent().moveTo(posPlayer.toVec());
@@ -208,6 +207,8 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 						}
 					}
 					
+					//shooting when close and can see
+					
 					if (chase) {
 						
 						Vector2f targVec = VecUtil.getTargetVector(pos.x, pos.y, posPlayer.x, posPlayer.y);
@@ -221,7 +222,7 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 							motion.y = 0;
 						}*/
 						
-						if (weapons.hasPrimaryWeapon()) {
+						if (weapons != null && weapons.hasPrimaryWeapon()) {
 							Weapon weapon = weapons.getActivePrimary();
 							
 							if (weapon.canFire()) {
@@ -277,10 +278,12 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 			//TODO: is this proper ecs design? maybe we should have a subsystem for weapon logic? or just a separate system?
 			
 			//process weapons - cooldowns all weapons
-			for (WeaponLocation weapLoc : weapons.listWeaponLocations) {
-				for (Weapon weapon : weapLoc.listWeapons) {
-					if (weapon.ticksCooldownCur > 0) {
-						weapon.ticksCooldownCur--;
+			if (weapons != null) {
+				for (WeaponLocation weapLoc : weapons.listWeaponLocations) {
+					for (Weapon weapon : weapLoc.listWeapons) {
+						if (weapon.ticksCooldownCur > 0) {
+							weapon.ticksCooldownCur--;
+						}
 					}
 				}
 			}
@@ -296,6 +299,8 @@ public class SpriteSim extends IntervalEntityProcessingSystem {
 				//TODO: RELOCATE TO PROPER CLEANUP METHOD
 				killEntity(data.levelID, e);
 			}
+		} else if (data.type == EnumEntityType.RESOURCE) {
+			
 		}
 		
 		//physics

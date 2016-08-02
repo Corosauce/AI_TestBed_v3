@@ -18,13 +18,13 @@ public class Agent {
 	
 	private Blackboard blackboard;
 	
-	private BehaviorManagerTest behavior;
+	private BehaviorManagerAnimalSim behavior;
 	
 	public Agent(int levelID, int entID) {
 		setLevelID(levelID);
 		setEntID(entID);
 		setAIBlackboard(new Blackboard(this));
-		setBehavior(new BehaviorManagerTest(this));
+		setBehavior(new BehaviorManagerAnimalSim(this));
 	}
 
 	public Blackboard getBlackboard() {
@@ -144,11 +144,11 @@ public class Agent {
 		
 	}
 
-	public BehaviorManagerTest getBehavior() {
+	public BehaviorManagerAnimalSim getBehavior() {
 		return behavior;
 	}
 
-	public void setBehavior(BehaviorManagerTest behavior) {
+	public void setBehavior(BehaviorManagerAnimalSim behavior) {
 		this.behavior = behavior;
 	}
 	
