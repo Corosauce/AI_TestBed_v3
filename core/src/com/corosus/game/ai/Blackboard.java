@@ -22,6 +22,8 @@ public class Blackboard {
 	
 	private AtomicBoolean isFighting = new AtomicBoolean(false);
 	private AtomicBoolean shouldTrySurvival = new AtomicBoolean(false);
+	private AtomicBoolean shouldFlee = new AtomicBoolean(false);
+
 	private AtomicBoolean shouldWander = new AtomicBoolean(false);
 	
 	private int closestPossibleThreatID = -1;
@@ -109,6 +111,14 @@ public class Blackboard {
 
 	public void setShouldWander(boolean shouldWander) {
 		this.shouldWander.set(shouldWander);
+	}
+	
+	public AtomicBoolean getShouldFlee() {
+		return shouldFlee;
+	}
+
+	public void setShouldFlee(boolean shouldFlee) {
+		this.shouldFlee.set(shouldFlee);
 	}
 	
 }

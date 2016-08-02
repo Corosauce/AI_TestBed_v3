@@ -3,7 +3,10 @@ package com.corosus.game.ai;
 import com.badlogic.gdx.ai.btree.BehaviorTree;
 import com.badlogic.gdx.ai.btree.branch.Sequence;
 import com.corosus.game.ai.btree.BooleanBranch;
+import com.corosus.game.ai.btree.Flee;
+import com.corosus.game.ai.btree.HuntForSurvivalNeeds;
 import com.corosus.game.ai.btree.RandomTest;
+import com.corosus.game.ai.btree.ScanEnvironment;
 import com.corosus.game.ai.btree.TestLeaf;
 
 public class BehaviorManagerAnimalSim {
@@ -57,7 +60,7 @@ public class BehaviorManagerAnimalSim {
 		 * 
 		 * 
 		 * 
-		 * down = false, up = true
+		 * up = false, down = true
 		 * 
 		 * 					doSurvivalRoutine < 
 		 * isThreatened <									doFightThreat 						
@@ -67,16 +70,34 @@ public class BehaviorManagerAnimalSim {
          * 
          */
 		
-		Sequence<Blackboard> seq = new Sequence<>();
-		seq.addChild(new BooleanBranch<Blackboard>(this.agent.getBlackboard().getIsFighting(), new TestLeaf("wat1"), new TestLeaf("wat2")));
+		//TODO: do i need to set blackboard on each object or just the top parent node?
+		
+		BooleanBranch<Blackboard> shouldFlee = new BooleanBranch<Blackboard>(agent.getBlackboard().getShouldFlee());
+		shouldFlee.addChild(new TestLeaf("TODO: attack or something"));
+		shouldFlee.addChild(new Flee());
+		
+		BooleanBranch<Blackboard> isThreatened = new BooleanBranch<Blackboard>(agent.getBlackboard().getIsFighting());
+		
+		isThreatened.addChild(new HuntForSurvivalNeeds());
+		isThreatened.addChild(shouldFlee);
+		
+		Sequence<Blackboard> seqMain = new Sequence<Blackboard>();
+		seqMain.addChild(isThreatened);
+		
+		Sequence<Blackboard> seqSense = new Sequence<Blackboard>();
+		seqSense.addChild(new ScanEnvironment());
+		//seq.addChild(new BooleanBranch<Blackboard>(this.agent.getBlackboard().getIsFighting(), new TestLeaf("wat1"), new TestLeaf("wat2")));
 		/*seq.addChild((new RandomTest()).setDebug("1"));
 		seq.addChild((new RandomTest()).setDebug("2"));
 		seq.addChild((new RandomTest()).setDebug("3"));*/
 		
 
 		
-		btMain = new BehaviorTree<Blackboard>(seq);
+		btMain = new BehaviorTree<Blackboard>(seqMain);
 		btMain.setObject(agent.getBlackboard());
+		
+		btSensing = new BehaviorTree<Blackboard>(seqSense);
+		btSensing.setObject(agent.getBlackboard());
 	}
 	
 }

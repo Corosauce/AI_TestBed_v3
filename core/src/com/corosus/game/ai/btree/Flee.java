@@ -1,5 +1,7 @@
 package com.corosus.game.ai.btree;
 
+import java.util.Random;
+
 import javax.vecmath.Vector2f;
 
 import com.artemis.Entity;
@@ -59,9 +61,13 @@ public class Flee extends LeafTask<Blackboard> {
 			float vecY = posTarg.y - posThis.y;
 			
 			//vec could work if only strait line, but we want angle variance
-			Vector2f vec = VecUtil.getTargetVector(posThis.toVec(), posTarg.toVec());
+			//Vector2f vec = VecUtil.getTargetVector(posThis.toVec(), posTarg.toVec());
 			
-			double angleRad = Math.atan2(vecX, vecY);
+			Random rand = new Random();
+			int randAngleSize = 30;
+			double angleDeg = Math.toDegrees(Math.atan2(vecX, vecY));
+			angleDeg += rand.nextInt(randAngleSize) - randAngleSize / 2;
+			double angleRad = Math.toRadians(angleDeg);
 			float navDist = Cst.TILESIZE * 5;
 			
 			Vector2f moveTo = new Vector2f(posThis.x + ((float)Math.sin(angleRad) * navDist), posThis.y + ((float)Math.cos(angleRad) * navDist));
